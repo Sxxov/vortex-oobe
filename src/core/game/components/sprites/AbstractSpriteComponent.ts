@@ -1,4 +1,3 @@
-import { bound } from '../../../../resources/decorators';
 import { Store } from '../../../blocks/store';
 import type { AbstractEntity } from '../../entities/AbstractEntity';
 import type { AbstractSprite } from '../../sprite/AbstractSprite';
@@ -15,13 +14,12 @@ export abstract class AbstractSpriteComponent<
 	constructor(entity: AbstractEntity) {
 		super(entity);
 
-		entity.position.subscribeLazy(this.updateBoundingBox);
+		entity.position.subscribeLazy(this.updateBoundingBox.bind(this));
 		entity.round.game.screenSpace.boundingBox.subscribeLazy(
-			this.updateBoundingBox,
+			this.updateBoundingBox.bind(this),
 		);
 	}
 
-	@bound
 	protected updateBoundingBox() {
 		const [x, y] =
 			this.entity.round.game.screenSpace.positionToScreenPosition(
