@@ -1,0 +1,25 @@
+@import url('./style/tailwind.pcss');
+@import url('./style/fonts.pcss');
+@import url('./style/utilities.pcss');
+
+/* purge start ignore */
+@layer base {
+	:root {
+		--colour-background-primary: theme('colour.background.light.primary');
+		--colour-background-secondary: theme('colour.background.light.secondary');
+		--colour-accent-primary: theme('colour.accent.light.primary');
+		--colour-accent-secondary: theme('colour.accent.light.secondary');
+		--colour-text-primary: theme('colour.text.light.primary');
+		--colour-text-secondary: theme('colour.text.light.secondary');
+
+		&.dark {
+			--colour-background-primary: theme('colour.background.dark.primary');
+			--colour-background-secondary: theme('colour.background.dark.secondary');
+			--colour-accent-primary: theme('colour.accent.dark.primary');
+			--colour-accent-secondary: theme('colour.accent.dark.secondary');
+			--colour-text-primary: theme('colour.text.dark.primary');
+			--colour-text-secondary: theme('colour.text.dark.secondary');
+		}
+	}
+}
+/* purge end ignore */

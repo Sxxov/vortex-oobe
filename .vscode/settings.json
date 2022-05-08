@@ -1,0 +1,12 @@
+{
+	"[svelte]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "svelte.svelte-vscode",
+	},
+	"svelte.plugin.svelte.format.enable": true,
+	"svelte.plugin.svelte.defaultScriptLanguage": "ts",
+	"svelte.plugin.svelte.useNewTransformation": true,
+	"editor.colorDecorators": true,
+	"tailwindCSS.emmetCompletions": true,
+	"typescript.tsdk": "node_modules\\typescript\\lib",
+}

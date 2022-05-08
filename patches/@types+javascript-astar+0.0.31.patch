@@ -1,0 +1,36 @@
+diff --git a/node_modules/@types/javascript-astar/index.d.ts b/node_modules/@types/javascript-astar/index.d.ts
+index a9c6a31..7f22982 100644
+--- a/node_modules/@types/javascript-astar/index.d.ts
++++ b/node_modules/@types/javascript-astar/index.d.ts
+@@ -3,26 +3,26 @@
+ // Definitions by: brian ridley <https://github.com/ptlis>, Mike Lazer-Walker <https://github.com/lazerwalker>
+ // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+ 
+-declare class Graph {
++export class Graph {
+     grid: Array<Array<GridNode>>;
+     constructor(grid: Array<Array<number>>, options?: {diagonal?: boolean | undefined});
+ }
+ 
+-declare class GridNode {
++class GridNode {
+     x: number;
+     y: number;
+ }
+ 
+-interface Heuristic {
++export interface Heuristic {
+     (pos0: {x: number, y: number}, pos1: {x: number, y: number}): number;
+ }
+ 
+-interface Heuristics {
++export interface Heuristics {
+     manhattan: Heuristic;
+     diagonal: Heuristic;
+ }
+ 
+-declare namespace astar {
++export namespace astar {
+     function search(
+         graph: Graph,
+         start: {x: number, y: number},

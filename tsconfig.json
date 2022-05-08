@@ -1,0 +1,42 @@
+{
+	"extends": "./.svelte-kit/tsconfig.json",
+	"include": [
+		"src/**/*", 
+		"types/**/*", 
+		"**/.eslintrc.cjs",
+		"**/.prettierrc.cjs",
+		"**/*.config.js",
+		"**/*.config.cjs",
+	],
+	"exclude": [
+		"node_modules",
+		"public",
+	],
+	"compilerOptions": {
+		"typeRoots": [
+			"node_modules/@types",
+		],
+		"types": [
+			"svelte",
+		],
+		"lib": [
+			"esnext",
+			"dom",
+		],
+		"esModuleInterop": true,
+		"isolatedModules": true,
+		"module": "esnext",
+		"target": "esnext",
+		"sourceMap": true,
+		"moduleResolution": "node",
+		"noEmit": true,
+		"strict": true,
+		"skipLibCheck": true,
+		"resolveJsonModule": true,
+		"useDefineForClassFields": false,
+		"allowSyntheticDefaultImports": true,
+		"importsNotUsedAsValues": "error",
+		"experimentalDecorators": true,
+		"noImplicitOverride": true,
+	}
+}

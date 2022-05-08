@@ -1,0 +1,69 @@
+diff --git a/node_modules/javascript-astar/astar.js b/node_modules/javascript-astar/astar.js
+index bc33ee2..0846985 100644
+--- a/node_modules/javascript-astar/astar.js
++++ b/node_modules/javascript-astar/astar.js
+@@ -5,19 +5,6 @@
+ // Includes Binary Heap (with modifications) from Marijn Haverbeke.
+ // http://eloquentjavascript.net/appendix2.html
+ 
+-(function(definition) {
+-    /* global module, define */
+-    if(typeof module === 'object' && typeof module.exports === 'object') {
+-        module.exports = definition();
+-    } else if(typeof define === 'function' && define.amd) {
+-        define([], definition);
+-    } else {
+-        var exports = definition();
+-        window.astar = exports.astar;
+-        window.Graph = exports.Graph;
+-    }
+-})(function() {
+-
+ function pathTo(node){
+     var curr = node,
+         path = [];
+@@ -34,7 +21,7 @@ function getHeap() {
+     });
+ }
+ 
+-var astar = {
++const astar = {
+     /**
+     * Perform an A* Search on a graph given a start and end node.
+     * @param {Graph} graph
+@@ -399,9 +386,7 @@ BinaryHeap.prototype = {
+     }
+ };
+ 
+-return {
+-    astar: astar,
+-    Graph: Graph
++export {
++    astar,
++    Graph,
+ };
+-
+-});
+diff --git a/node_modules/javascript-astar/package.json b/node_modules/javascript-astar/package.json
+index 1f6f54d..bbe7ed9 100644
+--- a/node_modules/javascript-astar/package.json
++++ b/node_modules/javascript-astar/package.json
+@@ -2,7 +2,9 @@
+   "name": "javascript-astar",
+   "version": "0.4.1",
+   "description": "astar search algorithm in JavaScript",
+-  "main": "astar.js",
++  "type": "module",
++  "main": "./astar.js",
++  "module": "./astar.js",
+   "repository": {
+     "type": "git",
+     "url": "git://github.com/bgrins/javascript-astar.git"
+@@ -14,7 +16,6 @@
+   "bugs": {
+     "url": "https://github.com/bgrins/javascript-astar/issues"
+   },
+-  "main": "./astar.js",
+   "homepage": "http://bgrins.github.io/javascript-astar",
+   "devDependencies": {
+     "grunt": "~0.4.5",

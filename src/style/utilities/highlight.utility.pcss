@@ -1,0 +1,55 @@
+@layer utilities {
+	.highlight-none {
+		transition: filter 0.1s theme('ease.fastSlow');
+
+		filter: unset;
+	}
+
+	.highlight-low {
+		transition: filter 0.1s theme('ease.fastSlow');
+
+		--stroke-pos: 1px;
+		--stroke-neg: -1px;
+		--stroke-color: rgba(255, 255, 255, 1);
+		filter: drop-shadow(var(--stroke-pos) 0 0 var(--stroke-color))
+			drop-shadow(var(--stroke-neg) 0 var(--stroke-color))
+			drop-shadow(0 var(--stroke-pos) 0 var(--stroke-color))
+			drop-shadow(0 var(--stroke-neg) 0 var(--stroke-color))
+			drop-shadow(
+				var(--stroke-pos) var(--stroke-pos) 0 var(--stroke-color)
+			)
+			drop-shadow(
+				var(--stroke-pos) var(--stroke-neg) 0 var(--stroke-color)
+			)
+			drop-shadow(
+				var(--stroke-neg) var(--stroke-pos) 0 var(--stroke-color)
+			)
+			drop-shadow(
+				var(--stroke-neg) var(--stroke-neg) 0 var(--stroke-color)
+			);
+	}
+
+	.highlight-high {
+		transition: filter 0.1s theme('ease.fastSlow');
+
+		--stroke-pos: 5px;
+		--stroke-neg: -5px;
+		--stroke-color: rgba(255, 255, 255, 1);
+		filter: drop-shadow(var(--stroke-pos) 0 0 var(--stroke-color))
+			drop-shadow(var(--stroke-neg) 0 var(--stroke-color))
+			drop-shadow(0 var(--stroke-pos) 0 var(--stroke-color))
+			drop-shadow(0 var(--stroke-neg) 0 var(--stroke-color))
+			drop-shadow(
+				var(--stroke-pos) var(--stroke-pos) 0 var(--stroke-color)
+			)
+			drop-shadow(
+				var(--stroke-pos) var(--stroke-neg) 0 var(--stroke-color)
+			)
+			drop-shadow(
+				var(--stroke-neg) var(--stroke-pos) 0 var(--stroke-color)
+			)
+			drop-shadow(
+				var(--stroke-neg) var(--stroke-neg) 0 var(--stroke-color)
+			);
+	}
+}
