@@ -2,7 +2,8 @@ import { ValueAnimation } from '../../../animator/animations/ValueAnimation';
 import { EntityPool } from '../../grid/EntityPool';
 import type { TPosition } from '../../types/TPosition';
 import { AbstractComponent } from '../AbstractComponent';
-import { astar, Graph, type GridNode } from 'javascript-astar';
+import Astar from 'javascript-astar';
+import type { GridNode } from 'javascript-astar';
 import { Animator } from '../../../animator';
 import { FrameController } from '../../../animator/controllers/FrameController';
 import type { AbstractAnimation } from '../../../animator/animations/AbstractAnimation';
@@ -13,6 +14,8 @@ import { PathFinderEntity } from '../../entities/PathFinderEntity';
 import { AbstractSpriteComponent } from '../sprites/AbstractSpriteComponent';
 import { NullSprite } from '../../sprite/NullSprite';
 import { GameConstants } from '../../GameConstants';
+
+const { astar, Graph } = Astar;
 
 export class WalkComponent extends AbstractComponent {
 	public animator = new Animator();
