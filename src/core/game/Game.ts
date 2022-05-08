@@ -1,11 +1,6 @@
 import { Store } from '../blocks/store';
 import { ArrayStore } from '../blocks/store/stores/ArrayStore';
 import { ShapedArrayStore } from '../blocks/store/stores/ShapedArrayStore';
-import { PlayerNearComponent } from './components/highlight/PlayerNearComponent';
-import { ClickableComponent } from './components/listeners/clickable/ClickableComponent';
-import { ClickableListenerKinds } from './components/listeners/clickable/ClickableListenerKinds';
-import { TouchableComponent } from './components/listeners/touchable/TouchableComponent';
-import { TouchableListenerKinds } from './components/listeners/touchable/TouchableListenerKinds';
 import { AlertComponent } from './components/ui/AlertComponent';
 import type { TUi } from './components/ui/TUi';
 import { WallComponent } from './components/WallComponent';
