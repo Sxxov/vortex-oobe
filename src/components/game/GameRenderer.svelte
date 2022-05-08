@@ -42,6 +42,8 @@
 		({ round: roundW, uiQueue: uiQueueW } = game);
 
 		hasMounted = true;
+
+		requestAnimationFrame(onResize);
 	});
 
 	function onResize() {
