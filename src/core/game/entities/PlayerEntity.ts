@@ -24,8 +24,6 @@ export class PlayerEntity extends AbstractEntity {
 				new PlaceholderSprite(),
 				new PlaceholderSprite(),
 			],
-			// walking is currently bugged with size of >1,1
-			// can't be arsed, smol player it is
 			[2, 2],
 		),
 		TouchableComponent,
