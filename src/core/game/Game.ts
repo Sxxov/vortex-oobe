@@ -39,7 +39,6 @@ export class Game {
 				Math.floor(Math.random() * 31),
 			]);
 
-			// @ClickableComponent.listener(ClickableListenerKinds.CLICK)
 			protected override async onClick() {
 				await super.onClick();
 
@@ -51,7 +50,6 @@ export class Game {
 				);
 			}
 
-			// @TouchableComponent.listener(TouchableListenerKinds.CONFINED)
 			protected override async onTouch(
 				iter: AsyncIterable<TScreenPosition[]>,
 			) {
