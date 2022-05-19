@@ -1,6 +1,6 @@
 import { ShapedArrayStore } from '../../blocks/store/stores/ShapedArrayStore';
 import type { TUnabstract } from '../../blocks/types/TUnabstract';
-import type { AbstractComponent } from '../components/AbstractComponent';
+import type { AbstractComponent } from '../components/common/AbstractComponent';
 import type { Round } from '../round/Round';
 import type { TPositionStore } from '../types/TPositionStore';
 

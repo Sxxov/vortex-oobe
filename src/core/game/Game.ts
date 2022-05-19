@@ -3,7 +3,7 @@ import { ArrayStore } from '../blocks/store/stores/ArrayStore';
 import { ShapedArrayStore } from '../blocks/store/stores/ShapedArrayStore';
 import { AlertComponent } from './components/ui/AlertComponent';
 import type { TUi } from './components/ui/TUi';
-import { WallComponent } from './components/WallComponent';
+import { WallComponent } from './components/wall/WallComponent';
 import { InteractivePropEntity } from './entities/InteractivePropEntity';
 import { GameConstants } from './GameConstants';
 import { Round } from './round/Round';

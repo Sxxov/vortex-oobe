@@ -1,4 +1,4 @@
-import { ConsumableComponent } from '../components/ConsumableComponent';
+import { ConsumableComponent } from '../components/consumable/ConsumableComponent';
 import { DynamicSpriteComponent } from '../components/sprites/DynamicSpriteComponent';
 import type { AbstractSprite } from '../sprite/AbstractSprite';
 import { AbstractEntity } from './AbstractEntity';
@@ -11,7 +11,7 @@ import { ClickableListenerKinds } from '../components/listeners/clickable/Clicka
 import type { TCellSize } from '../types/TCellSize';
 import { HighlightLevels } from '../components/highlight/HighlightLevels';
 import type { TUnabstract } from '../../blocks/types/TUnabstract';
-import type { AbstractComponent } from '../components/AbstractComponent';
+import type { AbstractComponent } from '../components/common/AbstractComponent';
 import { PlayerNearComponent } from '../components/highlight/PlayerNearComponent';
 import type { Round } from '../round/Round';
 

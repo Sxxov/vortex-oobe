@@ -1,8 +1,8 @@
-import { Store } from '../../blocks/store';
-import type { AbstractEntity } from '../entities/AbstractEntity';
-import type { AbstractSprite } from '../sprite/AbstractSprite';
-import { AbstractComponent } from './AbstractComponent';
-import { AbstractSpriteComponent } from './sprites/AbstractSpriteComponent';
+import { Store } from '../../../blocks/store';
+import type { AbstractEntity } from '../../entities/AbstractEntity';
+import type { AbstractSprite } from '../../sprite/AbstractSprite';
+import { AbstractComponent } from '../common/AbstractComponent';
+import { AbstractSpriteComponent } from '../sprites/AbstractSpriteComponent';
 
 export abstract class ConsumableComponent extends AbstractComponent {
 	public abstract consumedSprite: AbstractSprite;

@@ -1,7 +1,7 @@
 import { ValueAnimation } from '../../../animator/animations/ValueAnimation';
 import { EntityPool } from '../../grid/EntityPool';
 import type { TPosition } from '../../types/TPosition';
-import { AbstractComponent } from '../AbstractComponent';
+import { AbstractComponent } from '../common/AbstractComponent';
 import Astar from 'javascript-astar';
 import type { GridNode } from 'javascript-astar';
 import { Animator } from '../../../animator';

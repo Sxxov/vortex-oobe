@@ -1,5 +1,5 @@
 import { Store } from '../../../blocks/store';
-import { AbstractComponent } from '../AbstractComponent';
+import { AbstractComponent } from '../common/AbstractComponent';
 import { HighlightLevels } from './HighlightLevels';
 
 export class HighlightComponent extends AbstractComponent {

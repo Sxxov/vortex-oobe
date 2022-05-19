@@ -1,6 +1,6 @@
-import type { AbstractEntity } from '../entities/AbstractEntity';
-import { AbstractComponent } from './AbstractComponent';
-import { AbstractSpriteComponent } from './sprites/AbstractSpriteComponent';
+import type { AbstractEntity } from '../../entities/AbstractEntity';
+import { AbstractComponent } from '../common/AbstractComponent';
+import { AbstractSpriteComponent } from '../sprites/AbstractSpriteComponent';
 
 export abstract class ZindexComponent extends AbstractComponent {
 	public zindex = 0;

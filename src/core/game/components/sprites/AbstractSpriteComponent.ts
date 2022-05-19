@@ -2,7 +2,7 @@ import { Store } from '../../../blocks/store';
 import type { AbstractEntity } from '../../entities/AbstractEntity';
 import type { AbstractSprite } from '../../sprite/AbstractSprite';
 import type { TCellSize } from '../../types/TCellSize';
-import { AbstractComponent } from '../AbstractComponent';
+import { AbstractComponent } from '../common/AbstractComponent';
 
 export abstract class AbstractSpriteComponent<
 	Sprite extends AbstractSprite,

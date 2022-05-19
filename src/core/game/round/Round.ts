@@ -1,5 +1,5 @@
 import { DoublyLinkedNode } from '../../doubly-linked/DoublyLinkedNode';
-import { ConsumableComponent } from '../components/ConsumableComponent';
+import { ConsumableComponent } from '../components/consumable/ConsumableComponent';
 import { PlayerEntity } from '../entities/PlayerEntity';
 import type { Game } from '../Game';
 import { EntityPool } from '../grid/EntityPool';

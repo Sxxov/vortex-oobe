@@ -1,5 +1,5 @@
-import { IncorrectUsageError } from '../../../resources/errors';
-import type { AbstractEntity } from '../entities/AbstractEntity';
+import { IncorrectUsageError } from '../../../../resources/errors';
+import type { AbstractEntity } from '../../entities/AbstractEntity';
 
 export abstract class AbstractComponent {
 	constructor(public entity: AbstractEntity) {}

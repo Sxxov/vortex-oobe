@@ -1,3 +1,3 @@
 import { AbstractComponent } from '../common/AbstractComponent';
 
-export class AbstractUiComponent extends AbstractComponent {}
+export class WallComponent extends AbstractComponent {}

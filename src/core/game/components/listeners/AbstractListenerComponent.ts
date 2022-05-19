@@ -1,6 +1,6 @@
 import { IllegalStateError } from '../../../../resources/errors';
 import type { AbstractEntity } from '../../entities/AbstractEntity';
-import { AbstractComponent } from '../AbstractComponent';
+import { AbstractComponent } from '../common/AbstractComponent';
 
 type TKind<T extends typeof AbstractListenerComponent> = ReturnType<
 	ReturnType<

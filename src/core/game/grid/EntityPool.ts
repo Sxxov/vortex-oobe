@@ -1,6 +1,6 @@
 import { ArrayStore } from '../../blocks/store/stores/ArrayStore';
 import { AbstractSpriteComponent } from '../components/sprites/AbstractSpriteComponent';
-import { WallComponent } from '../components/WallComponent';
+import { WallComponent } from '../components/wall/WallComponent';
 import type { AbstractEntity } from '../entities/AbstractEntity';
 import { GameConstants } from '../GameConstants';
 import type { TCellIndex } from '../types/TCellIndex';

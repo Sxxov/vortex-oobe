@@ -2,14 +2,14 @@ import { FacingSpriteComponent } from '../components/sprites/FacingSpriteCompone
 import { TouchableComponent } from '../components/listeners/touchable/TouchableComponent';
 import { TouchableListenerKinds } from '../components/listeners/touchable/TouchableListenerKinds';
 import { WalkComponent } from '../components/walk/WalkComponent';
-import { ZindexComponent } from '../components/ZindexComponent';
+import { ZindexComponent } from '../components/zindex/ZindexComponent';
 import { PlaceholderSprite } from '../sprite/PlaceholderSprite';
 import type { TScreenPosition } from '../types/TScreenPosition';
 import { AbstractEntity } from './AbstractEntity';
 import { ClickableComponent } from '../components/listeners/clickable/ClickableComponent';
 import { HighlightComponent } from '../components/highlight/HighlightComponent';
 import { ClickableListenerKinds } from '../components/listeners/clickable/ClickableListenerKinds';
-import { CursorComponent } from '../components/CursorComponent';
+import { CursorComponent } from '../components/cursor/CursorComponent';
 import { HighlightLevels } from '../components/highlight/HighlightLevels';
 import type { Round } from '../round/Round';
 import { AlertComponent } from '../components/ui/AlertComponent';
