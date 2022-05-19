@@ -50,7 +50,7 @@ export abstract class InteractivePropEntity extends AbstractEntity {
 
 	@TouchableComponent.listener(TouchableListenerKinds.CONFINED)
 	protected async onTouch(iter: AsyncIterable<TScreenPosition[]>) {
-		if (!this.isNear.value) return;
+		if (!this.isNear.value) return false;
 
 		const highlight = this.component(HighlightComponent)!;
 
@@ -60,14 +60,18 @@ export abstract class InteractivePropEntity extends AbstractEntity {
 		for await (const _ of iter);
 
 		highlight.popHighlight();
+
+		return true;
 	}
 
 	@ClickableComponent.listener(ClickableListenerKinds.CLICK)
 	protected async onClick() {
-		if (!this.isNear.value) return;
+		if (!this.isNear.value) return false;
 
 		const consumable = this.component(ConsumableComponent)!;
 
 		consumable.consume();
+
+		return true;
 	}
 }

@@ -11,7 +11,6 @@ import type { ScreenSpace } from './screen/ScreenSpace';
 import { NullSprite } from './sprite/NullSprite';
 import { PlaceholderSprite } from './sprite/PlaceholderSprite';
 import type { TPositionStore } from './types/TPositionStore';
-import type { TScreenPosition } from './types/TScreenPosition';
 
 export class Game {
 	public uiQueue = new ArrayStore<TUi>();
@@ -40,20 +39,14 @@ export class Game {
 			]);
 
 			protected override async onClick() {
-				await super.onClick();
-
-				if (!this.isNear.value) return;
+				if (!(await super.onClick())) return false;
 
 				await this.component(AlertComponent)?.alert(
 					'oOoOooOoo',
 					'disappear... oOOOOOoOOOOOOOOOOOOO',
 				);
-			}
 
-			protected override async onTouch(
-				iter: AsyncIterable<TScreenPosition[]>,
-			) {
-				await super.onTouch(iter);
+				return true;
 			}
 		}
 
