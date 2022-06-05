@@ -51,6 +51,10 @@ export abstract class AbstractEntity {
 		);
 	}
 
+	public remove() {
+		this.round.entityPool.remove(this);
+	}
+
 	public static *surroundingEntityAndDistances(
 		sourceEntity: AbstractEntity,
 		targetEntities: AbstractEntity[],
