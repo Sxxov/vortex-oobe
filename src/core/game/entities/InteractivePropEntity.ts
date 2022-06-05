@@ -14,12 +14,15 @@ import type { TUnabstract } from '../../blocks/types/TUnabstract';
 import type { AbstractComponent } from '../components/common/AbstractComponent';
 import { PlayerNearComponent } from '../components/highlight/PlayerNearComponent';
 import type { Round } from '../round/Round';
+import { DreamComponent } from '../components/dream/DreamComponent';
+import type { TDream } from '../components/dream/TDream';
 
 export abstract class InteractivePropEntity extends AbstractEntity {
 	public static for(
 		initialSprite: AbstractSprite,
 		consumedSprite: AbstractSprite,
 		size: TCellSize,
+		dream: TDream,
 	) {
 		return class extends InteractivePropEntity {
 			public static override readonly Components: readonly TUnabstract<
@@ -31,6 +34,7 @@ export abstract class InteractivePropEntity extends AbstractEntity {
 				ConsumableComponent.for(consumedSprite),
 				HighlightComponent,
 				PlayerNearComponent,
+				DreamComponent.for(dream),
 			] as const;
 		};
 	}

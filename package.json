@@ -5,7 +5,7 @@
 	"main": "",
 	"type": "module",
 	"scripts": {
-		"dev": "svelte-kit dev",
+		"dev": "svelte-kit dev --host --https",
 		"build": "svelte-kit build --verbose",
 		"preview": "svelte-kit preview",
 		"postinstall": "patch-package",
@@ -23,6 +23,7 @@
 		"@types/javascript-astar": "^0.0.31",
 		"@types/postcss-import": "^14.0.0",
 		"@types/tailwindcss": "^3.0.9",
+		"@types/three": "^0.140.0",
 		"@typescript-eslint/eslint-plugin": "^5.4.0",
 		"@typescript-eslint/parser": "^5.4.0",
 		"autoprefixer": "^10.4.0",
@@ -60,6 +61,7 @@
 		"kursor": "^0.1.6",
 		"lottie-web": "^5.9.1",
 		"smoothscroll-for-websites": "^1.4.10",
+		"three": "^0.140.2",
 		"ts-transformer-keys": "^0.4.3"
 	}
 }

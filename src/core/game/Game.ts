@@ -14,13 +14,19 @@ import type { TPositionStore } from './types/TPositionStore';
 
 export class Game {
 	public uiQueue = new ArrayStore<TUi>();
-	public rounds = new Array<Round>(GameConstants.ROUND_COUNT)
-		.fill(undefined as any)
-		.map((_, i, arr) => new Round(this, arr[i - 1]));
-
-	public round = new Store(this.rounds[0]);
+	public rounds: Round[] = [];
+	public round: Store<Round>;
 
 	constructor(public screenSpace: ScreenSpace) {
+		let prevRound: Round | undefined;
+		let currRound: Round | undefined;
+		for (let i = 0, l = GameConstants.ROUND_COUNT; i < l; ++i) {
+			this.rounds.push(
+				(currRound = new Round(this, prevRound, currRound)),
+			);
+		}
+
+		this.round = new Store(currRound!);
 		this.round.subscribe((round) => {
 			round.populate();
 		});
@@ -29,6 +35,43 @@ export class Game {
 			new PlaceholderSprite(),
 			new NullSprite(),
 			[2, 2],
+			{
+				heading: 'bruh',
+				message: 'bruhhhhh',
+				sprite: new PlaceholderSprite(),
+				options: ['bruhhhhhhhhh'],
+			},
+		) {
+			public static override Components: typeof InteractivePropEntity['Components'] =
+				[...super.Components, WallComponent, AlertComponent] as const;
+
+			public override position: TPositionStore = new ShapedArrayStore([
+				Math.floor(Math.random() * 31),
+				Math.floor(Math.random() * 31),
+			]);
+
+			protected override async onClick() {
+				if (!(await super.onClick())) return false;
+
+				await this.component(AlertComponent)?.alert(
+					'oOoOooOoo',
+					'disappear... oOOOOOoOOOOOOOOOOOOO',
+				);
+
+				return true;
+			}
+		}
+
+		class DoorEntity extends InteractivePropEntity.for(
+			new PlaceholderSprite(),
+			new NullSprite(),
+			[2, 2],
+			{
+				heading: 'bruh',
+				message: 'bruhhhhh',
+				sprite: new PlaceholderSprite(),
+				options: ['bruhhhhhhhhh'],
+			},
 		) {
 			public static override Components: typeof InteractivePropEntity['Components'] =
 				[...super.Components, WallComponent, AlertComponent] as const;
@@ -52,5 +95,9 @@ export class Game {
 
 		for (let i = 0, l = 32; i < l; ++i)
 			this.round.value.entityPool.push(new TestEntity(this.round.value));
+	}
+
+	public proceedToNextRound() {
+		if (this.round.value.next) this.round.set(this.round.value.next);
 	}
 }
