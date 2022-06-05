@@ -1,17 +1,12 @@
 import { Store } from '../../../blocks/store';
 import type { AbstractEntity } from '../../entities/AbstractEntity';
-import type { AbstractSprite } from '../../sprite/AbstractSprite';
+import type { Sprite } from '../../sprite/Sprite';
 import type { TCellSize } from '../../types/TCellSize';
 import { AbstractSpriteComponent } from './AbstractSpriteComponent';
 
-export abstract class DynamicSpriteComponent<
-	Sprite extends AbstractSprite,
-> extends AbstractSpriteComponent<Sprite> {
-	public static for<Sprite extends AbstractSprite>(
-		initialSprite: Sprite,
-		size: TCellSize,
-	) {
-		return class extends DynamicSpriteComponent<Sprite> {
+export abstract class DynamicSpriteComponent extends AbstractSpriteComponent {
+	public static for(initialSprite: Sprite, size: TCellSize) {
+		return class extends DynamicSpriteComponent {
 			public sprite = new Store(initialSprite);
 			public size = size;
 

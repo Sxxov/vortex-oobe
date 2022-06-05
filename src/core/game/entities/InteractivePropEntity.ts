@@ -1,6 +1,6 @@
 import { ConsumableComponent } from '../components/consumable/ConsumableComponent';
 import { DynamicSpriteComponent } from '../components/sprites/DynamicSpriteComponent';
-import type { AbstractSprite } from '../sprite/AbstractSprite';
+import type { Sprite } from '../sprite/Sprite';
 import { AbstractEntity } from './AbstractEntity';
 import { ClickableComponent } from '../components/listeners/clickable/ClickableComponent';
 import { TouchableComponent } from '../components/listeners/touchable/TouchableComponent';
@@ -19,8 +19,8 @@ import type { TDream } from '../components/dream/TDream';
 
 export abstract class InteractivePropEntity extends AbstractEntity {
 	public static for(
-		initialSprite: AbstractSprite,
-		consumedSprite: AbstractSprite,
+		initialSprite: Sprite,
+		consumedSprite: Sprite,
 		size: TCellSize,
 		dream: TDream,
 	) {
@@ -40,6 +40,7 @@ export abstract class InteractivePropEntity extends AbstractEntity {
 	}
 
 	protected isNear = this.component(PlayerNearComponent)!.isNear;
+	protected consumable = this.component(ConsumableComponent)!;
 
 	constructor(round: Round) {
 		super(round);
@@ -49,6 +50,10 @@ export abstract class InteractivePropEntity extends AbstractEntity {
 		this.isNear.subscribeLazy((isNear) => {
 			if (isNear) highlight.pushHighlight(HighlightLevels.LOW);
 			else highlight.popHighlight();
+		});
+
+		this.consumable.isConsumed.subscribeLazy((isConsumed) => {
+			if (isConsumed) void this.onConsume();
 		});
 	}
 
@@ -72,10 +77,10 @@ export abstract class InteractivePropEntity extends AbstractEntity {
 	protected async onClick() {
 		if (!this.isNear.value) return false;
 
-		const consumable = this.component(ConsumableComponent)!;
-
-		consumable.consume();
+		this.consumable.consume();
 
 		return true;
 	}
+
+	protected async onConsume() {}
 }

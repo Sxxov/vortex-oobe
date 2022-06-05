@@ -1,6 +1,9 @@
-import { AbstractSprite } from './AbstractSprite';
+import { Sprite } from './Sprite';
 
-export class NullSprite extends AbstractSprite {
-	public readonly src =
-		'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+export class NullSprite extends Sprite {
+	constructor() {
+		super(
+			'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
+		);
+	}
 }

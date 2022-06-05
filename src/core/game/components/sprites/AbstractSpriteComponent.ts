@@ -1,12 +1,10 @@
 import { Store } from '../../../blocks/store';
 import type { AbstractEntity } from '../../entities/AbstractEntity';
-import type { AbstractSprite } from '../../sprite/AbstractSprite';
+import type { Sprite } from '../../sprite/Sprite';
 import type { TCellSize } from '../../types/TCellSize';
 import { AbstractComponent } from '../common/AbstractComponent';
 
-export abstract class AbstractSpriteComponent<
-	Sprite extends AbstractSprite,
-> extends AbstractComponent {
+export abstract class AbstractSpriteComponent extends AbstractComponent {
 	public abstract sprite: Store<Sprite>;
 	public abstract size: TCellSize;
 	public boundingBox = new Store<DOMRect>(new DOMRect());

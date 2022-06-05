@@ -1,11 +1,11 @@
 import { Store } from '../../../blocks/store';
 import type { AbstractEntity } from '../../entities/AbstractEntity';
-import type { AbstractSprite } from '../../sprite/AbstractSprite';
+import type { Sprite } from '../../sprite/Sprite';
 import { AbstractComponent } from '../common/AbstractComponent';
 import { AbstractSpriteComponent } from '../sprites/AbstractSpriteComponent';
 
 export abstract class ConsumableComponent extends AbstractComponent {
-	public abstract consumedSprite: AbstractSprite;
+	public abstract consumedSprite: Sprite;
 	public isConsumed = new Store(false);
 
 	constructor(entity: AbstractEntity) {
@@ -24,7 +24,7 @@ export abstract class ConsumableComponent extends AbstractComponent {
 		});
 	}
 
-	public static for(consumedSprite: AbstractSprite) {
+	public static for(consumedSprite: Sprite) {
 		return class extends ConsumableComponent {
 			public consumedSprite = consumedSprite;
 		};

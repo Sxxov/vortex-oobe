@@ -1,23 +1,21 @@
 import { Store } from '../../../blocks/store';
 import { Directions } from '../../common/directions/Directions';
 import type { AbstractEntity } from '../../entities/AbstractEntity';
-import type { AbstractSprite } from '../../sprite/AbstractSprite';
+import type { Sprite } from '../../sprite/Sprite';
 import type { TCellSize } from '../../types/TCellSize';
 import { AbstractSpriteComponent } from './AbstractSpriteComponent';
 
-export abstract class FacingSpriteComponent<
-	Sprite extends AbstractSprite,
-> extends AbstractSpriteComponent<Sprite> {
-	public abstract readonly sprites: { [x in Directions]: AbstractSprite };
+export abstract class FacingSpriteComponent extends AbstractSpriteComponent {
+	public abstract readonly sprites: { [x in Directions]: Sprite };
 	public abstract readonly facing: Store<Directions>;
 
 	public static for(
-		sprites: { [x in Directions]: AbstractSprite },
+		sprites: { [x in Directions]: Sprite },
 		size: TCellSize,
 		initialDirection = Directions.DOWN,
 	) {
-		return class extends FacingSpriteComponent<typeof sprites[Directions]> {
-			public readonly sprite = new Store<AbstractSprite>(
+		return class extends FacingSpriteComponent {
+			public readonly sprite = new Store<Sprite>(
 				sprites[initialDirection],
 			);
 

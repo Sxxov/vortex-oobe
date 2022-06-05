@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Game } from '../../core/game/Game';
-	import type { AbstractSprite } from '../../core/game/sprite/AbstractSprite';
+	import type { Sprite } from '../../core/game/sprite/Sprite';
 
 	export let game: Game;
-	export let sprite: AbstractSprite;
+	export let sprite: Sprite;
 	export let isResponsive = false;
 
 	const { cellScreenSize: cellScreenSizeW } = game.screenSpace;
