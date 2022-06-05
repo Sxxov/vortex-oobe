@@ -1,6 +1,7 @@
 import { Store } from '../../blocks/store';
 import { DoublyLinkedNode } from '../../doubly-linked/DoublyLinkedNode';
 import { ConsumableComponent } from '../components/consumable/ConsumableComponent';
+import { DoorEntity } from '../entities/DoorEntity';
 import { PlayerEntity } from '../entities/PlayerEntity';
 import type { Game } from '../Game';
 import { EntityPool } from '../grid/EntityPool';
@@ -18,6 +19,7 @@ export class Round extends DoublyLinkedNode {
 		if (this.isPopulated) return;
 
 		this.entityPool.push(new PlayerEntity(this));
+		this.entityPool.push(new DoorEntity(this));
 
 		if (this.prev)
 			for (const entity of this.prev.entityPool) {

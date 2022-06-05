@@ -62,37 +62,6 @@ export class Game {
 			}
 		}
 
-		class DoorEntity extends InteractivePropEntity.for(
-			new PlaceholderSprite(),
-			new NullSprite(),
-			[2, 2],
-			{
-				heading: 'bruh',
-				message: 'bruhhhhh',
-				sprite: new PlaceholderSprite(),
-				options: ['bruhhhhhhhhh'],
-			},
-		) {
-			public static override Components: typeof InteractivePropEntity['Components'] =
-				[...super.Components, WallComponent, AlertComponent] as const;
-
-			public override position: TPositionStore = new ShapedArrayStore([
-				Math.floor(Math.random() * 31),
-				Math.floor(Math.random() * 31),
-			]);
-
-			protected override async onClick() {
-				if (!(await super.onClick())) return false;
-
-				await this.component(AlertComponent)?.alert(
-					'oOoOooOoo',
-					'disappear... oOOOOOoOOOOOOOOOOOOO',
-				);
-
-				return true;
-			}
-		}
-
 		for (let i = 0, l = 32; i < l; ++i)
 			this.round.value.entityPool.push(new TestEntity(this.round.value));
 	}
