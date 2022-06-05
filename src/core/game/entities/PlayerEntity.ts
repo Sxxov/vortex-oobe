@@ -77,7 +77,5 @@ export class PlayerEntity extends AbstractEntity {
 	}
 
 	@ClickableComponent.listener(ClickableListenerKinds.CLICK)
-	private async onClick() {
-		await this.component(AlertComponent)?.alert('ket', 'nyaaa');
-	}
+	private async onClick() {}
 }
