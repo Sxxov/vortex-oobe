@@ -16,6 +16,8 @@ import { PlayerNearComponent } from '../components/highlight/PlayerNearComponent
 import type { Round } from '../round/Round';
 import { DreamComponent } from '../components/dream/DreamComponent';
 import type { TDream } from '../components/dream/TDream';
+import { AlertComponent } from '../components/ui/AlertComponent';
+import { WallComponent } from '../components/wall/WallComponent';
 
 export abstract class InteractivePropEntity extends AbstractEntity {
 	public static for(
@@ -28,6 +30,8 @@ export abstract class InteractivePropEntity extends AbstractEntity {
 			public static override readonly Components: readonly TUnabstract<
 				typeof AbstractComponent
 			>[] = [
+				AlertComponent,
+				WallComponent,
 				DynamicSpriteComponent.for(initialSprite, size),
 				TouchableComponent,
 				ClickableComponent,
@@ -51,10 +55,6 @@ export abstract class InteractivePropEntity extends AbstractEntity {
 			if (isNear) highlight.pushHighlight(HighlightLevels.LOW);
 			else highlight.popHighlight();
 		});
-
-		this.consumable.isConsumed.subscribeLazy((isConsumed) => {
-			if (isConsumed) void this.onConsume();
-		});
 	}
 
 	@TouchableComponent.listener(TouchableListenerKinds.CONFINED)
@@ -77,10 +77,16 @@ export abstract class InteractivePropEntity extends AbstractEntity {
 	protected async onClick() {
 		if (!this.isNear.value) return false;
 
-		this.consumable.consume();
+		if (this.consumable.isConsumed.value) {
+			await this.onConsumedInteraction();
+		} else {
+			await this.onUnconsumedInteraction();
+			this.consumable.consume();
+		}
 
 		return true;
 	}
 
-	protected async onConsume() {}
+	protected async onUnconsumedInteraction() {}
+	protected async onConsumedInteraction() {}
 }
