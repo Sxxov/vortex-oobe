@@ -5,6 +5,7 @@
 	import type { TDream } from '../../core/game/components/dream/TDream';
 	import { UiKinds } from '../../core/game/components/ui/UiKinds';
 	import type { Game } from '../../core/game/Game';
+	import { PlaceholderSprite } from '../../core/game/sprite/PlaceholderSprite';
 	import { DeviceOrientationControls } from './dream/DeviceOrientationControls';
 	import { Css3dObject } from './dream/renderer/Css3dObject';
 	import { Css3dRenderer } from './dream/renderer/Css3dRenderer';
@@ -30,6 +31,17 @@
 
 	let hasMounted = false;
 
+	if (uis.length <= 0) {
+		uis = [
+			{
+				heading: 'You did nothing today',
+				message: 'Very productive.',
+				options: ['ok'],
+				sprite: new PlaceholderSprite(),
+			},
+		];
+	}
+
 	const elements: HTMLElement[] = new Array(uis.length);
 	const elementIndexToIsVisible: (boolean | undefined)[] = new Array(
 		uis.length,
@@ -38,10 +50,6 @@
 	const uiIndexToIsDismissed: boolean[] = [];
 
 	onMount(() => {
-		if (uis.length <= 0) {
-			dispatch('wake');
-		}
-
 		// set camera video feed
 		void (async () => {
 			cameraVideo.srcObject = await navigator.mediaDevices.getUserMedia({
