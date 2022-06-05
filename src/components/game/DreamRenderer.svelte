@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, createEventDispatcher } from 'svelte';
+	import { onMount, createEventDispatcher, onDestroy } from 'svelte';
 	import { Object3D, PerspectiveCamera, Scene } from 'three';
 	import { degToRad } from 'three/src/math/MathUtils';
 	import type { TDream } from '../../core/game/components/dream/TDream';
@@ -10,6 +10,7 @@
 	import { Css3dObject } from './dream/renderer/Css3dObject';
 	import { Css3dRenderer } from './dream/renderer/Css3dRenderer';
 	import UiRenderer from './UiRenderer.svelte';
+	import { fade } from '../../core/transitioner/Transitioner';
 
 	const dispatch = createEventDispatcher();
 
@@ -17,12 +18,18 @@
 	export let uis: TDream[];
 
 	const MAX_VISIBLE_COUNT = 4;
+	const VIDEO_LUMINANCE_CHECK_BLOCK_SIZE = 16;
 
 	let rendererDiv: HTMLDivElement;
 	let containerDivHeight = 0;
 	let containerDivWidth = 0;
 
-	let cameraVideo: HTMLVideoElement;
+	let video: HTMLVideoElement;
+	let videoLuminance = Infinity;
+	let videoLuminanceCanvas: HTMLCanvasElement;
+	let videoLuminanceUpdateIntervalHandle: ReturnType<typeof setInterval>;
+	let isTooBright = false;
+	let hasDarkenedOnce = false;
 
 	let scene: THREE.Scene;
 	let camera: THREE.PerspectiveCamera;
@@ -52,13 +59,70 @@
 	onMount(() => {
 		// set camera video feed
 		void (async () => {
-			cameraVideo.srcObject = await navigator.mediaDevices.getUserMedia({
+			video.srcObject = await navigator.mediaDevices.getUserMedia({
 				audio: false,
 				video: {
 					facingMode: 'environment',
 				},
 			});
 		})();
+
+		// update video luminance
+		videoLuminanceCanvas = document.createElement('canvas');
+		const ctx = videoLuminanceCanvas.getContext('2d')!;
+		videoLuminanceUpdateIntervalHandle = setInterval(() => {
+			ctx.drawImage(
+				video,
+				0,
+				0,
+				videoLuminanceCanvas.width,
+				videoLuminanceCanvas.height,
+			);
+
+			const data = ctx.getImageData(
+				0,
+				0,
+				videoLuminanceCanvas.width,
+				videoLuminanceCanvas.height,
+			);
+			const pixelCount =
+				(videoLuminanceCanvas.width * videoLuminanceCanvas.height) /
+				VIDEO_LUMINANCE_CHECK_BLOCK_SIZE;
+			let r = 0;
+			let g = 0;
+			let b = 0;
+
+			for (
+				let i = 0, l = data.data.length;
+				i < l;
+				i += 4 * VIDEO_LUMINANCE_CHECK_BLOCK_SIZE
+			) {
+				const a = data.data[i + 3];
+				const aFloat = a / 255;
+				r += data.data[i + 0] * aFloat;
+				g += data.data[i + 1] * aFloat;
+				b += data.data[i + 2] * aFloat;
+			}
+
+			// https://gist.github.com/jfsiii/5641126
+			const rFloat = r / 255 / pixelCount;
+			const gFloat = g / 255 / pixelCount;
+			const bFloat = b / 255 / pixelCount;
+
+			videoLuminance =
+				0.2126 *
+					(rFloat <= 0.03928
+						? rFloat / 12.92
+						: ((rFloat + 0.055) / 1.055) ** 2.4) +
+				0.7152 *
+					(gFloat <= 0.03928
+						? gFloat / 12.92
+						: ((gFloat + 0.055) / 1.055) ** 2.4) +
+				0.0722 *
+					(bFloat <= 0.03928
+						? bFloat / 12.92
+						: ((bFloat + 0.055) / 1.055) ** 2.4);
+		}, 500);
 
 		// setup scene
 		scene = new Scene();
@@ -126,6 +190,10 @@
 		hasMounted = true;
 	});
 
+	onDestroy(() => {
+		clearInterval(videoLuminanceUpdateIntervalHandle);
+	});
+
 	// when everything is false
 	$: if (
 		!elementIndexToIsVisible.some((isVisible) => isVisible !== undefined)
@@ -145,6 +213,18 @@
 
 		renderer.render(scene, camera);
 	}
+
+	// responsive video luminance canvas
+	$: if (videoLuminanceCanvas && video) {
+		videoLuminanceCanvas.height = containerDivHeight;
+		videoLuminanceCanvas.width = containerDivWidth;
+	}
+
+	$: if (videoLuminance < 0.02) {
+		hasDarkenedOnce = true;
+	}
+
+	$: isTooBright = videoLuminance > (hasDarkenedOnce ? 0.08 : 0.02);
 
 	$: {
 		let currVisibleCount = 0;
@@ -170,7 +250,7 @@
 	bind:clientWidth={containerDivWidth}
 	bind:this={rendererDiv}
 >
-	<video playsinline autoplay muted src="" bind:this={cameraVideo} />
+	<video playsinline autoplay muted src="" bind:this={video} />
 	{#each uis as ui, i}
 		<div
 			class="ui"
@@ -195,6 +275,11 @@
 			{/if}
 		</div>
 	{/each}
+	{#if isTooBright}
+		<div class="too-bright" in:fade out:fade>
+			<p>It's currently too bright to dream, dim your surroundings.</p>
+		</div>
+	{/if}
 </div>
 
 <style lang="postcss">
@@ -216,6 +301,24 @@
 
 			&.no {
 				pointer-events: none !important;
+			}
+		}
+
+		& > .too-bright {
+			@apply absolute
+				box-border
+				top-0
+				grid
+				items-center
+				justify-items-center
+				h-full
+				w-full;
+
+			background: #000;
+			padding: theme('padding');
+
+			& > p {
+				@apply text-center;
 			}
 		}
 	}
