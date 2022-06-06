@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount, createEventDispatcher, onDestroy } from 'svelte';
-	import { Object3D, PerspectiveCamera, Scene } from 'three';
-	import { degToRad } from 'three/src/math/MathUtils';
+	import { Object3D, PerspectiveCamera, Scene, MathUtils } from 'three';
 	import type { TDream } from '../../core/game/components/dream/TDream';
 	import { UiKinds } from '../../core/game/components/ui/UiKinds';
 	import type { Game } from '../../core/game/Game';
@@ -12,6 +11,7 @@
 	import UiRenderer from './UiRenderer.svelte';
 	import { fade } from '../../core/transitioner/Transitioner';
 
+	const { degToRad } = MathUtils;
 	const dispatch = createEventDispatcher();
 
 	export let game: Game;
