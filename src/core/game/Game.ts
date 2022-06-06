@@ -5,6 +5,7 @@ import { GameConstants } from './GameConstants';
 import { Round } from './round/Round';
 import type { ScreenSpace } from './screen/ScreenSpace';
 import { DirtyTeddyBearEntity } from './story/DirtyTeddyBearEntity';
+import { ToteBagEntity } from './story/ToteBagEntity';
 
 export class Game {
 	public uiQueue = new ArrayStore<TUi>();
@@ -27,6 +28,7 @@ export class Game {
 
 		this.round.value.entityPool.push(
 			new DirtyTeddyBearEntity(this.round.value),
+			new ToteBagEntity(this.round.value),
 		);
 	}
 
