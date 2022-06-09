@@ -4,7 +4,7 @@ import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { NullSprite } from '../sprite/NullSprite';
 import { PlaceholderSprite } from '../sprite/PlaceholderSprite';
 import type { TPositionStore } from '../types/TPositionStore';
-// import { TissueEntity } from './TissueEntity';
+import { BackpackWithLockEntity } from './BackpackWithLockEntity';
 
 export class BackpackEntity extends InteractivePropEntity.for(
 	new PlaceholderSprite(),
@@ -26,6 +26,8 @@ export class BackpackEntity extends InteractivePropEntity.for(
 			'You attempt to sneakily open it, see that there are books inside, but then get caught before you’re able to see what they’re about and you get caught!',
 		);
 
-		// this.round.next?.entityPool.push(new TissueEntity(this.round));
+		this.round.next?.entityPool.push(
+			new BackpackWithLockEntity(this.round),
+		);
 	}
 }

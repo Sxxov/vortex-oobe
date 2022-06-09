@@ -4,7 +4,7 @@ import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { NullSprite } from '../sprite/NullSprite';
 import { PlaceholderSprite } from '../sprite/PlaceholderSprite';
 import type { TPositionStore } from '../types/TPositionStore';
-// import { TissueEntity } from './TissueEntity';
+import { BackpackEntity } from './BackpackEntity';
 
 export class ToteBagEntity extends InteractivePropEntity.for(
 	new PlaceholderSprite(),
@@ -25,6 +25,6 @@ export class ToteBagEntity extends InteractivePropEntity.for(
 			'You try to open the door but its not possible. Charles sees it and takes the bag from you!',
 		);
 
-		// this.rou//nd.next?.entityPool.push(new TissueEntity(this.round));
+		this.round.next?.entityPool.push(new BackpackEntity(this.round));
 	}
 }
