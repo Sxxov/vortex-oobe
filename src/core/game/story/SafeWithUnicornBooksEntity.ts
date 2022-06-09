@@ -13,7 +13,7 @@ export class SafeWithUnicornBookEntity extends InteractivePropEntity.for(
 	{
 		heading: 'UGHHHH!',
 		message:
-			'Charles is so injued , he regrets bringing the books to class! Keeps them at home',
+			'Charles is so injured, he regrets bringing the books to class! Keeps them at home',
 		options: ['ok'],
 		sprite: new PlaceholderSprite(),
 	},

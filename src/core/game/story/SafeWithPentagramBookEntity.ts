@@ -13,7 +13,7 @@ export class SafeWithPentagramBookEntity extends InteractivePropEntity.for(
 	{
 		heading: 'UGHHHH!',
 		message:
-			'Charles is so injued , he regrets bringing the books to class! Keeps them at home',
+			'Charles is injured, he regrets bringing the books to class! Keeps them at home',
 		options: ['ok'],
 		sprite: new PlaceholderSprite(),
 	},

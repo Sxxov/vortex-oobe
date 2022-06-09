@@ -23,7 +23,7 @@ export class BackpackEntity extends InteractivePropEntity.for(
 	protected override async onUnconsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
 			'CAUGHT!',
-			'You attempt to sneakily open it, see that there are books inside, but then get caught before you’re able to see what they’re about and you get caught!',
+			'You attempt to sneakily open it, see that there are books inside, but then get caught before you’re able to see what they’re about!',
 		);
 
 		this.round.next?.entityPool.push(
