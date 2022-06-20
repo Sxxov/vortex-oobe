@@ -3,6 +3,7 @@ import type { TScreenPosition } from '../../../types/TScreenPosition';
 import { AbstractSpriteComponent } from '../../sprites/AbstractSpriteComponent';
 import { TouchableListenerKinds } from './TouchableListenerKinds';
 import { AbstractScreenListenerComponent } from '../AbstractScreenListenerComponent';
+import type { TScreenTouchPosition } from '../../../types/TScreenTouchPosition';
 
 export class TouchableComponent extends AbstractScreenListenerComponent {
 	public static override ClassToListenerKindToListenerKeys = new Map<
@@ -21,14 +22,13 @@ export class TouchableComponent extends AbstractScreenListenerComponent {
 		const spriteComponent = this.entity.component(AbstractSpriteComponent)!;
 
 		for (const [kind, keys] of this.listenerKindToListenerKeys) {
-			let resolve: (v: TScreenPosition[]) => void;
-			let promise: Promise<TScreenPosition[]> | undefined = new Promise(
-				(r) => {
+			let resolve: (v: TScreenTouchPosition[]) => void;
+			let promise: Promise<TScreenTouchPosition[]> | undefined =
+				new Promise((r) => {
 					resolve = r;
-				},
-			);
+				});
 
-			const asyncIterable: AsyncIterable<TScreenPosition[]> = {
+			const asyncIterable: AsyncIterable<TScreenTouchPosition[]> = {
 				[Symbol.asyncIterator]: () => ({
 					async next() {
 						return {
@@ -37,7 +37,7 @@ export class TouchableComponent extends AbstractScreenListenerComponent {
 							done: !promise,
 						};
 					},
-					async return(value: TScreenPosition[]) {
+					async return(value: TScreenTouchPosition[]) {
 						promise = undefined;
 
 						destroy();
@@ -55,7 +55,7 @@ export class TouchableComponent extends AbstractScreenListenerComponent {
 				// unconfined won't check if the touch is inside of the bounding box
 				// & will fire regardless until the user lets go
 				if (kind === TouchableListenerKinds.UNCONFINED) {
-					resolve(TouchableComponent.eventToScreenPositions(e));
+					resolve(TouchableComponent.eventToScreenTouchPositions(e));
 
 					promise = new Promise((r) => {
 						resolve = r;
@@ -65,8 +65,8 @@ export class TouchableComponent extends AbstractScreenListenerComponent {
 				// & will stop listening when the user leaves the bounding box
 				else if (kind === TouchableListenerKinds.CONFINED) {
 					const intersectingScreenPositions =
-						TouchableComponent.intersectingScreenPositions(
-							TouchableComponent.eventToScreenPositions(e),
+						TouchableComponent.intersectingScreenTouchPositions(
+							TouchableComponent.eventToScreenTouchPositions(e),
 							spriteComponent.boundingBox.value,
 						);
 
@@ -88,9 +88,11 @@ export class TouchableComponent extends AbstractScreenListenerComponent {
 			const onTouchEnd = (e: TouchEvent | MouseEvent) => {
 				resolve(
 					kind === TouchableListenerKinds.UNCONFINED
-						? TouchableComponent.eventToScreenPositions(e)
-						: TouchableComponent.intersectingScreenPositions(
-								TouchableComponent.eventToScreenPositions(e),
+						? TouchableComponent.eventToScreenTouchPositions(e)
+						: TouchableComponent.intersectingScreenTouchPositions(
+								TouchableComponent.eventToScreenTouchPositions(
+									e,
+								),
 								spriteComponent.boundingBox.value,
 						  ),
 				);

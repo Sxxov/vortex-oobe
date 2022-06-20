@@ -1,8 +1,9 @@
 import { UnreachableError } from '../../../../resources/errors';
 import type { AbstractEntity } from '../../entities/AbstractEntity';
-import type { TScreenPosition } from '../../types/TScreenPosition';
+import type { TScreenTouchPosition } from '../../types/TScreenTouchPosition';
 import { AbstractSpriteComponent } from '../sprites/AbstractSpriteComponent';
 import { AbstractListenerComponent } from './AbstractListenerComponent';
+import { ellipseBox } from 'intersects';
 
 export abstract class AbstractScreenListenerComponent extends AbstractListenerComponent {
 	constructor(entity: AbstractEntity) {
@@ -22,11 +23,11 @@ export abstract class AbstractScreenListenerComponent extends AbstractListenerCo
 		if (this.entity.round.game.uiQueue.length > 0) return;
 
 		const touchScreenPositions =
-			AbstractScreenListenerComponent.eventToScreenPositions(e);
+			AbstractScreenListenerComponent.eventToScreenTouchPositions(e);
 
 		const spriteComponent = this.entity.component(AbstractSpriteComponent)!;
 		const intersectingScreenPositions =
-			AbstractScreenListenerComponent.intersectingScreenPositions(
+			AbstractScreenListenerComponent.intersectingScreenTouchPositions(
 				touchScreenPositions,
 				spriteComponent.boundingBox.value,
 			);
@@ -35,33 +36,33 @@ export abstract class AbstractScreenListenerComponent extends AbstractListenerCo
 			this.onIntersectingTouchStart(e);
 	}
 
-	protected static eventToScreenPositions(
+	protected static eventToScreenTouchPositions(
 		e: TouchEvent | MouseEvent,
-	): TScreenPosition[] {
+	): TScreenTouchPosition[] {
 		if (typeof TouchEvent !== 'undefined' && e instanceof TouchEvent)
-			return Array.from(e.touches).map(({ clientX, clientY }) => [
-				clientX,
-				clientY,
-			]);
+			return Array.from(e.touches).map(
+				({ clientX, clientY, radiusX, radiusY }) => [
+					clientX,
+					clientY,
+					radiusX * 20,
+					radiusY * 20,
+				],
+			);
 
 		if (typeof MouseEvent !== 'undefined' && e instanceof MouseEvent)
-			return [[e.clientX, e.clientY]];
+			return [[e.clientX, e.clientY, 0, 0]];
 
 		throw new UnreachableError(
 			`unknown touch event type: ${e.constructor.name}`,
 		);
 	}
 
-	protected static intersectingScreenPositions(
-		screenPositions: TScreenPosition[],
+	protected static intersectingScreenTouchPositions(
+		screenPositions: TScreenTouchPosition[],
 		rect: DOMRect,
 	) {
-		return screenPositions.filter(
-			([x, y]) =>
-				x > rect.left &&
-				x < rect.right &&
-				y > rect.top &&
-				y < rect.bottom,
+		return screenPositions.filter(([x, y, rx, ry]) =>
+			ellipseBox(x, y, rx, ry, rect.x, rect.y, rect.width, rect.height),
 		);
 	}
 }

@@ -29,10 +29,10 @@ export class ClickableComponent extends AbstractScreenListenerComponent {
 
 		const onTouchEnd = () => {
 			const touchScreenPositions =
-				ClickableComponent.eventToScreenPositions(e);
+				ClickableComponent.eventToScreenTouchPositions(e);
 
 			const intersectingScreenPositions =
-				ClickableComponent.intersectingScreenPositions(
+				ClickableComponent.intersectingScreenTouchPositions(
 					touchScreenPositions,
 					spriteComponent.boundingBox.value,
 				);

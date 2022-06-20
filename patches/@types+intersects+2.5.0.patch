@@ -1,0 +1,782 @@
+diff --git a/node_modules/@types/intersects/index.d.ts b/node_modules/@types/intersects/index.d.ts
+index 1062b2f..ed9acf9 100644
+--- a/node_modules/@types/intersects/index.d.ts
++++ b/node_modules/@types/intersects/index.d.ts
+@@ -3,6 +3,17 @@
+ // Definitions by: Voxylu <https://github.com/voxylu>
+ // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+ 
++/**
++ * box-box collision
++ * @param x1 top-left corner of first box
++ * @param y1 top-left corner of first box
++ * @param w1 width of first box
++ * @param h1 height of first box
++ * @param x2 top-left corner of second box
++ * @param y2 top-left corner of second box
++ * @param w2 width of second box
++ * @param h2 height of second box
++ */
+ export function boxBox(
+     x1: number,
+     y1: number,
+@@ -14,6 +25,16 @@ export function boxBox(
+     h2: number
+ ): boolean;
+ 
++/**
++ * box-circle collision
++ * @param xb top-left corner of box
++ * @param yb top-left corner of box
++ * @param wb width of box
++ * @param hb height of box
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ */
+ export function boxCircle(
+     xb: number,
+     yb: number,
+@@ -24,6 +45,39 @@ export function boxCircle(
+     rc: number
+ ): boolean;
+ 
++/**
++ * box-circleOutline (axis-aligned) collision
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ * @param x top-left corner of box
++ * @param y top-left corner of box
++ * @param width of box
++ * @param height of box
++ * @param thickness of circle outline
++ */
++export function boxCircleOutline(
++    x: number,
++    y: number,
++    width: number,
++    height: number,
++    xc: number,
++    yc: number,
++    rc: number,
++    thickness: number
++): boolean;
++
++/**
++ * box-ellipse (axis-oriented rectangle) collision
++ * @param xb top-left corner of rectangle
++ * @param yb top-left corner of rectangle
++ * @param wb width of rectangle
++ * @param hb height of rectangle
++ * @param xe center of ellipse
++ * @param ye center of ellipse
++ * @param rex radius-x of ellipse
++ * @param rey radius-y of ellipse
++ */
+ export function boxEllipse(
+     xb: number,
+     yb: number,
+@@ -35,6 +89,17 @@ export function boxEllipse(
+     rey: number
+ ): boolean;
+ 
++/**
++ * box-line collision
++ * @param xb top-left corner of box
++ * @param yb top-left corner of box
++ * @param wb width of box
++ * @param hb height of box
++ * @param x1 first point of line
++ * @param y1 first point of line
++ * @param x2 second point of line
++ * @param y2 second point of line
++ */
+ export function boxLine(
+     xb: number,
+     yb: number,
+@@ -46,6 +111,15 @@ export function boxLine(
+     y2: number
+ ): boolean;
+ 
++/**
++ * box-point collision
++ * @param x1 top-left corner of box
++ * @param y1 top-left corner of box
++ * @param w1 width of box
++ * @param h1 height of box
++ * @param x2 of point
++ * @param y2 of point
++ */
+ export function boxPoint(
+     x1: number,
+     y1: number,
+@@ -55,6 +129,14 @@ export function boxPoint(
+     y2: number
+ ): boolean;
+ 
++/**
++ * box-polygon collision
++ * @param xb top-left corner of box
++ * @param yb top-left corner of box
++ * @param wb width of box
++ * @param hb height of box
++ * @param points of polygon
++ */
+ export function boxPolygon(
+     xb: number,
+     yb: number,
+@@ -63,6 +145,17 @@ export function boxPolygon(
+     points: number[]
+ ): boolean;
+ 
++/**
++ * circle-box (axis-oriented rectangle) collision
++ * from http://stackoverflow.com/a/402010/1955997
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ * @param xb top-left corner of rectangle
++ * @param yb top-left corner of rectangle
++ * @param wb width of rectangle
++ * @param hb height of rectangle
++ */
+ export function circleBox(
+     xc: number,
+     yc: number,
+@@ -73,6 +166,15 @@ export function circleBox(
+     hb: number
+ ): boolean;
+ 
++/**
++ * circle-circle collision
++ * @param x1 center of circle 1
++ * @param y1 center of circle 1
++ * @param r1 radius of circle 1
++ * @param x2 center of circle 2
++ * @param y2 center of circle 2
++ * @param r2 radius of circle 2
++ */
+ export function circleCircle(
+     x1: number,
+     y1: number,
+@@ -82,6 +184,34 @@ export function circleCircle(
+     r2: number
+ ): boolean;
+ 
++/**
++ * circle-circleOutline collision
++ * @param xco center of circle outline
++ * @param yco center of circle outline
++ * @param rco radius of circle outline
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ */
++export function circleCircleOutline(
++    xco: number,
++    yco: number,
++    rco: number,
++    xc: number,
++    yc: number,
++    rc: number
++): boolean;
++
++/**
++ * circle-ellipse collision
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ * @param xe center of ellipse
++ * @param ye center of ellipse
++ * @param rex radius-x of ellipse
++ * @param rey radius-y of ellipse
++ */
+ export function circleEllipse(
+     xc: number,
+     yc: number,
+@@ -92,6 +222,17 @@ export function circleEllipse(
+     rey: number
+ ): boolean;
+ 
++/**
++ * circle-line collision
++ * from http://stackoverflow.com/a/10392860/1955997
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ * @param x1 first point of line
++ * @param y1 first point of line
++ * @param x2 second point of line
++ * @param y2 second point of line
++ */
+ export function circleLine(
+     xc: number,
+     yc: number,
+@@ -102,6 +243,14 @@ export function circleLine(
+     y2: number
+ ): boolean;
+ 
++/**
++ * circle-point collision
++ * @param x1 center of circle
++ * @param y1 center of circle
++ * @param r1 radius of circle
++ * @param x2 point
++ * @param y2 point
++ */
+ export function circlePoint(
+     x1: number,
+     y1: number,
+@@ -110,6 +259,14 @@ export function circlePoint(
+     y2: number
+ ): boolean;
+ 
++/**
++ * circle-polygon collision
++ * from http://stackoverflow.com/a/402019/1955997
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ * @param points [x1, y1, x2, y2, ... xn, yn] of polygon
++ */
+ export function circlePolygon(
+     xc: number,
+     yc: number,
+@@ -117,6 +274,99 @@ export function circlePolygon(
+     points: number[]
+ ): boolean;
+ 
++/**
++ * circleOutline-box (axis-aligned) collision
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ * @param x top-left corner of box
++ * @param y top-left corner of box
++ * @param width of box
++ * @param height of box
++ * @param thickness of circle outline
++ */
++export function circleOutlineBox(
++    xc: number,
++    yc: number,
++    rc: number,
++    x: number,
++    y: number,
++    width: number,
++    height: number,
++    thickness: number
++): boolean;
++
++/**
++ * circleOutline-circle collision
++ * @param xco center of circle outline
++ * @param yco center of circle outline
++ * @param rco radius of circle outline
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ * @param thickness of circle outline
++ */
++export function circleOutlineCircle(
++    xc: number,
++    yc: number,
++    rc: number,
++    xco: number,
++    yco: number,
++    rco: number,
++    thickness: number
++)
++
++/**
++ * circleOutline-line collision
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ * @param x1 of point 1 of line
++ * @param y1 of point 1 of line
++ * @param x2 of point 2 of line
++ * @param y2 of point 2 of line
++ * @param thickness of circle outline
++ */
++export function circleOutlineLine(
++    xc: number,
++    yc: number,
++    rc: number,
++    x1: number,
++    y1: number,
++    x2: number,
++    y2: number,
++    thickness: number
++): boolean;
++
++/**
++ * circleOutline-point collision
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ * @param x of point
++ * @param y of point
++ * @param thickness of circle outline
++ */
++export function circleOutlinePoint(
++    xc: number,
++    yc: number,
++    rc: number,
++    x: number,
++    y: number,
++    thickness: number
++): boolean;
++
++/**
++ * ellipse-box (axis-oriented rectangle) collision
++ * @param xe center of ellipse
++ * @param ye center of ellipse
++ * @param rex radius-x of ellipse
++ * @param rey radius-y of ellipse
++ * @param xb top-left corner of box
++ * @param yb top-left corner of box
++ * @param wb width of box
++ * @param hb height of box
++ */
+ export function ellipseBox(
+     xe: number,
+     ye: number,
+@@ -128,6 +378,16 @@ export function ellipseBox(
+     hb: number
+ ): boolean;
+ 
++/**
++ * ellipse-circle collision
++ * @param xe center of ellipse
++ * @param ye center of ellipse
++ * @param rex radius-x of ellipse
++ * @param rey radius-y of ellipse
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ */
+ export function ellipseCircle(
+     xe: number,
+     ye: number,
+@@ -138,6 +398,17 @@ export function ellipseCircle(
+     rc: number
+ ): boolean;
+ 
++/**
++ * ellipse-ellipse collision
++ * @param x1 center of ellipse 1
++ * @param y1 center of ellipse 1
++ * @param r1x radius-x of ellipse 1
++ * @param r1y radius-y of ellipse 1
++ * @param x2 center of ellipse 2
++ * @param y2 center of ellipse 2
++ * @param r2x radius of ellipse 2
++ * @param r2y radius of ellipse 2
++ */
+ export function ellipseEllipse(
+     x1: number,
+     y1: number,
+@@ -149,6 +420,18 @@ export function ellipseEllipse(
+     r2y: number
+ ): boolean;
+ 
++/**
++ * ellipse-line collision
++ * adapted from http://csharphelper.com/blog/2017/08/calculate-where-a-line-segment-and-an-ellipse-intersect-in-c/
++ * @param xe center of ellipse
++ * @param ye center of ellipse
++ * @param rex radius-x of ellipse
++ * @param rey radius-y of ellipse
++ * @param x1 first point of line
++ * @param y1 first point of line
++ * @param x2 second point of line
++ * @param y2 second point of line
++ */
+ export function ellipseLine(
+     xe: number,
+     ye: number,
+@@ -160,6 +443,15 @@ export function ellipseLine(
+     y2: number
+ ): boolean;
+ 
++/**
++ * ellipse-point collision
++ * @param xe center of ellipse
++ * @param ye center of ellipse
++ * @param rex radius-x of ellipse
++ * @param rey radius-y of ellipse
++ * @param x1 point
++ * @param y1 point
++ */
+ export function ellipsePoint(
+     xe: number,
+     ye: number,
+@@ -169,6 +461,14 @@ export function ellipsePoint(
+     y1: number
+ ): boolean;
+ 
++/**
++ * ellipse-polygon collision
++ * @param xe center of ellipse
++ * @param ye center of ellipse
++ * @param rex radius-x of ellipse
++ * @param rey radius-y of ellipse
++ * @param points [x1, y1, x2, y2, ... xn, yn] of polygon
++ */
+ export function ellipsePolygon(
+     xe: number,
+     ye: number,
+@@ -177,6 +477,17 @@ export function ellipsePolygon(
+     points: number[]
+ ): boolean;
+ 
++/**
++ * line-box collision
++ * @param x1 point 1 of line
++ * @param y1 point 1 of line
++ * @param x2 point 2 of line
++ * @param y2 point 2 of line
++ * @param xb top-left of box
++ * @param yb top-left of box
++ * @param wb width of box
++ * @param hb height of box
++ */
+ export function lineBox(
+     x1: number,
+     y1: number,
+@@ -188,6 +499,16 @@ export function lineBox(
+     hb: number
+ ): boolean;
+ 
++/**
++ * line-circle collision
++ * @param x1 point 1 of line
++ * @param y1 point 1 of line
++ * @param x2 point 2 of line
++ * @param y2 point 2 of line
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ */
+ export function lineCircle(
+     x1: number,
+     y1: number,
+@@ -198,6 +519,39 @@ export function lineCircle(
+     rc: number
+ ): boolean;
+ 
++/**
++ * line-circleOutline collision
++ * @param x1 of point 1 of line
++ * @param y1 of point 1 of line
++ * @param x2 of point 2 of line
++ * @param y2 of point 2 of line
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ * @param thickness of circle outline
++ */
++export function lineCircleOutline(
++    x1: number,
++    y1: number,
++    x2: number,
++    y2: number,
++    xc: number,
++    yc: number,
++    rc: number,
++    thickness: number
++): boolean;
++
++/**
++ * line-ellipse collision
++ * @param x1 first point of line
++ * @param y1 first point of line
++ * @param x2 second point of line
++ * @param y2 second point of line
++ * @param xe center of ellipse
++ * @param ye center of ellipse
++ * @param rx radius-x of ellipse
++ * @param ry radius-y of ellipse
++ */
+ export function lineEllipse(
+     x1: number,
+     y1: number,
+@@ -209,6 +563,20 @@ export function lineEllipse(
+     rey: number
+ ): boolean;
+ 
++/**
++ * line-line collision
++ * from http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
++ * @param x1 first point in line 1
++ * @param y1 first point in line 1
++ * @param x2 second point in line 1
++ * @param y2 second point in line 1
++ * @param x3 first point in line 2
++ * @param y3 first point in line 2
++ * @param x4 second point in line 2
++ * @param y4 second point in line 2
++ * @param [thickness1] of line 1 (the line is centered in its thickness--see demo)
++ * @param [thickness2] of line 2 (the line is centered in its thickness--see demo)
++ */
+ export function lineLine(
+     x1: number,
+     y1: number,
+@@ -220,6 +588,17 @@ export function lineLine(
+     y4: number
+ ): boolean;
+ 
++/**
++ * line-point collision
++ * from https://stackoverflow.com/a/17693146/1955997
++ * @param x1 first point in line
++ * @param y1 first point in line
++ * @param x2 second point in line
++ * @param y2 second point in line
++ * @param xp point
++ * @param yp point
++ * @param [tolerance=1]
++ */
+ export function linePoint(
+     x1: number,
+     y1: number,
+@@ -230,6 +609,15 @@ export function linePoint(
+     tolerance: number
+ ): boolean;
+ 
++/**
++ * line-polygon collision
++ * @param x1 point 1 of line
++ * @param y1 point 1 of line
++ * @param x2 point 2 of line
++ * @param y2 point 2 of line
++ * @param points of polygon
++ * @param maximum distance of point to polygon's edges that triggers collision (see pointLine)
++ */
+ export function linePolygon(
+     x1: number,
+     y1: number,
+@@ -239,6 +627,54 @@ export function linePolygon(
+     tolerance: number
+ ): boolean;
+ 
++/**
++ * lineToLine helper function (to avoid circular dependencies)
++ * from http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
++ * @param x1 first point in line 1
++ * @param y1 first point in line 1
++ * @param x2 second point in line 1
++ * @param y2 second point in line 1
++ * @param x3 first point in line 2
++ * @param y3 first point in line 2
++ * @param x4 second point in line 2
++ * @param y4 second point in line 2
++ */
++export function lineToLine(
++    x1: number,
++    y1: number,
++    x2: number,
++    y2: number,
++    x3: number,
++    y3: number,
++    x4: number,
++    y4: number
++): boolean;
++
++/**
++ * turns a line into a polygon using thickness
++ * @param x1 first point of line
++ * @param y1 first point of line
++ * @param x2 second point of line
++ * @param y2 second point of line
++ * @param thickness of line
++ */
++export function lineToPolygon(
++    x1: number,
++    y1: number,
++    x2: number,
++    y2: number,
++    thickness: number
++): boolean;
++
++/**
++ * point-box collision
++ * @param x1 point
++ * @param y1 point
++ * @param xb top-left corner of box
++ * @param yb top-left corner of box
++ * @param wb width of box
++ * @param hb height of box
++ */
+ export function pointBox(
+     x1: number,
+     y1: number,
+@@ -248,6 +684,14 @@ export function pointBox(
+     hb: number
+ ): boolean;
+ 
++/**
++ * point-circle collision
++ * @param x1 point
++ * @param y1 point
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ */
+ export function pointCircle(
+     x1: number,
+     y1: number,
+@@ -256,6 +700,33 @@ export function pointCircle(
+     rc: number
+ ): boolean;
+ 
++/**
++ * point-circleOutline collision
++ * @param x of point
++ * @param y of point
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ * @param thickness of circle outline
++ */
++export function pointCircleOutline(
++    x: number,
++    y: number,
++    xc: number,
++    yc: number,
++    rc: number,
++    thickness: number
++): boolean;
++
++/**
++ * point-ellipse collision
++ * @param x1 point
++ * @param y1 point
++ * @param xe center of ellipse
++ * @param ye center of ellipse
++ * @param rex radius-x of ellipse
++ * @param rey radius-y of ellipse
++ */
+ export function pointEllipse(
+     x1: number,
+     y1: number,
+@@ -265,6 +736,15 @@ export function pointEllipse(
+     rey: number
+ ): boolean;
+ 
++/**
++ * point-line collision
++ * @param xp point
++ * @param yp point
++ * @param x1 first point in line
++ * @param y1 first point in line
++ * @param x2 second point in line
++ * @param y2 second point in line
++ */
+ export function pointLine(
+     xp: number,
+     yp: number,
+@@ -274,6 +754,14 @@ export function pointLine(
+     y2: number
+ ): boolean;
+ 
++/**
++ * point-polygon collision
++ * based on https://stackoverflow.com/a/17490923/1955997
++ * @param x1
++ * @param y1
++ * @param points
++ * @param [tolerance=1] maximum distance of point to polygon's edges that triggers collision (see pointLine)
++ */
+ export function pointPolygon(
+     x1: number,
+     y1: number,
+@@ -281,6 +769,14 @@ export function pointPolygon(
+     tolerance: number
+ ): boolean;
+ 
++/**
++ * polygon-box collision
++ * @param points [x1, y1, x2, y2, ... xn, yn] of polygon
++ * @param x of box
++ * @param y of box
++ * @param w of box
++ * @param h of box
++ */
+ export function polygonBox(
+     points: number[],
+     x: number,
+@@ -289,6 +785,14 @@ export function polygonBox(
+     h: number
+ ): boolean;
+ 
++/**
++ * polygon-circle collision
++ * @param points [x1, y1, x2, y2, ... xn, yn] of polygon
++ * @param xc center of circle
++ * @param yc center of circle
++ * @param rc radius of circle
++ * @param [tolerance=1] maximum distance of point to polygon's edges that triggers collision (see pointLine)
++ */
+ export function polygonCircle(
+     points: number[],
+     xc: number,
+@@ -296,6 +800,14 @@ export function polygonCircle(
+     rc: number
+ ): boolean;
+ 
++/**
++ * polygon-ellipse collision
++ * @param points [x1, y1, x2, y2, ... xn, yn] of polygon
++ * @param xe center of ellipse
++ * @param ye center of ellipse
++ * @param rex radius-x of ellipse
++ * @param rey radius-y of ellipse
++ */
+ export function polygonEllipse(
+     points: number[],
+     xe: number,
+@@ -304,6 +816,15 @@ export function polygonEllipse(
+     rey: number
+ ): boolean;
+ 
++/**
++ * polygon-line collisions
++ * @param points [x1, y1, x2, y2, ... xn, yn] of polygon
++ * @param x1 first point in line
++ * @param y1 first point in line
++ * @param x2 second point in line
++ * @param y2 second point in line
++ * @param maximum distance of point to polygon's edges that triggers collision (see pointLine)
++ */
+ export function polygonLine(
+     points: number[],
+     x1: number,
+@@ -313,6 +834,14 @@ export function polygonLine(
+     tolerance: number
+ ): boolean;
+ 
++/**
++ * polygon-point collision
++ * based on https://stackoverflow.com/a/17490923/1955997
++ * @param points [x1, y1, x2, y2, ... xn, yn] of polygon
++ * @param x of point
++ * @param y of point
++ * @param [tolerance=1] maximum distance of point to polygon's edges that triggers collision (see pointLine)
++ */
+ export function polygonPoint(
+     points: number[],
+     x: number,
+@@ -320,4 +849,10 @@ export function polygonPoint(
+     tolerance: number
+ ): boolean;
+ 
++/**
++ * polygon-polygon collision
++ * based on http://stackoverflow.com/questions/10962379/how-to-check-intersection-between-2-rotated-rectangles
++ * @param points1 [x1, y1, x2, y2, ... xn, yn] of first polygon
++ * @param points2 [x1, y1, x2, y2, ... xn, yn] of second polygon
++ */
+ export function polygonPolygon(points1: number[], points2: number[]): boolean;
