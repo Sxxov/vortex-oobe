@@ -97,7 +97,7 @@
 		height: 100%;
 		width: 100%;
 
-		background: var(--colour-background-primary);
+		background: #000;
 
 		position: fixed;
 		top: 0;
