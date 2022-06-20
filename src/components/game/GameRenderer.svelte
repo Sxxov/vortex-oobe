@@ -13,6 +13,7 @@
 	import DreamRenderer from './DreamRenderer.svelte';
 	import EntityRenderer from './EntityRenderer.svelte';
 	import UiRenderer from './UiRenderer.svelte';
+	import { fade } from '../../core/transitioner/Transitioner';
 
 	let screenSpace: ScreenSpace;
 	let game: Game;
@@ -81,27 +82,30 @@
 >
 	{#if hasMounted}
 		{#if $isDreamingW}
-			<DreamRenderer
-				{game}
-				uis={dreamUis}
-				on:wake={() => {
-					game.proceedToNextRound();
-					console.log('wake');
-				}}
-			/>
-		{:else}
-			{#if $uiQueueW[0]}
-				<UiRenderer
-					ui={$uiQueueW[0]}
+			<div class="content">
+				<DreamRenderer
 					{game}
-					on:result={() => {
-						uiQueueW.shift();
+					uis={dreamUis}
+					on:wake={() => {
+						game.proceedToNextRound();
 					}}
 				/>
-			{/if}
-			{#each $entityPoolW as entity}
-				<EntityRenderer {entity} {game} />
-			{/each}
+			</div>
+		{:else}
+			<div class="content" in:fade={{ duration: 1000 }}>
+				{#if $uiQueueW[0]}
+					<UiRenderer
+						ui={$uiQueueW[0]}
+						{game}
+						on:result={() => {
+							uiQueueW.shift();
+						}}
+					/>
+				{/if}
+				{#each $entityPoolW as entity}
+					<EntityRenderer {entity} {game} />
+				{/each}
+			</div>
 		{/if}
 	{/if}
 </div>
@@ -114,6 +118,11 @@
 		&.dreaming {
 			height: 100vh;
 			width: 100vw;
+		}
+
+		& > .content {
+			@apply h-full
+				w-full;
 		}
 	}
 </style>
