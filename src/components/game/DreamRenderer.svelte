@@ -16,6 +16,10 @@
 
 	export let game: Game;
 	export let uis: TDream[];
+	export let enforceLuminance =
+		new URLSearchParams(window.location.search).get(
+			'dream-enforce-luminance',
+		) !== 'false';
 
 	const MAX_VISIBLE_COUNT = 4;
 	const VIDEO_LUMINANCE_CHECK_BLOCK_SIZE = 16;
@@ -25,11 +29,17 @@
 	let containerDivWidth = 0;
 
 	let video: HTMLVideoElement;
-	let videoLuminance = Infinity;
 	let videoLuminanceCanvas: HTMLCanvasElement;
 	let videoLuminanceUpdateIntervalHandle: ReturnType<typeof setInterval>;
+	let videoLuminanceHistory = new Array<number>(10).fill(0);
+	let videoLuminance = 0;
 	let isTooBright = false;
-	let hasDarkenedOnce = false;
+
+	let isEyeOpen = true;
+	let isWaking = false;
+
+	let wobblyInFilter: SVGFilterElement;
+	let wobblyOutFilter: SVGFilterElement;
 
 	let scene: THREE.Scene;
 	let camera: THREE.PerspectiveCamera;
@@ -109,20 +119,23 @@
 			const gFloat = g / 255 / pixelCount;
 			const bFloat = b / 255 / pixelCount;
 
-			videoLuminance =
+			videoLuminanceHistory.shift();
+			videoLuminanceHistory.push(
 				0.2126 *
 					(rFloat <= 0.03928
 						? rFloat / 12.92
 						: ((rFloat + 0.055) / 1.055) ** 2.4) +
-				0.7152 *
-					(gFloat <= 0.03928
-						? gFloat / 12.92
-						: ((gFloat + 0.055) / 1.055) ** 2.4) +
-				0.0722 *
-					(bFloat <= 0.03928
-						? bFloat / 12.92
-						: ((bFloat + 0.055) / 1.055) ** 2.4);
-		}, 500);
+					0.7152 *
+						(gFloat <= 0.03928
+							? gFloat / 12.92
+							: ((gFloat + 0.055) / 1.055) ** 2.4) +
+					0.0722 *
+						(bFloat <= 0.03928
+							? bFloat / 12.92
+							: ((bFloat + 0.055) / 1.055) ** 2.4),
+			);
+			videoLuminanceHistory = videoLuminanceHistory;
+		}, 100);
 
 		// setup scene
 		scene = new Scene();
@@ -198,7 +211,13 @@
 	$: if (
 		!elementIndexToIsVisible.some((isVisible) => isVisible !== undefined)
 	) {
-		dispatch('wake');
+		isWaking = true;
+	}
+
+	$: if (isWaking) {
+		setTimeout(() => {
+			dispatch('wake');
+		}, 2000);
 	}
 
 	// reset
@@ -220,11 +239,23 @@
 		videoLuminanceCanvas.width = containerDivWidth;
 	}
 
-	$: if (videoLuminance < 0.02) {
-		hasDarkenedOnce = true;
-	}
+	$: videoLuminance =
+		videoLuminanceHistory.reduce((a, b) => a + b) /
+		videoLuminanceHistory.length;
 
-	$: isTooBright = videoLuminance > (hasDarkenedOnce ? 0.08 : 0.02);
+	$: isTooBright = enforceLuminance && videoLuminance > 0.08;
+
+	$: isEyeOpen = !isTooBright;
+
+	$: if (isWaking) {
+		wobblyOutFilter?.querySelectorAll('animate').forEach((elem) => {
+			elem.beginElement();
+		});
+	} else {
+		wobblyInFilter?.querySelectorAll('animate').forEach((elem) => {
+			elem.beginElement();
+		});
+	}
 
 	$: {
 		let currVisibleCount = 0;
@@ -248,38 +279,166 @@
 	class="dream"
 	bind:clientHeight={containerDivHeight}
 	bind:clientWidth={containerDivWidth}
-	bind:this={rendererDiv}
 >
-	<video playsinline autoplay muted src="" bind:this={video} />
-	{#each uis as ui, i}
-		<div
-			class="ui"
-			class:no={!elementIndexToIsVisible[i]}
-			bind:this={elements[i]}
-		>
-			{#if elementIndexToIsVisible[i]}
-				<UiRenderer
-					{game}
-					ui={{ kind: UiKinds.ALERT, ...ui }}
-					on:result={() => {
-						const object = uiToObject.get(ui);
+	<svg class="filters" xmlns="http://www.w3.org/2000/svg">
+		<defs>
+			<filter id="wobbly-out-filter" bind:this={wobblyOutFilter}>
+				<feTurbulence
+					type="turbulence"
+					baseFrequency="0"
+					numOctaves="1"
+					result="turbulence"
+					seed="10"
+					stitchTiles="noStitch"
+				>
+					<animate
+						attributeName="baseFrequency"
+						attributeType="XML"
+						from="0"
+						to=".03"
+						begin="0s"
+						dur="2s"
+						repeatCount="1"
+						fill="freeze"
+						calcMode="spline"
+						keySplines=".64 0 .78 0"
+					/>
+				</feTurbulence>
+				<feColorMatrix
+					in="turbulence"
+					type="hueRotate"
+					values="0"
+					result="displacementMap"
+				>
+					<animate
+						attributeName="values"
+						from="0"
+						to="360"
+						dur=".3s"
+						repeatCount="7"
+						fill="freeze"
+					/>
+				</feColorMatrix>
+				<feDisplacementMap
+					in2="displacementMap"
+					in="SourceGraphic"
+					scale="-100"
+					xChannelSelector="R"
+					yChannelSelector="G"
+				>
+					<animate
+						attributeName="scale"
+						from="0"
+						to="-100"
+						dur="2s"
+						repeatCount="1"
+						fill="freeze"
+						calcMode="spline"
+						keySplines=".64 0 .78 0"
+					/>
+				</feDisplacementMap>
+			</filter>
+			<filter id="wobbly-in-filter" bind:this={wobblyInFilter}>
+				<feTurbulence
+					type="turbulence"
+					baseFrequency="0"
+					numOctaves="1"
+					result="turbulence"
+					seed="10"
+					stitchTiles="noStitch"
+				>
+					<animate
+						attributeName="baseFrequency"
+						attributeType="XML"
+						from=".03"
+						to="0"
+						begin="0s"
+						dur="5s"
+						repeatCount="1"
+						fill="freeze"
+						calcMode="spline"
+						keySplines=".83 0 .17 1"
+					/>
+				</feTurbulence>
+				<feColorMatrix
+					in="turbulence"
+					type="hueRotate"
+					values="0"
+					result="displacementMap"
+				>
+					<animate
+						attributeName="values"
+						from="0"
+						to="360"
+						dur=".3s"
+						repeatCount="17"
+						fill="freeze"
+					/>
+				</feColorMatrix>
+				<feDisplacementMap
+					in2="displacementMap"
+					in="SourceGraphic"
+					scale="0"
+					xChannelSelector="R"
+					yChannelSelector="G"
+				>
+					<animate
+						attributeName="scale"
+						from="-100"
+						to="0"
+						dur="5s"
+						repeatCount="1"
+						fill="freeze"
+						calcMode="spline"
+						keySplines=".83 0 .17 1"
+					/>
+				</feDisplacementMap>
+			</filter>
+		</defs>
+	</svg>
+	<div
+		class="content"
+		bind:this={rendererDiv}
+		class:wobbly-in={!isWaking}
+		class:wobbly-out={isWaking}
+	>
+		<video playsinline autoplay muted src="" bind:this={video} />
+		{#each uis as ui, i}
+			<div
+				class="ui"
+				class:no={!elementIndexToIsVisible[i]}
+				bind:this={elements[i]}
+			>
+				{#if elementIndexToIsVisible[i]}
+					<UiRenderer
+						{game}
+						ui={{ kind: UiKinds.ALERT, ...ui }}
+						on:result={() => {
+							const object = uiToObject.get(ui);
 
-						if (object) {
-							root.remove(object);
-							uiToObject.delete(ui);
-						}
+							if (object) {
+								root.remove(object);
+								uiToObject.delete(ui);
+							}
 
-						elementIndexToIsVisible[i] = undefined;
-					}}
-				/>
-			{/if}
+							elementIndexToIsVisible[i] = undefined;
+						}}
+					/>
+				{/if}
+			</div>
+		{/each}
+		<div class="eyelids" class:closed={!isEyeOpen}>
+			<div class="top" />
+			<div class="bottom" />
 		</div>
-	{/each}
-	{#if isTooBright}
-		<div class="too-bright" in:fade out:fade>
-			<p>It's currently too bright to dream, dim your surroundings.</p>
-		</div>
-	{/if}
+		{#if isTooBright}
+			<div class="too-bright" in:fade out:fade>
+				<p>
+					It's currently too bright to dream, dim your surroundings.
+				</p>
+			</div>
+		{/if}
+	</div>
 </div>
 
 <style lang="postcss">
@@ -287,25 +446,97 @@
 		@apply h-screen
 			w-screen;
 
-		& > video {
-			@apply absolute
+		background: #000;
+
+		& .wobbly-in {
+			animation-name: wobbly-in;
+			animation-duration: 5s;
+			animation-timing-function: theme('ease.slowSlow');
+			animation-fill-mode: both;
+		}
+
+		& .wobbly-out {
+			animation-name: wobbly-out;
+			animation-duration: 2s;
+			animation-timing-function: theme('ease.slowFast');
+			animation-fill-mode: both;
+		}
+
+		& > .filters {
+			display: none;
+		}
+
+		& > .content {
+			@apply h-full
+				w-full;
+
+			& > video {
+				@apply absolute
 				h-full
 				w-full
 				object-cover
 				top-0;
-		}
-
-		& .ui {
-			height: 400px;
-			width: 400px;
-
-			&.no {
-				pointer-events: none !important;
 			}
-		}
 
-		& > .too-bright {
-			@apply absolute
+			& .ui {
+				height: 400px;
+				width: 400px;
+
+				&.no {
+					pointer-events: none !important;
+				}
+			}
+
+			& > .eyelids {
+				@apply absolute
+				box-border
+				top-0
+				h-full
+				w-full
+				pointer-events-none;
+
+				z-index: 1;
+
+				& > * {
+					@apply absolute
+					h-full
+					w-full;
+					background: #000;
+				}
+
+				&.closed {
+					@apply pointer-events-auto;
+
+					& > .top {
+						clip-path: inset(0 0 49.95% 0);
+					}
+
+					& > .bottom {
+						clip-path: inset(49.95% 0 0 0);
+					}
+				}
+
+				& > .top {
+					@apply top-0
+					left-0;
+
+					clip-path: inset(0 0 100% 0);
+					transition: clip-path 0.3s theme('ease.fastSlow');
+				}
+
+				& > .bottom {
+					@apply bottom-0
+					left-0
+					h-full
+					w-full;
+
+					clip-path: inset(100% 0 0 0);
+					transition: clip-path 0.3s theme('ease.fastSlow');
+				}
+			}
+
+			& > .too-bright {
+				@apply absolute
 				box-border
 				top-0
 				grid
@@ -314,12 +545,52 @@
 				h-full
 				w-full;
 
-			background: #000;
-			padding: theme('padding');
+				z-index: 1;
 
-			& > p {
-				@apply text-center;
+				padding: theme('padding');
+
+				& > p {
+					@apply text-center;
+				}
 			}
+		}
+	}
+
+	@keyframes wobbly-in {
+		0% {
+			filter: url(#wobbly-in-filter);
+			transform: scale(10);
+		}
+
+		99.99% {
+			filter: url(#wobbly-in-filter);
+		}
+
+		100% {
+			filter: none;
+			transform: scale(1);
+		}
+	}
+
+	@keyframes wobbly-out {
+		0% {
+			filter: none;
+			transform: scale(1);
+			opacity: 1;
+		}
+
+		0.01% {
+			filter: url(#wobbly-out-filter);
+		}
+
+		99.99% {
+			filter: url(#wobbly-out-filter);
+		}
+
+		100% {
+			filter: none;
+			transform: scale(10);
+			opacity: 0;
 		}
 	}
 </style>
