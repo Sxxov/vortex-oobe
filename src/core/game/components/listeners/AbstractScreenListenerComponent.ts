@@ -50,7 +50,7 @@ export abstract class AbstractScreenListenerComponent extends AbstractListenerCo
 			);
 
 		if (typeof MouseEvent !== 'undefined' && e instanceof MouseEvent)
-			return [[e.clientX, e.clientY, 0, 0]];
+			return [[e.clientX, e.clientY, 1, 1]];
 
 		throw new UnreachableError(
 			`unknown touch event type: ${e.constructor.name}`,
