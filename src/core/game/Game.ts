@@ -15,7 +15,7 @@ export class Game {
 	public uiQueue = new ArrayStore<TUi>();
 	public xps = new XpStore();
 	public rounds: Round[] = [];
-	public round = new RoundStore(undefined);
+	public round = new RoundStore();
 	public state = new Store(GameStates.PREGAME);
 
 	constructor(public screenSpace: ScreenSpace) {}
