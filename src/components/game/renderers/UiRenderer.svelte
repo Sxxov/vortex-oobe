@@ -34,13 +34,17 @@
 		<SpriteRenderer sprite={ui.sprite} {game} isResponsive />
 	</div>
 	<div class="dialog">
-		<div class="heading">
-			<h6>{ui.heading}</h6>
-		</div>
-		<div class="content">
-			<div class="message">
-				<p>{ui.message}</p>
+		{#if ui.heading.length > 0}
+			<div class="heading">
+				<h6>{ui.heading}</h6>
 			</div>
+		{/if}
+		<div class="content">
+			{#if ui.message.length > 0}
+				<div class="message">
+					<p>{ui.message}</p>
+				</div>
+			{/if}
 			<div class="buttons">
 				{#if ui.kind === UiKinds.PROMPT}
 					<Input isMovingLabel={false} label="..." bind:value>
