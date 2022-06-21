@@ -29,7 +29,7 @@
 		padding: 20vw;
 		box-sizing: border-box;
 		display: grid;
-		height: 100vh;
+		height: 100%;
 		justify-items: center;
 		align-items: center;
 	}
