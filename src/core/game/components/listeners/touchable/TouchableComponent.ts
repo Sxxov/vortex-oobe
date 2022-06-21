@@ -16,8 +16,6 @@ export class TouchableComponent extends AbstractScreenListenerComponent {
 	>;
 
 	protected override onIntersectingTouchStart(e: TouchEvent | MouseEvent) {
-		e.preventDefault();
-
 		const spriteComponent = this.entity.component(AbstractSpriteComponent)!;
 
 		for (const [kind, keys] of this.listenerKindToListenerKeys) {

@@ -16,8 +16,6 @@ export class ClickableComponent extends AbstractScreenListenerComponent {
 	protected override onIntersectingTouchStart(
 		e: TouchEvent | MouseEvent,
 	): void {
-		e.preventDefault();
-
 		const spriteComponent = this.entity.component(AbstractSpriteComponent)!;
 
 		const destroy = () => {
