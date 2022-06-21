@@ -20,6 +20,8 @@ export abstract class AbstractScreenListenerComponent extends AbstractListenerCo
 	protected onIntersectingTouchStart(e: TouchEvent | MouseEvent) {}
 
 	protected onTouchStart(e: TouchEvent | MouseEvent) {
+		if (e.cancelable) e.preventDefault();
+
 		if (this.entity.round.game.uiQueue.length > 0) return;
 
 		const touchScreenPositions =
