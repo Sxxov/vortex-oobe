@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Game } from '../../../core/game/Game';
 	import type { Sprite } from '../../../core/game/sprite/Sprite';
+	import { CssUtility, type Css } from '../../../resources/utilities';
 
 	export let game: Game;
 	export let sprite: Sprite;
@@ -8,15 +9,15 @@
 
 	const { cellScreenSize: cellScreenSizeW } = game.screenSpace;
 
-	export let height: number = $cellScreenSizeW[0];
-	export let width: number = $cellScreenSizeW[1];
+	export let height: Css = $cellScreenSizeW[0];
+	export let width: Css = $cellScreenSizeW[1];
 </script>
 
 <img
 	type="SpriteRenderer"
 	class:responsive={isResponsive}
-	{width}
-	{height}
+	width={CssUtility.parse(width)}
+	height={CssUtility.parse(height)}
 	src={sprite.src}
 	alt=""
 />
