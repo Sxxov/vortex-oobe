@@ -11,6 +11,7 @@
 	import ClassScene from '../scenes/ClassScene.svelte';
 	import DreamScene from '../scenes/DreamScene.svelte';
 	import EndScene from '../scenes/EndScene.svelte';
+	import FailScene from '../scenes/FailScene.svelte';
 	import StartScene from '../scenes/StartScene.svelte';
 
 	let boundingBoxW: Store<DOMRect>;
@@ -46,7 +47,7 @@
 		roundStateW = $roundW.state;
 	}
 
-	$: if (hasMounted) {
+	$: if (gameStateW) {
 		switch ($gameStateW) {
 			case GameStates.PREGAME:
 				SceneComponent = StartScene;
@@ -64,8 +65,13 @@
 				}
 
 				break;
-			case GameStates.POSTGAME:
+			case GameStates.POSTGAME_PEDOPHILIC:
+			case GameStates.POSTGAME_HOMICIDAL:
+			case GameStates.POSTGAME_SUICIDAL:
 				SceneComponent = EndScene;
+				break;
+			case GameStates.POSTGAME_FAIL:
+				SceneComponent = FailScene;
 				break;
 			default:
 				throw new IllegalStateError(
