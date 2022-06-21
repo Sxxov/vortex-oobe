@@ -19,7 +19,8 @@
 
 <style lang="postcss">
 	.component {
-		height: 100vh;
-		width: 100vw;
+		@apply w-screen;
+
+		height: var(--height-window);
 	}
 </style>
