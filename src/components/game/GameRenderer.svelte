@@ -1,36 +1,21 @@
+<script context="module" lang="ts">
+	export let game: Game;
+</script>
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Store } from '../../core/blocks/store';
-	import type { ArrayStore } from '../../core/blocks/store/stores/ArrayStore';
-	import { ConsumableComponent } from '../../core/game/components/consumable/ConsumableComponent';
-	import { DreamComponent } from '../../core/game/components/dream/DreamComponent';
-	import type { TDream } from '../../core/game/components/dream/TDream';
-	import type { TUi } from '../../core/game/components/ui/TUi';
-	import type { AbstractEntity } from '../../core/game/entities/AbstractEntity';
 	import { Game } from '../../core/game/Game';
-	import type { Round } from '../../core/game/round/Round';
 	import { ScreenSpace } from '../../core/game/screen/ScreenSpace';
-	import DreamRenderer from './DreamRenderer.svelte';
-	import EntityRenderer from './EntityRenderer.svelte';
-	import UiRenderer from './UiRenderer.svelte';
-	import { fade } from '../../core/transitioner/Transitioner';
 
-	let screenSpace: ScreenSpace;
-	let game: Game;
-
-	let roundW: Store<Round>;
-	let entityPoolW: ArrayStore<AbstractEntity>;
 	let boundingBoxW: Store<DOMRect>;
-	let uiQueueW: ArrayStore<TUi>;
-	let isDreamingW: Store<boolean>;
 
+	let windowHeight: number;
 	let gameHeight: number;
 	let gameWidth: number;
 
 	let hasMounted = false;
 	let gameDiv: HTMLDivElement;
-
-	let dreamUis: TDream[];
 
 	$: {
 		gameWidth;
@@ -38,30 +23,13 @@
 		onResize();
 	}
 
-	$: if ($roundW) {
-		({ entityPool: entityPoolW, isDreaming: isDreamingW } = $roundW);
-	}
-
-	$: if ($entityPoolW) {
-		dreamUis = $entityPoolW
-			.map(
-				(entity) =>
-					entity.component(ConsumableComponent)?.isConsumed.value &&
-					entity.component(DreamComponent)?.ui,
-			)
-			.filter(Boolean) as TDream[];
-	}
-
 	onMount(() => {
 		boundingBoxW = new Store(new DOMRect());
-		screenSpace = new ScreenSpace(boundingBoxW);
-		game = new Game(screenSpace);
-
-		({ round: roundW, uiQueue: uiQueueW } = game);
-
-		hasMounted = true;
+		game ??= new Game(new ScreenSpace(boundingBoxW));
 
 		requestAnimationFrame(onResize);
+
+		hasMounted = true;
 	});
 
 	function onResize() {
@@ -71,58 +39,29 @@
 	}
 </script>
 
-<svelte:window on:resize={onResize} />
+<svelte:window on:resize={onResize} bind:innerHeight={windowHeight} />
 
-<div
-	class="game"
-	class:dreaming={$isDreamingW}
-	bind:this={gameDiv}
-	bind:clientHeight={gameHeight}
-	bind:clientWidth={gameWidth}
->
-	{#if hasMounted}
-		{#if $isDreamingW}
-			<div class="content">
-				<DreamRenderer
-					{game}
-					uis={dreamUis}
-					on:wake={() => {
-						game.proceedToNextRound();
-					}}
-				/>
-			</div>
-		{:else}
-			<div class="content" in:fade={{ duration: 1000 }}>
-				{#if $uiQueueW[0]}
-					<UiRenderer
-						ui={$uiQueueW[0]}
-						{game}
-						on:result={() => {
-							uiQueueW.shift();
-						}}
-					/>
-				{/if}
-				{#each $entityPoolW as entity}
-					<EntityRenderer {entity} {game} />
-				{/each}
-			</div>
-		{/if}
-	{/if}
-</div>
+{#if hasMounted}
+	<div
+		type="GameRenderer"
+		class="component"
+		style="--height-window: {windowHeight}px"
+	>
+		<div
+			bind:this={gameDiv}
+			bind:clientHeight={gameHeight}
+			bind:clientWidth={gameWidth}
+		>
+			<slot {game} />
+		</div>
+	</div>
+{/if}
 
 <style lang="postcss">
-	.game {
-		height: 100vmin;
-		width: 100vmin;
+	.component {
+		@apply grid
+			place-items-center;
 
-		&.dreaming {
-			height: 100vh;
-			width: 100vw;
-		}
-
-		& > .content {
-			@apply h-full
-				w-full;
-		}
+		height: var(--height-window);
 	}
 </style>

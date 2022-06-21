@@ -12,7 +12,14 @@
 	export let width: number = $cellScreenSizeW[1];
 </script>
 
-<img class:responsive={isResponsive} {width} {height} src={sprite.src} alt="" />
+<img
+	type="SpriteRenderer"
+	class:responsive={isResponsive}
+	{width}
+	{height}
+	src={sprite.src}
+	alt=""
+/>
 
 <style lang="postcss">
 	img {

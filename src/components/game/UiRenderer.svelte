@@ -28,7 +28,7 @@
 	}
 </script>
 
-<div class="ui" in:dropIn out:dropOut>
+<div type="UiRenderer" class="component" in:dropIn out:dropOut>
 	<div class="overlay" />
 	<div class="sprite">
 		<SpriteRenderer sprite={ui.sprite} {game} isResponsive />
@@ -90,7 +90,7 @@
 </div>
 
 <style lang="postcss">
-	.ui {
+	.component {
 		@apply absolute
 			grid
 			top-0 

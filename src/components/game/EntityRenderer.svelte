@@ -37,7 +37,8 @@
 
 {#if spriteComponent}
 	<div
-		class="entity {entity.constructor.name}"
+		type={entity.constructor.name}
+		class="component"
 		class:highlight-none={$highlightW === HighlightLevels.NONE}
 		class:highlight-low={$highlightW === HighlightLevels.LOW}
 		class:highlight-high={$highlightW === HighlightLevels.HIGH}
@@ -58,7 +59,7 @@
 {/if}
 
 <style lang="postcss">
-	.entity {
+	.component {
 		position: absolute;
 	}
 </style>
