@@ -9,7 +9,7 @@ export abstract class AbstractAnimation extends Item {
 
 	protected abstract onStart(): void;
 	protected abstract onEnd(): void;
-	protected abstract onFrame(frame: number): void;
+	protected abstract onFrame(frame: number, length: number): void;
 	protected abstract onCreate(): void;
 	protected abstract onDestroy(): void;
 	protected abstract in: number;

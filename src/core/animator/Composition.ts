@@ -51,10 +51,10 @@ export class Composition extends AbstractAnimation {
 			const animation = this.animations[i];
 
 			animation['onStart']();
-			animation['onFrame'](0);
+			animation['onFrame'](0, this.length);
 		}
 
-		this.onFrame(0);
+		this.onFrame(0, this.length);
 	};
 
 	protected onStart() {}
@@ -74,7 +74,7 @@ export class Composition extends AbstractAnimation {
 		this.animations.length = 0;
 	}
 
-	protected onFrame(frame: number) {
+	protected onFrame(frame: number, length: number) {
 		for (let i = 0, l = this.animations.length; i < l; ++i) {
 			const animation = this.animations[i];
 			const localFrame = frame - animation['in'];
@@ -96,7 +96,7 @@ export class Composition extends AbstractAnimation {
 				this.startedAnimations.add(animation);
 			}
 
-			animation['onFrame'](fpsAdjustedLocalFrame);
+			animation['onFrame'](fpsAdjustedLocalFrame, length);
 		}
 	}
 

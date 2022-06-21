@@ -25,8 +25,8 @@ export class AnimationAdapter<
 		this.animation['onEnd']();
 	}
 
-	protected onFrame(frame: number): void {
-		this.animation['onFrame'](frame);
+	protected onFrame(frame: number, length: number): void {
+		this.animation['onFrame'](frame, length);
 	}
 
 	protected onCreate(): void {

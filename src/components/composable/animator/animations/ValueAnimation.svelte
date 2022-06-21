@@ -30,8 +30,8 @@
 			out: length ? Number(inFrame) + Number(length) : outFrame ?? 0,
 			onStart,
 			onEnd,
-			onFrame: (v) => {
-				onFrame(v);
+			onFrame: (v, length) => {
+				onFrame(v, length);
 
 				value = v;
 			},

@@ -12,11 +12,8 @@ export class EasingAdapter extends AnimationAdapter {
 		return this;
 	}
 
-	protected override onFrame(frame: number) {
-		super.onFrame(
-			this.bezierUtility.at(frame / this.animation['length']) *
-				this.animation['length'],
-		);
+	protected override onFrame(frame: number, length: number) {
+		super.onFrame(this.bezierUtility.at(frame / length) * length, length);
 	}
 
 	public static override from<

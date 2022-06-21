@@ -21,6 +21,6 @@ export class Animator {
 	}
 
 	public seek(frame: number) {
-		this.composition['onFrame'](frame);
+		this.composition['onFrame'](frame, this.composition.length);
 	}
 }
