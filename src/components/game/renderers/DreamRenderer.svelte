@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, createEventDispatcher, onDestroy } from 'svelte';
-	import { fade } from '../../core/transitioner/Transitioner';
+	import { fade } from '../../../core/transitioner/Transitioner';
 	import type { IDreamContext } from './dream/IDreamContext';
 
 	const dispatch = createEventDispatcher();

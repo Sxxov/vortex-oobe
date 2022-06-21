@@ -86,23 +86,17 @@
 </svelte:head>
 
 <main>
-	<div class="background" />
 	<slot />
 	<Toast {toasts} />
 	<!-- <Frame /> -->
 </main>
 
 <style lang="postcss">
-	.background {
-		height: 100%;
-		width: 100%;
+	:global(body) {
+		overscroll-behavior-y: contain;
+	}
 
+	main {
 		background: #000;
-
-		position: fixed;
-		top: 0;
-		left: 0;
-
-		z-index: -100000;
 	}
 </style>

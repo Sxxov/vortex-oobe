@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { Game } from '../../core/game/Game';
-	import type { Sprite } from '../../core/game/sprite/Sprite';
+	import type { Game } from '../../../core/game/Game';
+	import type { Sprite } from '../../../core/game/sprite/Sprite';
 
 	export let game: Game;
 	export let sprite: Sprite;

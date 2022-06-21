@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import type { TUi } from '../../core/game/components/ui/TUi';
-	import { UiKinds } from '../../core/game/components/ui/UiKinds';
-	import type { Game } from '../../core/game/Game';
-	import SvgButton from '../composable/buttons/SvgButton.svelte';
-	import Input from '../composable/Input.svelte';
+	import type { TUi } from '../../../core/game/components/ui/TUi';
+	import { UiKinds } from '../../../core/game/components/ui/UiKinds';
+	import type { Game } from '../../../core/game/Game';
+	import SvgButton from '../../composable/buttons/SvgButton.svelte';
+	import Input from '../../composable/Input.svelte';
 	import SpriteRenderer from './SpriteRenderer.svelte';
 	import { done, close } from '!i/twotone::done,close';
-	import { dropIn, dropOut } from '../../core/transitioner';
+	import { dropIn, dropOut } from '../../../core/transitioner';
 
 	const dispatch = createEventDispatcher();
 	export let game: Game;

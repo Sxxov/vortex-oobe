@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Object3D, PerspectiveCamera, Scene, MathUtils } from 'three';
-	import { ConsumableComponent } from '../../../core/game/components/consumable/ConsumableComponent';
-	import { DreamComponent } from '../../../core/game/components/dream/DreamComponent';
-	import type { IDream } from '../../../core/game/components/dream/IDream';
-	import { UiKinds } from '../../../core/game/components/ui/UiKinds';
-	import type { Game } from '../../../core/game/Game';
-	import { PlaceholderSprite } from '../../../core/game/sprite/PlaceholderSprite';
+	import { ConsumableComponent } from '../../../../core/game/components/consumable/ConsumableComponent';
+	import { DreamComponent } from '../../../../core/game/components/dream/DreamComponent';
+	import type { IDream } from '../../../../core/game/components/dream/IDream';
+	import { UiKinds } from '../../../../core/game/components/ui/UiKinds';
+	import type { Game } from '../../../../core/game/Game';
+	import { PlaceholderSprite } from '../../../../core/game/sprite/PlaceholderSprite';
 	import UiRenderer from '../UiRenderer.svelte';
 	import { DeviceOrientationControls } from './controls/DeviceOrientationControls';
 	import type { IDreamContext } from './IDreamContext';
@@ -20,17 +20,13 @@
 	export let ctx: IDreamContext;
 	export let game: Game;
 
-	const { round: roundW } = game;
-
-	$: ({ entityPool: entityPoolW } = $roundW!);
-	$: uis = $entityPoolW
-		.map(
+	let uis = game.round
+		.value!.entityPool.value.map(
 			(entity) =>
 				entity.component(ConsumableComponent)?.isConsumed.value &&
 				entity.component(DreamComponent)?.ui,
 		)
 		.filter(Boolean) as IDream[];
-
 	let uisDiv: HTMLDivElement;
 	let uisDivHeight = 0;
 	let uisDivWidth = 0;

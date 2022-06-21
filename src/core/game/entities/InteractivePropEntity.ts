@@ -15,16 +15,18 @@ import type { AbstractComponent } from '../components/common/AbstractComponent';
 import { PlayerNearComponent } from '../components/highlight/PlayerNearComponent';
 import type { Round } from '../round/Round';
 import { DreamComponent } from '../components/dream/DreamComponent';
-import type { TDream } from '../components/dream/TDream';
+import type { IDream } from '../components/dream/IDream';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { WallComponent } from '../components/wall/WallComponent';
+import type { TXps } from '../xp/TXps';
 
 export abstract class InteractivePropEntity extends AbstractEntity {
 	public static for(
 		initialSprite: Sprite,
 		consumedSprite: Sprite,
 		size: TCellSize,
-		dream: TDream,
+		dream: IDream,
+		points: TXps,
 	) {
 		return class extends InteractivePropEntity {
 			public static override readonly Components: readonly TUnabstract<
@@ -40,9 +42,12 @@ export abstract class InteractivePropEntity extends AbstractEntity {
 				PlayerNearComponent,
 				DreamComponent.for(dream),
 			] as const;
+
+			protected points = points;
 		};
 	}
 
+	protected abstract points: TXps;
 	protected isNear = this.component(PlayerNearComponent)!.isNear;
 	protected consumable = this.component(ConsumableComponent)!;
 
@@ -82,6 +87,7 @@ export abstract class InteractivePropEntity extends AbstractEntity {
 		} else {
 			await this.onUnconsumedInteraction();
 			this.consumable.consume();
+			this.round.game.xps.increment(this.points);
 		}
 
 		return true;

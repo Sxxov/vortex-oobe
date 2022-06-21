@@ -5,10 +5,11 @@ import { DoorEntity } from '../entities/DoorEntity';
 import { PlayerEntity } from '../entities/PlayerEntity';
 import type { Game } from '../Game';
 import { EntityPool } from '../grid/EntityPool';
+import { RoundStates } from './RoundStates';
 
 export class Round extends DoublyLinkedNode {
 	private isPopulated = false;
-	public isDreaming = new Store(false);
+	public state = new Store(RoundStates.IN_CLASS);
 	public entityPool = new EntityPool();
 
 	constructor(public game: Game, prev?: Round['prev'], next?: Round['next']) {
@@ -33,7 +34,15 @@ export class Round extends DoublyLinkedNode {
 		this.isPopulated = true;
 	}
 
+	public restart() {
+		this.state.set(RoundStates.IN_CLASS);
+	}
+
 	public dream() {
-		this.isDreaming.set(true);
+		this.state.set(RoundStates.IN_DREAM);
+	}
+
+	public end() {
+		this.state.set(RoundStates.FINISHED);
 	}
 }

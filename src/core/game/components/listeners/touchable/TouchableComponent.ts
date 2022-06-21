@@ -1,5 +1,4 @@
 import { UnreachableError } from '../../../../../resources/errors';
-import type { TScreenPosition } from '../../../types/TScreenPosition';
 import { AbstractSpriteComponent } from '../../sprites/AbstractSpriteComponent';
 import { TouchableListenerKinds } from './TouchableListenerKinds';
 import { AbstractScreenListenerComponent } from '../AbstractScreenListenerComponent';

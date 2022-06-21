@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { CursorComponent } from '../../core/game/components/cursor/CursorComponent';
-	import { HighlightComponent } from '../../core/game/components/highlight/HighlightComponent';
-	import { HighlightLevels } from '../../core/game/components/highlight/HighlightLevels';
-	import { AbstractSpriteComponent } from '../../core/game/components/sprites/AbstractSpriteComponent';
-	import { ZindexComponent } from '../../core/game/components/zindex/ZindexComponent';
-	import type { AbstractEntity } from '../../core/game/entities/AbstractEntity';
-	import type { Game } from '../../core/game/Game';
-	import type { TScreenPosition } from '../../core/game/types/TScreenPosition';
+	import { CursorComponent } from '../../../core/game/components/cursor/CursorComponent';
+	import { HighlightComponent } from '../../../core/game/components/highlight/HighlightComponent';
+	import { HighlightLevels } from '../../../core/game/components/highlight/HighlightLevels';
+	import { AbstractSpriteComponent } from '../../../core/game/components/sprites/AbstractSpriteComponent';
+	import { ZindexComponent } from '../../../core/game/components/zindex/ZindexComponent';
+	import type { AbstractEntity } from '../../../core/game/entities/AbstractEntity';
+	import type { Game } from '../../../core/game/Game';
+	import type { TScreenPosition } from '../../../core/game/types/TScreenPosition';
 	import SpriteRenderer from './SpriteRenderer.svelte';
 
 	export let game: Game;
