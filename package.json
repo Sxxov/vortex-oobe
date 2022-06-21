@@ -19,7 +19,7 @@
 		"@rollup/plugin-alias": "^3.1.8",
 		"@rollup/plugin-node-resolve": "^13.0.6",
 		"@sveltejs/adapter-netlify": "^1.0.0-next.56",
-		"@sveltejs/kit": "^1.0.0-next.326",
+		"@sveltejs/kit": "^1.0.0-next.350",
 		"@types/intersects": "^2.5.0",
 		"@types/javascript-astar": "^0.0.31",
 		"@types/postcss-import": "^14.0.0",

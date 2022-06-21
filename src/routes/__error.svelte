@@ -1,8 +1,8 @@
 <script lang="ts" context="module">
-	import type { ErrorLoad } from '@sveltejs/kit';
+	import type { Load } from '@sveltejs/kit';
 
 	export const prerender = true;
-	export const load: ErrorLoad = ({ error, status }) => ({
+	export const load: Load = ({ error, status }) => ({
 		props: {
 			status,
 			error,
@@ -11,8 +11,8 @@
 </script>
 
 <script lang="ts">
-	export let error: Parameters<ErrorLoad>[0]['error'];
-	export let status: Parameters<ErrorLoad>[0]['status'];
+	export let error: Parameters<Load>[0]['error'];
+	export let status: Parameters<Load>[0]['status'];
 </script>
 
 <div type="/__error" class="component">
