@@ -39,7 +39,7 @@ export class Game {
 		this.round.set(currRound);
 		this.round.subscribe((round) => {
 			if (round) round.populate();
-			else this.state.set(GameStates.POSTGAME);
+			else this.state.set(GameStates.POSTGAME_FAIL);
 		});
 
 		currRound.entityPool.push(
