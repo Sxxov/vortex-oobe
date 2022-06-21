@@ -3,7 +3,7 @@ import { Item } from '../blocks/item';
 
 export type TTransitionCssString = string;
 
-export class TransitionerResultItem extends Item {
+export class TransitionerItem extends Item {
 	public delay = 0;
 	public duration = 200;
 	public easing = quintInOut;

@@ -1,5 +1,5 @@
 import * as easings from 'svelte/easing';
-import { TransitionerResultItem } from './TransitionerItem';
+import { TransitionerItem } from './TransitionerItem';
 
 type TEasing = typeof easings[keyof typeof easings];
 type TTransitionOptions = {
@@ -18,7 +18,7 @@ export class Transitioner {
 
 	// use arrow functions to keep 'this' bound
 	// even if destructured
-	public t = (): Partial<TransitionerResultItem> => {
+	public t = (): Partial<TransitionerItem> => {
 		let index = this.inIndex % this.inLength;
 
 		if (!this.isInRegistered) {
@@ -36,7 +36,7 @@ export class Transitioner {
 		};
 	};
 
-	public tt = (): Partial<TransitionerResultItem> => {
+	public tt = (): Partial<TransitionerItem> => {
 		let index = this.outIndex % this.outLength;
 
 		if (!this.isOutRegistered) {
@@ -54,8 +54,8 @@ export class Transitioner {
 		};
 	};
 
-	public static noop(): TransitionerResultItem {
-		return TransitionerResultItem.from({
+	public static noop(): TransitionerItem {
+		return TransitionerItem.from({
 			delay: 0,
 			duration: 0,
 			easing: (t) => t,
@@ -70,11 +70,11 @@ export class Transitioner {
 			duration = 200,
 			easing = easings.quintInOut,
 		}: TTransitionOptions = {},
-		tick?: TransitionerResultItem['tick'],
-	): TransitionerResultItem {
+		tick?: TransitionerItem['tick'],
+	): TransitionerItem {
 		const { opacity } = getComputedStyle(element);
 
-		return TransitionerResultItem.from({
+		return TransitionerItem.from({
 			delay,
 			duration,
 			easing,
@@ -86,7 +86,7 @@ export class Transitioner {
 	public static fadeIn(
 		element: Element,
 		options?: TTransitionOptions,
-	): TransitionerResultItem {
+	): TransitionerItem {
 		return Transitioner.fade(element, {
 			easing: easings.quintOut,
 			...options,
@@ -96,7 +96,7 @@ export class Transitioner {
 	public static fadeOut(
 		element: Element,
 		options?: TTransitionOptions,
-	): TransitionerResultItem {
+	): TransitionerItem {
 		return Transitioner.fade(element, {
 			easing: easings.quintIn,
 			...options,
@@ -110,13 +110,13 @@ export class Transitioner {
 			duration = 500,
 			easing = easings.expoOut,
 		}: TTransitionOptions = {},
-	): TransitionerResultItem {
+	): TransitionerItem {
 		const computed = getComputedStyle(element);
 		const opacity = Number(computed.opacity);
 		const transform =
 			computed.transform === 'none' ? '' : computed.transform;
 
-		return TransitionerResultItem.from({
+		return TransitionerItem.from({
 			delay,
 			duration,
 			easing,
@@ -134,13 +134,13 @@ export class Transitioner {
 			duration = 200,
 			easing = easings.expoIn,
 		}: TTransitionOptions = {},
-	): TransitionerResultItem {
+	): TransitionerItem {
 		const computed = getComputedStyle(element);
 		const opacity = Number(computed.opacity);
 		const transform =
 			computed.transform === 'none' ? '' : computed.transform;
 
-		return TransitionerResultItem.from({
+		return TransitionerItem.from({
 			delay,
 			duration,
 			easing,
