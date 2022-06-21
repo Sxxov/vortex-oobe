@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Object3D, PerspectiveCamera, Scene, MathUtils } from 'three';
+	import { Object3D, MathUtils } from 'three';
 	import { ConsumableComponent } from '../../../../core/game/components/consumable/ConsumableComponent';
 	import { DreamComponent } from '../../../../core/game/components/dream/DreamComponent';
 	import type { IDream } from '../../../../core/game/components/dream/IDream';
@@ -8,10 +8,8 @@
 	import type { Game } from '../../../../core/game/Game';
 	import { PlaceholderSprite } from '../../../../core/game/sprite/PlaceholderSprite';
 	import UiRenderer from '../UiRenderer.svelte';
-	import { DeviceOrientationControls } from './controls/DeviceOrientationControls';
 	import type { IDreamContext } from './IDreamContext';
 	import { Css3dObject } from './renderer/Css3dObject';
-	import { Css3dRenderer } from './renderer/Css3dRenderer';
 
 	const { degToRad } = MathUtils;
 
@@ -20,46 +18,33 @@
 	export let ctx: IDreamContext;
 	export let game: Game;
 
-	let uis = game.round
+	const uis = game.round
 		.value!.entityPool.value.map(
 			(entity) =>
 				entity.component(ConsumableComponent)?.isConsumed.value &&
 				entity.component(DreamComponent)?.ui,
 		)
 		.filter(Boolean) as IDream[];
-	let uisDiv: HTMLDivElement;
-	let uisDivHeight = 0;
-	let uisDivWidth = 0;
-
-	let scene: THREE.Scene;
-	let camera: THREE.PerspectiveCamera;
-	let renderer: Css3dRenderer;
-	let root: THREE.Object3D;
-
-	let hasMounted = false;
 
 	if (uis.length <= 0) {
-		uis = [
-			{
-				heading: 'You did nothing today',
-				message: 'Very productive.',
-				options: ['ok'],
-				sprite: new PlaceholderSprite(),
-			},
-		];
+		uis.push({
+			heading: 'You did nothing today',
+			message: 'Very productive.',
+			options: ['ok'],
+			sprite: new PlaceholderSprite(),
+		});
 	}
+
+	const elements: HTMLElement[] = new Array(uis.length);
+	const elementIndexToIsVisible: (boolean | undefined)[] = new Array(
+		uis.length,
+	).fill(false);
+	const uiToObject = new Map<IDream, Object3D>();
 
 	onMount(() => {
 		if (uis.length <= 0) {
 			return;
 		}
-
-		// setup scene
-		scene = new Scene();
-		camera = new PerspectiveCamera(90, 1, 0.1, 2000);
-		renderer = new Css3dRenderer({ element: uisDiv });
-		root = new Object3D();
-		scene.add(root);
 
 		// calculate random rotations
 		const rotations = new Array(uis.length).fill(undefined).map((_, i) => {
@@ -94,47 +79,18 @@
 				pivotObject.rotation.x,
 				pivotObject.rotation.y,
 				pivotObject.rotation.z,
-			] = [degToRad(Math.random() * 0), degToRad(yy), degToRad(zz - 90)];
+			] = [0, degToRad(yy), degToRad(zz - 90)];
 
-			root.add(pivotObject);
+			ctx.root.add(pivotObject);
 			uiToObject.set(ui, pivotObject);
 		}
-
-		// setup camera to use gyro
-		const controls = new DeviceOrientationControls(camera);
-		controls.connect();
-
-		requestAnimationFrame(function raf() {
-			controls.update();
-			renderer.render(scene, camera);
-
-			requestAnimationFrame(raf);
-		});
-
-		hasMounted = true;
 	});
-
-	const elements: HTMLElement[] = new Array(uis.length);
-	const elementIndexToIsVisible: (boolean | undefined)[] = new Array(
-		uis.length,
-	).fill(false);
-	const uiToObject = new Map<IDream, Object3D>();
 
 	// when everything is false
 	$: if (
 		!elementIndexToIsVisible.some((isVisible) => isVisible !== undefined)
 	) {
 		ctx.awaken();
-	}
-
-	// responsive THREE canvas
-	$: if (hasMounted) {
-		renderer.setSize(uisDivWidth, uisDivHeight);
-
-		camera.aspect = uisDivWidth / uisDivHeight;
-		camera.updateProjectionMatrix();
-
-		renderer.render(scene, camera);
 	}
 
 	$: {
@@ -155,51 +111,38 @@
 	}
 </script>
 
-<div
-	type="DreamUiContent"
-	class="component"
-	bind:this={uisDiv}
-	bind:clientHeight={uisDivHeight}
-	bind:clientWidth={uisDivWidth}
->
-	{#each uis as ui, i}
-		<div
-			class="ui"
-			class:no={!elementIndexToIsVisible[i]}
-			bind:this={elements[i]}
-		>
-			{#if elementIndexToIsVisible[i]}
-				<UiRenderer
-					{game}
-					ui={{ kind: UiKinds.ALERT, ...ui }}
-					on:result={() => {
-						const object = uiToObject.get(ui);
+{#each uis as ui, i}
+	<div
+		class="ui"
+		class:no={!elementIndexToIsVisible[i]}
+		bind:this={elements[i]}
+	>
+		{#if elementIndexToIsVisible[i]}
+			<UiRenderer
+				{game}
+				ui={{ kind: UiKinds.ALERT, ...ui }}
+				on:result={() => {
+					const object = uiToObject.get(ui);
 
-						if (object) {
-							root.remove(object);
-							uiToObject.delete(ui);
-						}
+					if (object) {
+						ctx.root.remove(object);
+						uiToObject.delete(ui);
+					}
 
-						elementIndexToIsVisible[i] = undefined;
-					}}
-				/>
-			{/if}
-		</div>
-	{/each}
-</div>
+					elementIndexToIsVisible[i] = undefined;
+				}}
+			/>
+		{/if}
+	</div>
+{/each}
 
 <style lang="postcss">
-	.component {
-		@apply h-full
-			w-full;
+	.ui {
+		height: 400px;
+		width: 400px;
 
-		& .ui {
-			height: 400px;
-			width: 400px;
-
-			&.no {
-				pointer-events: none !important;
-			}
+		&.no {
+			pointer-events: none !important;
 		}
 	}
 </style>

@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { onMount, createEventDispatcher, onDestroy } from 'svelte';
+	import { Object3D, PerspectiveCamera, Scene } from 'three';
 	import { fade } from '../../../core/transitioner/Transitioner';
+	import { DeviceOrientationControls } from './dream/controls/DeviceOrientationControls';
 	import type { IDreamContext } from './dream/IDreamContext';
+	import { Css3dRenderer } from './dream/renderer/Css3dRenderer';
 
 	const dispatch = createEventDispatcher();
 
@@ -12,8 +15,14 @@
 			'dream-enforce-luminance',
 		) !== 'false';
 
+	let rendererDiv: HTMLDivElement;
 	let containerDivHeight = 0;
 	let containerDivWidth = 0;
+
+	let scene: THREE.Scene;
+	let camera: THREE.PerspectiveCamera;
+	let renderer: Css3dRenderer;
+	let root: THREE.Object3D;
 
 	let video: HTMLVideoElement;
 	let videoLuminanceCanvas: HTMLCanvasElement;
@@ -24,13 +33,14 @@
 
 	let isEyeOpen = true;
 	let isWaking = false;
+	let isWobbly = false;
 
 	let wobblyInFilter: SVGFilterElement;
 	let wobblyOutFilter: SVGFilterElement;
 
-	const ctx: IDreamContext = {
-		awaken,
-	};
+	let hasMounted = false;
+
+	let dreamContext: IDreamContext;
 
 	onMount(() => {
 		// set camera video feed
@@ -102,6 +112,36 @@
 			);
 			videoLuminanceHistory = videoLuminanceHistory;
 		}, 100);
+
+		// setup scene
+		scene = new Scene();
+		camera = new PerspectiveCamera(90, 1, 0.1, 2000);
+		renderer = new Css3dRenderer({ element: rendererDiv });
+		root = new Object3D();
+		scene.add(root);
+
+		// setup camera to use gyro
+		const controls = new DeviceOrientationControls(camera);
+		controls.connect();
+
+		requestAnimationFrame(function raf() {
+			controls.update();
+			renderer.render(scene, camera);
+
+			requestAnimationFrame(raf);
+		});
+
+		dreamContext = {
+			awaken,
+			setWobbly,
+			controls,
+			scene,
+			camera,
+			renderer,
+			root,
+		};
+
+		hasMounted = true;
 	});
 
 	onDestroy(() => {
@@ -112,6 +152,16 @@
 		setTimeout(() => {
 			dispatch('wake');
 		}, 2000);
+	}
+
+	// responsive THREE canvas
+	$: if (hasMounted) {
+		renderer.setSize(containerDivWidth, containerDivHeight);
+
+		camera.aspect = containerDivWidth / containerDivHeight;
+		camera.updateProjectionMatrix();
+
+		renderer.render(scene, camera);
 	}
 
 	// responsive video luminance canvas
@@ -140,6 +190,10 @@
 
 	function awaken() {
 		isWaking = true;
+	}
+
+	function setWobbly(v: boolean) {
+		isWobbly = v;
 	}
 </script>
 
@@ -263,15 +317,52 @@
 					/>
 				</feDisplacementMap>
 			</filter>
+			<filter id="wobbly-filter" bind:this={wobblyInFilter}>
+				<feTurbulence
+					type="turbulence"
+					baseFrequency=".03"
+					numOctaves="1"
+					result="turbulence"
+					seed="10"
+					stitchTiles="noStitch"
+				/>
+				<feColorMatrix
+					in="turbulence"
+					type="hueRotate"
+					values="0"
+					result="displacementMap"
+				>
+					<animate
+						attributeName="values"
+						from="0"
+						to="360"
+						dur=".3s"
+						repeatCount="indefinite"
+						fill="freeze"
+					/>
+				</feColorMatrix>
+				<feDisplacementMap
+					in2="displacementMap"
+					in="SourceGraphic"
+					scale="10"
+					xChannelSelector="R"
+					yChannelSelector="G"
+				/>
+			</filter>
 		</defs>
 	</svg>
 	<div
 		class="content"
-		class:wobbly-in={!isWaking}
+		class:wobbly={isWobbly}
+		class:wobbly-in={!isWaking && !isWobbly}
 		class:wobbly-out={isWaking}
 	>
 		<video playsinline autoplay muted src="" bind:this={video} />
-		<slot {ctx} />
+		<div class="renderer" bind:this={rendererDiv}>
+			{#if hasMounted}
+				<slot ctx={dreamContext} />
+			{/if}
+		</div>
 		<div class="eyelids" class:closed={!isEyeOpen}>
 			<div class="top" />
 			<div class="bottom" />
@@ -288,25 +379,12 @@
 
 <style lang="postcss">
 	.component {
-		@apply h-screen
-			w-screen
+		@apply w-screen
 			overflow-hidden;
 
+		height: var(--height-window);
+
 		background: #000;
-
-		& .wobbly-in {
-			animation-name: wobbly-in;
-			animation-duration: 5s;
-			animation-timing-function: theme('ease.slowSlow');
-			animation-fill-mode: both;
-		}
-
-		& .wobbly-out {
-			animation-name: wobbly-out;
-			animation-duration: 2s;
-			animation-timing-function: theme('ease.slowFast');
-			animation-fill-mode: both;
-		}
 
 		& > .filters {
 			display: none;
@@ -316,28 +394,51 @@
 			@apply h-full
 				w-full;
 
+			&.wobbly-in {
+				animation-name: wobbly-in;
+				animation-duration: 5s;
+				animation-timing-function: theme('ease.slowSlow');
+				animation-fill-mode: both;
+			}
+
+			&.wobbly-out {
+				animation-name: wobbly-out;
+				animation-duration: 2s;
+				animation-timing-function: theme('ease.slowFast');
+				animation-fill-mode: both;
+			}
+
+			&.wobbly {
+				filter: url(#wobbly-filter);
+			}
+
+			& > .renderer {
+				@apply h-full
+					w-full;
+			}
+
 			& > video {
 				@apply absolute
-				h-full
-				w-full
-				object-cover
-				top-0;
+					h-full
+					w-full
+					object-cover
+					top-0;
 			}
 
 			& > .eyelids {
 				@apply absolute
-				box-border
-				top-0
-				h-full
-				w-full
-				pointer-events-none;
+					box-border
+					top-0
+					h-full
+					w-full
+					pointer-events-none;
 
 				z-index: 1;
 
 				& > * {
 					@apply absolute
-					h-full
-					w-full;
+						h-full
+						w-full;
 					background: #000;
 				}
 
@@ -355,7 +456,7 @@
 
 				& > .top {
 					@apply top-0
-					left-0;
+						left-0;
 
 					clip-path: inset(0 0 100% 0);
 					transition: clip-path 0.3s theme('ease.fastSlow');
@@ -363,9 +464,9 @@
 
 				& > .bottom {
 					@apply bottom-0
-					left-0
-					h-full
-					w-full;
+						left-0
+						h-full
+						w-full;
 
 					clip-path: inset(100% 0 0 0);
 					transition: clip-path 0.3s theme('ease.fastSlow');
@@ -374,13 +475,13 @@
 
 			& > .too-bright {
 				@apply absolute
-				box-border
-				top-0
-				grid
-				items-center
-				justify-items-center
-				h-full
-				w-full;
+					box-border
+					top-0
+					grid
+					items-center
+					justify-items-center
+					h-full
+					w-full;
 
 				z-index: 1;
 
