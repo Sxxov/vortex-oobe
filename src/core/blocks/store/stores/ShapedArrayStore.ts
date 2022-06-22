@@ -22,19 +22,7 @@ export class ShapedArrayStore<
 		super(array, isWritable);
 
 		// eslint-disable-next-line no-constructor-return
-		return new Proxy(this, {
-			get(o, k) {
-				return k in o
-					? o[k as keyof typeof o]
-					: o.getAt(k as unknown as number);
-			},
-			set(o, k, v) {
-				if (k in o) o[k as keyof typeof o] = v;
-				else o.setAt(k as unknown as number, v);
-
-				return true;
-			},
-		});
+		return this.proxy();
 	}
 
 	public [Symbol.iterator](): IterableIterator<TArrayElement<Shape>> {

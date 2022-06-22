@@ -12,16 +12,19 @@ import { EntityPool } from '../grid/EntityPool';
 import { RoundStates } from './RoundStates';
 
 export class Round extends DoublyLinkedNode {
-	private isPopulated = false;
-	public state = new Store(RoundStates.IN_CLASS);
+	public state = new Store(RoundStates.FINISHED);
+	private setState: (v: RoundStates) => void;
 	public entityPool = new EntityPool();
 
 	constructor(public game: Game, prev?: Round['prev'], next?: Round['next']) {
 		super(prev, next);
+
+		this.setState = this.state.set.bind(this.state);
+		this.state.seal();
 	}
 
-	public populate() {
-		if (this.isPopulated) return;
+	public start() {
+		if (this.state.value === RoundStates.IN_CLASS) return;
 
 		this.entityPool.unshift(
 			new BackgroundEntity(this),
@@ -56,18 +59,18 @@ export class Round extends DoublyLinkedNode {
 				this.entityPool.push(entity);
 			}
 
-		this.isPopulated = true;
-	}
-
-	public restart() {
-		this.state.set(RoundStates.IN_CLASS);
+		this.setState(RoundStates.IN_CLASS);
 	}
 
 	public dream() {
-		this.state.set(RoundStates.IN_DREAM);
+		this.setState(RoundStates.IN_DREAM);
 	}
 
 	public end() {
-		this.state.set(RoundStates.FINISHED);
+		this.setState(RoundStates.FINISHED);
+
+		for (const entity of this.entityPool) entity.destructor();
+
+		this.entityPool.splice(0, Infinity);
 	}
 }

@@ -4,6 +4,8 @@ import type { AbstractEntity } from '../../entities/AbstractEntity';
 export abstract class AbstractComponent {
 	constructor(public entity: AbstractEntity) {}
 
+	destructor() {}
+
 	public assertEntityHas(Component: typeof AbstractComponent): void | never {
 		if (
 			!(this.entity.constructor as typeof AbstractEntity).component(

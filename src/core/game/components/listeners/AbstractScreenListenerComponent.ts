@@ -11,15 +11,21 @@ export abstract class AbstractScreenListenerComponent extends AbstractListenerCo
 
 		this.assertEntityHas(AbstractSpriteComponent);
 
-		const onTouchStart = this.onTouchStart.bind(this);
-		window.addEventListener('touchstart', onTouchStart);
-		window.addEventListener('mousedown', onTouchStart);
+		window.addEventListener('touchstart', this.onTouchStart);
+		window.addEventListener('mousedown', this.onTouchStart);
+	}
+
+	override destructor() {
+		super.destructor();
+
+		window.removeEventListener('touchstart', this.onTouchStart);
+		window.removeEventListener('mousedown', this.onTouchStart);
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	protected onIntersectingTouchStart(e: TouchEvent | MouseEvent) {}
 
-	protected onTouchStart(e: TouchEvent | MouseEvent) {
+	protected onTouchStart = (e: TouchEvent | MouseEvent) => {
 		if (e.cancelable) e.preventDefault();
 
 		if (this.entity.round.game.uiQueue.length > 0) return;
@@ -36,7 +42,7 @@ export abstract class AbstractScreenListenerComponent extends AbstractListenerCo
 
 		if (intersectingScreenPositions.length > 0)
 			this.onIntersectingTouchStart(e);
-	}
+	};
 
 	protected static eventToScreenTouchPositions(
 		e: TouchEvent | MouseEvent,

@@ -1,39 +1,29 @@
 import { Store } from '../Store.js';
 
 export class ExtendableStore<T = unknown> extends Store<T> {
-	constructor(value: T, isWritable?: boolean) {
-		super(value, isWritable);
+	protected proxy() {
+		return new Proxy(this, {
+			get(o, k) {
+				if (k in o) return o[k as keyof typeof o];
 
-		const valueDescriptors = Object.getOwnPropertyDescriptors(this.value);
-		const prototypeDescriptors = Object.getOwnPropertyDescriptors(
-			(this.value as any)?.constructor?.prototype ?? {},
-		);
-		const descriptors = {
-			...prototypeDescriptors,
-			...valueDescriptors,
-		};
+				const value = o.value[k as keyof typeof o.value];
 
-		Object.keys(descriptors).forEach((descriptorKey) => {
-			// @ts-expect-error obj[string]
-			if (this[descriptorKey] != null) {
-				return;
-			}
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+				if (value instanceof Function) return value.bind(o.value);
 
-			const {
+				return value;
+			},
+			set(o, k, v) {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-				value: descriptorValue,
-			} = descriptors[descriptorKey];
+				if (k in o) o[k as keyof typeof o] = v;
+				else {
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+					o.value[k as keyof typeof o.value] = v;
+					o.trigger();
+				}
 
-			descriptors[descriptorKey].value =
-				(descriptorValue as (...args: any) => any)?.bind?.(
-					this.value,
-				) ?? descriptorValue;
-
-			Object.defineProperty(
-				this,
-				descriptorKey,
-				descriptors[descriptorKey],
-			);
+				return true;
+			},
 		});
 	}
 }

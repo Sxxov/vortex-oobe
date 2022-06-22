@@ -28,6 +28,7 @@ export class CandyEntity extends InteractivePropEntity.for(
 		const tissue = this.round.entityPool.find(
 			(v) => v instanceof TissueEntity,
 		);
+		console.log('candy:', this.round.entityPool);
 		if (tissue) {
 			await tissue
 				.component(AlertComponent)!

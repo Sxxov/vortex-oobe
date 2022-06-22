@@ -1,20 +1,20 @@
 import { IllegalStateError } from '../../resources/errors';
 import { Store } from '../blocks/store';
 import { ArrayStore } from '../blocks/store/stores/ArrayStore';
-import { ShapedArrayStore } from '../blocks/store/stores/ShapedArrayStore';
 import type { TUi } from './components/ui/TUi';
 import { GameConstants } from './GameConstants';
 import { GameStates } from './GameStates';
 import { Round } from './round/Round';
+import { RoundStore } from './round/RoundStore';
 import type { ScreenSpace } from './screen/ScreenSpace';
 import { DirtyTeddyBearEntity } from './story/DirtyTeddyBearEntity';
-import type { TXps } from './xp/TXps';
+import { XpStore } from './xp/XpStore';
 
 export class Game {
 	public uiQueue = new ArrayStore<TUi>();
-	public xps = new ShapedArrayStore<TXps>([0, 0, 0]);
+	public xps = new XpStore();
 	public rounds: Round[] = [];
-	public round = new Store<Round | undefined>(undefined);
+	public round = new RoundStore();
 	public state = new Store(GameStates.PREGAME);
 
 	constructor(public screenSpace: ScreenSpace) {}
@@ -37,7 +37,7 @@ export class Game {
 
 		this.round.set(currRound);
 		this.round.subscribe((round) => {
-			if (round) round.populate();
+			if (round) round.start();
 			else this.state.set(GameStates.POSTGAME_FAIL);
 		});
 
@@ -48,6 +48,7 @@ export class Game {
 	}
 
 	public end() {
+		this.round.value?.end();
 		this.round.set(undefined);
 	}
 }

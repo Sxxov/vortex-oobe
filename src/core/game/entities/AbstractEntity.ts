@@ -20,6 +20,12 @@ export abstract class AbstractEntity {
 		).Components.map((Component) => new Component(this));
 	}
 
+	destructor() {
+		this.round.entityPool.remove(this);
+
+		for (const component of this.components) component.destructor();
+	}
+
 	public component<T extends typeof AbstractComponent>(Class: T) {
 		return this.components.find(
 			(component) => component instanceof Class,
@@ -53,7 +59,8 @@ export abstract class AbstractEntity {
 	}
 
 	public remove() {
-		this.round.entityPool.remove(this);
+		console.log('remove', this.round, this.round.entityPool);
+		this.destructor();
 	}
 
 	public static *surroundingEntityAndDistances(

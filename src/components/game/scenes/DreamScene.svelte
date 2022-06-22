@@ -9,8 +9,7 @@
 <div type="DreamScene" class="component">
 	<DreamRenderer
 		on:wake={() => {
-			game.round.value?.end();
-			game.round.update((v) => v?.next);
+			game.round.forward();
 		}}
 		let:ctx
 	>

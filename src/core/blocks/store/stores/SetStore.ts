@@ -14,6 +14,9 @@ export class SetStore<T = unknown> extends ExtendableStore<Set<T>> {
 
 	constructor(iterable?: Iterable<T>, isWritable?: boolean) {
 		super(new Set(iterable), isWritable);
+
+		// eslint-disable-next-line no-constructor-return
+		return this.proxy();
 	}
 
 	public [Symbol.iterator](): IterableIterator<T> {
