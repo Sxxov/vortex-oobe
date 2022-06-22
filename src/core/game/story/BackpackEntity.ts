@@ -13,7 +13,7 @@ export class BackpackEntity extends InteractivePropEntity.for(
 	{
 		heading: 'CLICK CLICK',
 		message:
-			'Charles is changing the Backpack code and adds a lock to the backpack',
+			'Dr. Charles is changing the Backpack code and adds a lock to the backpack',
 		options: ['ok'],
 		sprite: new PlaceholderSprite(),
 	},

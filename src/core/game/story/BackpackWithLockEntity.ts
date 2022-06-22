@@ -13,7 +13,8 @@ export class BackpackWithLockEntity extends InteractivePropEntity.for(
 	[2, 2],
 	{
 		heading: 'ZIP',
-		message: 'Charles brings locks for the books and stores them in a safe',
+		message:
+			'Dr. Charles brings locks for the books and stores them in a safe',
 		options: ['ok'],
 		sprite: new PlaceholderSprite(),
 	},

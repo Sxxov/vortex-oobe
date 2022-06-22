@@ -11,8 +11,8 @@ export class ToteBagEntity extends InteractivePropEntity.for(
 	new NullSprite(),
 	[2, 2],
 	{
-		heading: 'You made Charles mad!',
-		message: 'Charles is changing his back from tote to backpack',
+		heading: 'You made Dr. Charles mad!',
+		message: 'Dr. Charles is changing his back from tote to backpack',
 		options: ['damn it!'],
 		sprite: new PlaceholderSprite(),
 	},
@@ -22,7 +22,7 @@ export class ToteBagEntity extends InteractivePropEntity.for(
 	protected override async onUnconsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
 			'woop',
-			'You try to open the door but its not possible. Charles sees it and takes the bag from you!',
+			'You try to open the door but its not possible. Dr. Charles sees it and takes the bag from you!',
 		);
 
 		this.round.next?.entityPool.push(new BackpackEntity(this.round));

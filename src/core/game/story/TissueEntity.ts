@@ -1,28 +1,44 @@
-import { ShapedArrayStore } from '../../blocks/store/stores/ShapedArrayStore';
+import tissueBox from '!p::../../../assets/img/sprites/tissue box.png';
+import tissueDirty from '!p::../../../assets/img/sprites/tissue, dirty.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
-import { NullSprite } from '../sprite/NullSprite';
-import { PlaceholderSprite } from '../sprite/PlaceholderSprite';
-import type { TPositionStore } from '../types/TPositionStore';
+import { Sprite } from '../sprite/Sprite';
+import { CandyEntity } from './CandyEntity';
 
 export class TissueEntity extends InteractivePropEntity.for(
-	new PlaceholderSprite(),
-	new NullSprite(),
-	[2, 2],
+	new Sprite(tissueBox),
+	new Sprite(tissueBox),
+	[14, 8, 2, 2],
 	{
 		heading: 'Eww.',
 		message:
-			'Charles decides to never wear that shirt ever again. He brings a new set of clothes tomorrow just incase',
+			'Dr. Charles never wants to wear that shirt ever again. Perhaps bringing some candy might keep your orifices shut.',
 		options: ['oh shirt'],
-		sprite: new PlaceholderSprite(),
+		sprite: new Sprite(tissueDirty),
 	},
+	[3, 0, 1],
 ) {
-	public override position: TPositionStore = new ShapedArrayStore([6, 6]);
-
 	protected override async onUnconsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
 			'Splat!',
-			'You blow your nose into Charles’s tissues. You miss a little bit & get some on Charles’s shirt',
+			'You blow your nose into Dr. Charles’s tissues. You miss a little bit & get some on Dr. Charles’s shirt.',
+		);
+
+		if (this.round.next) {
+			const consumedTissue = new TissueEntity(this.round.next);
+			consumedTissue.consumable.consume();
+
+			this.round.next.entityPool.push(
+				new CandyEntity(this.round.next),
+				consumedTissue,
+			);
+		}
+	}
+
+	protected override async onConsumedInteraction() {
+		await this.component(AlertComponent)!.alert(
+			'Hey hey hey!',
+			'Dr. Charles prohibits you from using the tissues. He doesn’t have that many shirts.',
 		);
 	}
 }

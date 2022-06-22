@@ -13,7 +13,7 @@ export class SafeWithUnicornBookEntity extends InteractivePropEntity.for(
 	{
 		heading: 'UGHHHH!',
 		message:
-			'Charles is so injured, he regrets bringing the books to class! Keeps them at home',
+			'Dr. Charles is so injured, he regrets bringing the books to class! Keeps them at home',
 		options: ['ok'],
 		sprite: new PlaceholderSprite(),
 	},
@@ -23,7 +23,7 @@ export class SafeWithUnicornBookEntity extends InteractivePropEntity.for(
 	protected override async onUnconsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
 			'MYSTERY REVEALED!',
-			'You kick the safe out the window of the class and open it by damaging it. It seems like a cheap safe. You read the book and it has your name on it, it has a colorful rainbow cover. Charles jumps out the window to stop you!',
+			'You kick the safe out the window of the class and open it by damaging it. It seems like a cheap safe. You read the book and it has your name on it, it has a colorful rainbow cover. Dr. Charles jumps out the window to stop you!',
 		);
 
 		this.round.entityPool.removeAt(
