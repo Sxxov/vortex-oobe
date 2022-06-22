@@ -13,19 +13,14 @@ export class ClickableComponent extends AbstractScreenListenerComponent {
 		string[]
 	>;
 
-	protected override onIntersectingTouchStart(
-		e: TouchEvent | MouseEvent,
-	): void {
+	protected override onIntersectingTouchStart(): void {
 		const spriteComponent = this.entity.component(AbstractSpriteComponent)!;
 
-		const destroy = () => {
-			window.removeEventListener('touchend', onTouchEnd);
-			window.removeEventListener('touchcancel', onTouchEnd);
-			window.removeEventListener('mouseup', onTouchEnd);
-			window.removeEventListener('mouseout', onMouseOut);
+		const onTouchMove = () => {
+			destroy();
 		};
 
-		const onTouchEnd = () => {
+		const onTouchEnd = (e: TouchEvent | MouseEvent) => {
 			const touchScreenPositions =
 				ClickableComponent.eventToScreenTouchPositions(e);
 
@@ -49,8 +44,19 @@ export class ClickableComponent extends AbstractScreenListenerComponent {
 			if (!e.relatedTarget) onTouchCancel();
 		};
 
+		const destroy = () => {
+			window.removeEventListener('touchmove', onTouchMove);
+			window.removeEventListener('touchend', onTouchEnd);
+			window.removeEventListener('touchcancel', onTouchCancel);
+			window.removeEventListener('mouseup', onTouchEnd);
+			window.removeEventListener('mouseout', onMouseOut);
+			window.removeEventListener('mousemove', onTouchMove);
+		};
+
+		window.addEventListener('touchmove', onTouchMove);
 		window.addEventListener('touchend', onTouchEnd);
-		window.addEventListener('touchcancel', onTouchEnd);
+		window.addEventListener('touchcancel', onTouchCancel);
+		window.addEventListener('mousemove', onTouchMove);
 		window.addEventListener('mouseup', onTouchEnd);
 		window.addEventListener('mouseout', onMouseOut);
 	}
