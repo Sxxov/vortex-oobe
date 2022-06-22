@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Object3D, MathUtils } from 'three';
+	import { MathUtils, Object3D } from 'three';
 	import { ConsumableComponent } from '../../../../core/game/components/consumable/ConsumableComponent';
 	import { DreamComponent } from '../../../../core/game/components/dream/DreamComponent';
 	import type { IDream } from '../../../../core/game/components/dream/IDream';
@@ -49,7 +49,7 @@
 		// calculate random rotations
 		const rotations = new Array(uis.length).fill(undefined).map((_, i) => {
 			const spread = Math.sqrt(uis.length);
-			const ys = 360 / spread; // x spacing
+			const ys = 180 / spread; // x spacing
 			const zs = 180 / spread; // y spacing
 			const n = i % uis.length;
 			const y = (n % spread) * ys;
@@ -79,11 +79,20 @@
 				pivotObject.rotation.x,
 				pivotObject.rotation.y,
 				pivotObject.rotation.z,
-			] = [0, degToRad(yy), degToRad(zz - 90)];
+			] = [0, degToRad(yy - 90), degToRad(zz - 90)];
 
 			ctx.root.add(pivotObject);
 			uiToObject.set(ui, pivotObject);
 		}
+
+		// put uis in front of camera
+		requestAnimationFrame(function initialCameraRotationRaf() {
+			if (ctx.camera.rotation.y === 0) {
+				requestAnimationFrame(initialCameraRotationRaf);
+			} else {
+				ctx.root.rotation.y = ctx.camera.rotation.y + Math.PI / 2;
+			}
+		});
 	});
 
 	// when everything is false
