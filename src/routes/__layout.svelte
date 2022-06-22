@@ -97,6 +97,6 @@
 	}
 
 	main {
-		background: #000;
+		background: #451973;
 	}
 </style>
