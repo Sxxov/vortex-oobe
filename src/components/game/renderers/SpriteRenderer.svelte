@@ -18,6 +18,10 @@
 	class:responsive={isResponsive}
 	width={CssUtility.parse(width)}
 	height={CssUtility.parse(height)}
+	style="
+		--height: {CssUtility.parse(height)};
+		--width: {CssUtility.parse(width)};
+	"
 	src={sprite.src}
 	alt=""
 />
@@ -25,6 +29,9 @@
 <style lang="postcss">
 	img {
 		object-fit: contain;
+
+		height: var(--height);
+		width: var(--width);
 
 		user-drag: none;
 		-webkit-user-drag: none;
