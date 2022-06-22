@@ -1,21 +1,20 @@
 import { IllegalStateError } from '../../resources/errors';
 import { Store } from '../blocks/store';
 import { ArrayStore } from '../blocks/store/stores/ArrayStore';
+import { ShapedArrayStore } from '../blocks/store/stores/ShapedArrayStore';
 import type { TUi } from './components/ui/TUi';
 import { GameConstants } from './GameConstants';
 import { GameStates } from './GameStates';
 import { Round } from './round/Round';
-import { RoundStore } from './round/RoundStore';
 import type { ScreenSpace } from './screen/ScreenSpace';
 import { DirtyTeddyBearEntity } from './story/DirtyTeddyBearEntity';
-import { ToteBagEntity } from './story/ToteBagEntity';
-import { XpStore } from './xp/XpStore';
+import type { TXps } from './xp/TXps';
 
 export class Game {
 	public uiQueue = new ArrayStore<TUi>();
-	public xps = new XpStore();
+	public xps = new ShapedArrayStore<TXps>([0, 0, 0]);
 	public rounds: Round[] = [];
-	public round = new RoundStore();
+	public round = new Store<Round | undefined>(undefined);
 	public state = new Store(GameStates.PREGAME);
 
 	constructor(public screenSpace: ScreenSpace) {}
@@ -44,7 +43,7 @@ export class Game {
 
 		currRound.entityPool.push(
 			new DirtyTeddyBearEntity(currRound),
-			new ToteBagEntity(currRound),
+			// new ToteBagEntity(currRound),
 		);
 	}
 
