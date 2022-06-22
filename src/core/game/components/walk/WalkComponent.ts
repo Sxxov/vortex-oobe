@@ -22,6 +22,9 @@ export class WalkComponent extends AbstractComponent {
 	public controller = new FrameController(this.animator);
 	public path = new ArrayStore<GridNode>();
 
+	private sprite?: AbstractSpriteComponent;
+	private hasAttemptedToGetSprite = false;
+
 	constructor(entity: AbstractEntity) {
 		super(entity);
 
@@ -49,7 +52,8 @@ export class WalkComponent extends AbstractComponent {
 					const pathFinder = new PathFinderEntity(entity.round);
 
 					pathFinder.position.value[0] = node.x;
-					pathFinder.position.value[1] = node.y;
+					pathFinder.position.value[1] =
+						node.y + (this.sprite?.size[1] ?? 0);
 
 					entity.round.entityPool.value.push(pathFinder);
 					prevEntities.push(pathFinder);
@@ -172,6 +176,11 @@ export class WalkComponent extends AbstractComponent {
 	}
 
 	public async walk(to: TPosition) {
+		if (!this.hasAttemptedToGetSprite) {
+			this.sprite = this.entity.component(AbstractSpriteComponent);
+			this.hasAttemptedToGetSprite = true;
+		}
+
 		const { entity } = this;
 		const {
 			position: from,
@@ -179,7 +188,20 @@ export class WalkComponent extends AbstractComponent {
 		} = entity;
 
 		const fromCell = EntityPool.positionToCellIndex(from);
-		const toCell = EntityPool.positionToCellIndex(to);
+		const toCellUnlimited = EntityPool.positionToCellIndex([
+			to[0],
+			to[1] - (this.sprite?.size[1] ?? 0),
+		]);
+		const toCell = [
+			Math.min(
+				toCellUnlimited[0],
+				GameConstants.GRID_COLUMN_COUNT - (this.sprite?.size[0] ?? 0),
+			),
+			Math.min(
+				toCellUnlimited[1],
+				GameConstants.GRID_ROW_COUNT - (this.sprite?.size[1] ?? 0),
+			),
+		];
 		const astarGrid = entityPool.toAstar();
 
 		const graph = new Graph(astarGrid, { diagonal: true });
