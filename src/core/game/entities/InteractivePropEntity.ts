@@ -23,7 +23,25 @@ import type { TScreenPosition } from '../types/TScreenPosition';
 import type { TXps } from '../xp/TXps';
 import { AbstractEntity } from './AbstractEntity';
 
+/** The base class of every consumable, interactive, entity */
 export abstract class InteractivePropEntity extends AbstractEntity {
+	/**
+	 * Generates an `InteractivePropEntity` class for a specific configuration
+	 *
+	 * @param initialSprite The sprite shown initially
+	 * @param consumedSprite The sprite shown after the sprite has been consumed
+	 *   (used by the player)
+	 * @param xywh In order, the x position, the y position, the width, & the
+	 *   height of the entity
+	 * @param dream The description that will be shown in the dream sequence
+	 *   when the entity is
+	 * @param points In order, pedo points given after consumption, homicidal
+	 *   points given after consumption, & suicidal points given after consumption
+	 * @param canEndGame If the entity, when consumed, can end the game, if
+	 *   there are enough points. This should be set to true for any things with
+	 *   "*" Or "**" at the end of their descriptions in docs
+	 * @returns
+	 */
 	public static for(
 		initialSprite: Sprite,
 		consumedSprite: Sprite,
@@ -110,13 +128,23 @@ export abstract class InteractivePropEntity extends AbstractEntity {
 				(oldXps) =>
 					oldXps.map((oldXp, i) => oldXp + this.points[i]) as TXps,
 			);
-			console.log(this.endingTrigger, this.round.game.xps);
 			this.endingTrigger?.endIfSufficientXp();
 		}
 
 		return true;
 	}
 
+	/**
+	 * Called when the entity is clicked & is not consumed
+	 *
+	 * The sequence is as follows:
+	 *
+	 * 1. `onUnconsumedInteraction()`
+	 * 2. `isConsumed` is set to true internally
+	 * 3. If the entity can trigger an ending & there are enough points, end the game
+	 */
 	protected async onUnconsumedInteraction() {}
+
+	/** Called when the entity is clicked & has already been consumed */
 	protected async onConsumedInteraction() {}
 }
