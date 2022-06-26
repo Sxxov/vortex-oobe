@@ -59,7 +59,6 @@ export abstract class AbstractEntity {
 	}
 
 	public remove() {
-		console.log('remove', this.round, this.round.entityPool);
 		this.destructor();
 	}
 
