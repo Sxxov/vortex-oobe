@@ -11,7 +11,7 @@ export class StainedPenOnFloorEntity extends InteractivePropEntity.for(
 	{
 		heading: 'Confusing...',
 		message:
-			'Charles can’t find the black pen, he writes in blue ink from now',
+			'Dr. Charles can’t find the black pen, he writes in blue ink from now',
 		options: ['Hm...'],
 		sprite: new Sprite(stainedpenonfloor),
 	},

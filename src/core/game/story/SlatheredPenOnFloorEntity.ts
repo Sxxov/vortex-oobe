@@ -10,7 +10,7 @@ export class SlatheredPenOnFloorEntity extends InteractivePropEntity.for(
 	[21, 9.5, 2, 2],
 	{
 		heading: 'WHERE IS IT?',
-		message: 'Charles doesn’t have any pens now, he is unable to write',
+		message: 'Dr. Charles doesn’t have any pens now, he is unable to write',
 		options: ['Hm...'],
 		sprite: new Sprite(slatheredpenonfloor),
 	},

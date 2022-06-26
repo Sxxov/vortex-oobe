@@ -9,9 +9,9 @@ export class AnotherCrumpledPaperOnFloorEntity extends InteractivePropEntity.for
 	new Sprite(anothercrumpledpaperonfloor),
 	[1.5, 10, 2, 2],
 	{
-		heading: 'HAPPY CHARLES FACE :)',
+		heading: 'Happy Dr. Charles face :)',
 		message:
-			'Charles appreciates the compliment, & decides to write even more',
+			'Dr. Charles appreciates the compliment, & decides to write even more',
 		options: ['Hm...'],
 		sprite: new Sprite(anothercrumpledpaperonfloor),
 	},
@@ -20,7 +20,7 @@ export class AnotherCrumpledPaperOnFloorEntity extends InteractivePropEntity.for
 	protected override async onUnconsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
 			'WHO PUT THIS HERE?',
-			'You find another essay written by Charles on the floor and read it again, it is a really detailed paper about video game violence! Charles is obsessed with this. You compliment him again',
+			'You find another essay written by Dr. Charles on the floor and read it again, it is a really detailed paper about video game violence! Dr. Charles is obsessed with this. You compliment him again',
 		);
 
 		if (this.round.next) {

@@ -9,8 +9,8 @@ export class CrumpledPapersOnFloorEntity extends InteractivePropEntity.for(
 	new Sprite(crumpledpapersonfloor),
 	[26, 9, 2, 2],
 	{
-		heading: 'ANGRY CHARLES FACE ;/',
-		message: 'Charles keeps writing, frantically',
+		heading: 'ANGRY Dr. Charles FACE ;/',
+		message: 'Dr. Charles keeps writing, frantically',
 		options: ['Hm...'],
 		sprite: new Sprite(crumpledpapersonfloor),
 	},
@@ -19,7 +19,7 @@ export class CrumpledPapersOnFloorEntity extends InteractivePropEntity.for(
 	protected override async onUnconsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
 			'Paper Waste!',
-			'You find a lot of essays written by Charles on the floor,You read one of the essays, it is eerily detailed. You throw it back into the pile, he sees you doing that & seems slightly agitated this time',
+			'You find a lot of essays written by Dr. Charles on the floor,You read one of the essays, it is eerily detailed. You throw it back into the pile, he sees you doing that & seems slightly agitated this time',
 		);
 
 		if (this.round.next) {

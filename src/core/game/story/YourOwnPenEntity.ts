@@ -10,7 +10,7 @@ export class YourOwnPenEntity extends InteractivePropEntity.for(
 	{
 		heading: 'WHATS WRONG WITH HIM?',
 		message:
-			'You try to give Charles one of your own pens,Charles accuses you of breaking his old one, & that being the reason you felt guilty & gave him this new pen',
+			'You try to give Dr. Charles one of your own pens,Dr. Charles accuses you of breaking his old one, & that being the reason you felt guilty & gave him this new pen',
 		options: ['ok'],
 		sprite: new Sprite(yourownpen),
 	},
@@ -31,7 +31,7 @@ export class YourOwnPenEntity extends InteractivePropEntity.for(
 	protected override async onConsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
 			'What are you doing?',
-			'You already talked gave the pen to Charles.',
+			'You already talked gave the pen to Dr. Charles.',
 		);
 	}
 }

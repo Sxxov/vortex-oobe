@@ -10,7 +10,8 @@ export class CrumpledPaperOnFloorEntity extends InteractivePropEntity.for(
 	[1.5, 10, 2, 2],
 	{
 		heading: 'Re-Tick!',
-		message: 'Charles appreciates the compliment, & decides to write more',
+		message:
+			'Dr. Charles appreciates the compliment, & decides to write more',
 		options: ['Natural Writer'],
 		sprite: new Sprite(crumpledpaperonfloor),
 	},
@@ -19,7 +20,7 @@ export class CrumpledPaperOnFloorEntity extends InteractivePropEntity.for(
 	protected override async onUnconsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
 			'WORLD’ BEST DETECTIVE',
-			'You find the essay written by Charles on the floor, after reading it you find it very detailed and compliment Charles about it.',
+			'You find the essay written by Dr. Charles on the floor, after reading it you find it very detailed and compliment Dr. Charles about it.',
 		);
 
 		if (this.round.next) {

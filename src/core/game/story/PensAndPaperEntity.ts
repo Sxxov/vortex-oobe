@@ -11,7 +11,7 @@ export class PensAndPaperEntity extends InteractivePropEntity.for(
 	{
 		heading: 'Tick!',
 		message:
-			'Charles does not really like how the essay turned out, so he throws the essay away',
+			'Dr. Charles does not really like how the essay turned out, so he throws the essay away',
 		options: ['ok'],
 		sprite: new Sprite(pensandpaper),
 	},
@@ -20,7 +20,7 @@ export class PensAndPaperEntity extends InteractivePropEntity.for(
 	protected override async onUnconsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
 			'Tick!',
-			'You invite Charles into a game of writing competition about video game violence in real-life and he accepts your challenge=',
+			'You invite Dr. Charles into a game of writing competition about video game violence in real-life and he accepts your challenge=',
 		);
 
 		if (this.round.next) {
