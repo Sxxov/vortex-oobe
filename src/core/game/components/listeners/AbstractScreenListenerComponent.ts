@@ -1,9 +1,11 @@
+import intersects from 'intersects';
 import { UnreachableError } from '../../../../resources/errors';
 import type { AbstractEntity } from '../../entities/AbstractEntity';
 import type { TScreenTouchPosition } from '../../types/TScreenTouchPosition';
 import { AbstractSpriteComponent } from '../sprites/AbstractSpriteComponent';
 import { AbstractListenerComponent } from './AbstractListenerComponent';
-import { ellipseBox } from 'intersects';
+
+const { ellipseBox } = intersects;
 
 export abstract class AbstractScreenListenerComponent extends AbstractListenerComponent {
 	constructor(entity: AbstractEntity) {

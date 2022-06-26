@@ -1,47 +1,34 @@
-import backpackwlock from '!p::../../../assets/img/sprites/backpack, w. lock.png';
+import backpackWithLock from '!p::../../../assets/img/sprites/backpack, w. lock.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
+import { NullSprite } from '../sprite/NullSprite';
 import { Sprite } from '../sprite/Sprite';
 import { SafeWithPentagramBookEntity } from './SafeWithPentagramBookEntity';
 import { SafeWithUnicornBookEntity } from './SafeWithUnicornBooksEntity';
 export class BackpackWithLockEntity extends InteractivePropEntity.for(
-	new Sprite(backpackwlock),
-	new Sprite(backpackwlock),
+	new Sprite(backpackWithLock),
+	new NullSprite(),
 	[24, 10, 2, 2],
 	{
-		heading: 'ZIP',
+		heading: 'Bags don’t cut it',
 		message:
 			'Dr. Charles brings locks for the books and stores them in a safe',
 		options: ['ok'],
-		sprite: new Sprite(backpackwlock),
+		sprite: new Sprite(backpackWithLock),
 	},
 	[3, 3, 0],
 ) {
 	protected override async onUnconsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
-			'A COLORFUL SIGHT',
-			'You use a pen to pry open the zip, see that there is a book with unicorns on it, & a book with a pentagram on it, but then get caught before you’re able to read what’s inside the books',
+			'A man of culture?',
+			'You use a pen to pry open the zip on the backpack; lock smhlock~. You get to see that there is a book with unicorns on it & a book with a pentagram on it, before having the backpack snatched away as usual.',
 		);
 
-		if (this.round.next) {
-			const consumedBackpackWithLockEntity = new BackpackWithLockEntity(
-				this.round.next,
-			);
-			consumedBackpackWithLockEntity.consumable.consume();
-
-			this.round.next.entityPool.push(
-				new SafeWithPentagramBookEntity(this.round.next),
-			);
-			this.round.next.entityPool.push(
-				new SafeWithUnicornBookEntity(this.round.next),
-			);
-		}
-	}
-
-	protected override async onConsumedInteraction() {
-		await this.component(AlertComponent)!.alert(
-			'Hey hey hey!',
-			'Dr. Charles changed the lock on this bag.',
+		this.round.next?.entityPool.push(
+			new SafeWithPentagramBookEntity(this.round.next),
+		);
+		this.round.next?.entityPool.push(
+			new SafeWithUnicornBookEntity(this.round.next),
 		);
 	}
 }
