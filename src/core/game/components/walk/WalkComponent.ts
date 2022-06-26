@@ -90,6 +90,8 @@ export class WalkComponent extends AbstractComponent {
 				let deltaX: number;
 				let deltaY: number;
 
+				const me = this;
+
 				const animation = EasingAdapter.from(
 					ValueAnimation.from({
 						fps: GameConstants.WALK_FPS,
@@ -111,7 +113,8 @@ export class WalkComponent extends AbstractComponent {
 										2 +
 										Math.abs(
 											startY -
-												prevEntity.position.value[1],
+												prevEntity.position.value[1] +
+												(me.sprite?.size[1] ?? 0),
 										) **
 											2,
 								);
