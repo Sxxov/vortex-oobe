@@ -1,35 +1,34 @@
-import { ShapedArrayStore } from '../../blocks/store/stores/ShapedArrayStore';
+import backpackWithLock from '!p::../../../assets/img/sprites/backpack, w. lock.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { NullSprite } from '../sprite/NullSprite';
-import { PlaceholderSprite } from '../sprite/PlaceholderSprite';
-import type { TPositionStore } from '../types/TPositionStore';
+import { Sprite } from '../sprite/Sprite';
 import { SafeWithPentagramBookEntity } from './SafeWithPentagramBookEntity';
 import { SafeWithUnicornBookEntity } from './SafeWithUnicornBooksEntity';
-
 export class BackpackWithLockEntity extends InteractivePropEntity.for(
-	new PlaceholderSprite(),
+	new Sprite(backpackWithLock),
 	new NullSprite(),
-	[2, 2],
+	[24, 10, 2, 2],
 	{
-		heading: 'ZIP',
+		heading: 'Bags don’t cut it',
 		message:
 			'Dr. Charles brings locks for the books and stores them in a safe',
 		options: ['ok'],
-		sprite: new PlaceholderSprite(),
+		sprite: new Sprite(backpackWithLock),
 	},
+	[3, 3, 0],
 ) {
-	public override position: TPositionStore = new ShapedArrayStore([4, 10]);
-
 	protected override async onUnconsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
-			'A COLORFUL SIGHT',
-			'You use a pen to pry open the zip, see that there is a book with unicorns on it, & a book with a pentagram on it, but then get caught before you’re able to read what’s inside the books',
+			'A man of culture?',
+			'You use a pen to pry open the zip on the backpack; lock smhlock~. You get to see that there is a book with unicorns on it & a book with a pentagram on it, before having the backpack snatched away as usual.',
 		);
 
 		this.round.next?.entityPool.push(
-			new SafeWithPentagramBookEntity(this.round),
-			new SafeWithUnicornBookEntity(this.round),
+			new SafeWithPentagramBookEntity(this.round.next),
+		);
+		this.round.next?.entityPool.push(
+			new SafeWithUnicornBookEntity(this.round.next),
 		);
 	}
 }

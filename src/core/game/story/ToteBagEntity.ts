@@ -1,30 +1,29 @@
-import { ShapedArrayStore } from '../../blocks/store/stores/ShapedArrayStore';
+import totebag from '!p::../../../assets/img/sprites/tote bag.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { NullSprite } from '../sprite/NullSprite';
-import { PlaceholderSprite } from '../sprite/PlaceholderSprite';
-import type { TPositionStore } from '../types/TPositionStore';
+import { Sprite } from '../sprite/Sprite';
 import { BackpackEntity } from './BackpackEntity';
 
 export class ToteBagEntity extends InteractivePropEntity.for(
-	new PlaceholderSprite(),
+	new Sprite(totebag),
 	new NullSprite(),
-	[2, 2],
+	[18, 8, 2, 2],
 	{
-		heading: 'You made Dr. Charles mad!',
-		message: 'Dr. Charles is changing his back from tote to backpack',
+		heading: 'A new bag would be nice',
+		message:
+			'Dr. Charles decides to bring a backpack instead of a totebag. Privacy’s a human right after all.',
 		options: ['damn it!'],
-		sprite: new PlaceholderSprite(),
+		sprite: new Sprite(totebag),
 	},
+	[3, 3, 0],
 ) {
-	public override position: TPositionStore = new ShapedArrayStore([6, 6]);
-
 	protected override async onUnconsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
-			'woop',
-			'You try to open the door but its not possible. Dr. Charles sees it and takes the bag from you!',
+			'Hey hey hey!',
+			'You try to peek into the bag but Dr. Charles snatches it back before you’re able to. He hides it away.',
 		);
 
-		this.round.next?.entityPool.push(new BackpackEntity(this.round));
+		this.round.next?.entityPool.push(new BackpackEntity(this.round.next));
 	}
 }

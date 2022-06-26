@@ -8,6 +8,7 @@ import { Round } from './round/Round';
 import { RoundStore } from './round/RoundStore';
 import type { ScreenSpace } from './screen/ScreenSpace';
 import { DirtyTeddyBearEntity } from './story/DirtyTeddyBearEntity';
+import { ToteBagEntity } from './story/ToteBagEntity';
 import { XpStore } from './xp/XpStore';
 
 export class Game {
@@ -43,7 +44,7 @@ export class Game {
 
 		currRound.entityPool.push(
 			new DirtyTeddyBearEntity(currRound),
-			// new ToteBagEntity(currRound),
+			new ToteBagEntity(currRound),
 		);
 	}
 
