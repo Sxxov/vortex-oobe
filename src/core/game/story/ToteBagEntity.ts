@@ -1,18 +1,18 @@
-import totebagimg from '!p::../../../assets/img/sprites/tote bag.png';
+import totebag from '!p::../../../assets/img/sprites/tote bag.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';
 import { BackpackEntity } from './BackpackEntity';
 
 export class ToteBagEntity extends InteractivePropEntity.for(
-	new Sprite(totebagimg),
-	new Sprite(totebagimg),
+	new Sprite(totebag),
+	new Sprite(totebag),
 	[18, 8, 2, 2],
 	{
 		heading: 'You made Dr. Charles mad!',
 		message: 'Dr. Charles is changing his back from tote to backpack',
 		options: ['damn it!'],
-		sprite: new Sprite(totebagimg),
+		sprite: new Sprite(totebag),
 	},
 	[3, 3, 0],
 ) {
@@ -28,7 +28,6 @@ export class ToteBagEntity extends InteractivePropEntity.for(
 
 			this.round.next.entityPool.push(
 				new BackpackEntity(this.round.next),
-				consumedToteBagEntity,
 			);
 		}
 	}

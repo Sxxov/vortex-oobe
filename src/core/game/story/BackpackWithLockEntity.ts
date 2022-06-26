@@ -1,19 +1,19 @@
-import BackpackWithLockEntityimg from '!p::../../../assets/img/sprites/backpack, w. lock.png';
+import backpackwlock from '!p::../../../assets/img/sprites/backpack, w. lock.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';
 import { SafeWithPentagramBookEntity } from './SafeWithPentagramBookEntity';
 import { SafeWithUnicornBookEntity } from './SafeWithUnicornBooksEntity';
 export class BackpackWithLockEntity extends InteractivePropEntity.for(
-	new Sprite(BackpackWithLockEntityimg),
-	new Sprite(BackpackWithLockEntityimg),
+	new Sprite(backpackwlock),
+	new Sprite(backpackwlock),
 	[24, 10, 2, 2],
 	{
 		heading: 'ZIP',
 		message:
 			'Dr. Charles brings locks for the books and stores them in a safe',
 		options: ['ok'],
-		sprite: new Sprite(BackpackWithLockEntityimg),
+		sprite: new Sprite(backpackwlock),
 	},
 	[3, 3, 0],
 ) {
@@ -31,11 +31,9 @@ export class BackpackWithLockEntity extends InteractivePropEntity.for(
 
 			this.round.next.entityPool.push(
 				new SafeWithPentagramBookEntity(this.round.next),
-				consumedBackpackWithLockEntity,
 			);
 			this.round.next.entityPool.push(
 				new SafeWithUnicornBookEntity(this.round.next),
-				consumedBackpackWithLockEntity,
 			);
 		}
 	}

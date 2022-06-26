@@ -1,19 +1,19 @@
-import Safeimg from '!p::../../../assets/img/sprites/safe, closed.png';
-import SafeSatanimg from '!p::../../../assets/img/sprites/safe, opened, satan.png';
+import safeUnopened from '!p::../../../assets/img/sprites/safe, closed.png';
+import safeOpenedSatan from '!p::../../../assets/img/sprites/safe, opened, satan.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';
 import { SafeWithUnicornBookEntity } from './SafeWithUnicornBooksEntity';
 export class SafeWithPentagramBookEntity extends InteractivePropEntity.for(
-	new Sprite(Safeimg),
-	new Sprite(SafeSatanimg),
+	new Sprite(safeUnopened),
+	new Sprite(safeOpenedSatan),
 	[1.5, 18, 2, 2],
 	{
 		heading: 'UGHHHH!',
 		message:
 			'Dr. Charles is injured, he regrets bringing the books to class! Keeps them at home',
 		options: ['ok'],
-		sprite: new Sprite(SafeSatanimg),
+		sprite: new Sprite(safeOpenedSatan),
 	},
 	[0, 6, 4],
 	true,

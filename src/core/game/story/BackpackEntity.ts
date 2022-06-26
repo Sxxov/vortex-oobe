@@ -1,19 +1,19 @@
-import Backpackentityimg from '!p::../../../assets/img/sprites/backpack.png';
+import backpack from '!p::../../../assets/img/sprites/backpack.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';
 import { BackpackWithLockEntity } from './BackpackWithLockEntity';
 
 export class BackpackEntity extends InteractivePropEntity.for(
-	new Sprite(Backpackentityimg),
-	new Sprite(Backpackentityimg),
+	new Sprite(backpack),
+	new Sprite(backpack),
 	[22, 10, 2, 2],
 	{
 		heading: 'CLICK CLICK',
 		message:
 			'Dr. Charles is changing the Backpack code and adds a lock to the backpack',
 		options: ['ok'],
-		sprite: new Sprite(Backpackentityimg),
+		sprite: new Sprite(backpack),
 	},
 	[3, 3, 0],
 ) {
@@ -29,7 +29,6 @@ export class BackpackEntity extends InteractivePropEntity.for(
 
 			this.round.next.entityPool.push(
 				new BackpackWithLockEntity(this.round.next),
-				consumedBackpackEntity,
 			);
 		}
 	}
