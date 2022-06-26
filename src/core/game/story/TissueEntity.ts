@@ -1,5 +1,6 @@
 import tissueBox from '../../../assets/img/sprites/tissue box.png';
 import tissueDirty from '../../../assets/img/sprites/tissue, dirty.png';
+import { DreamComponent } from '../components/dream/DreamComponent';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';
@@ -27,6 +28,14 @@ export class TissueEntity extends InteractivePropEntity.for(
 		if (this.round.next) {
 			const consumedTissue = new TissueEntity(this.round.next);
 			consumedTissue.consumable.consume();
+
+			const [dream] = consumedTissue.components.splice(
+				consumedTissue.components.findIndex(
+					(v) => v instanceof DreamComponent,
+				),
+				1,
+			);
+			dream.destructor();
 
 			this.round.next.entityPool.push(
 				new CandyEntity(this.round.next),
