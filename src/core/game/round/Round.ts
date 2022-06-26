@@ -48,6 +48,11 @@ export class Round extends DoublyLinkedNode {
 			new (WallEntity.for([0, GameConstants.GRID_ROW_COUNT - 5, 4, 5]))(
 				this,
 			),
+			new (WallEntity.for([8, 10, 8, 4]))(this),
+			new (WallEntity.for([20, 10, 8, 4]))(this),
+			new (WallEntity.for([8, 16, 8, 4]))(this),
+			new (WallEntity.for([20, 16, 8, 4]))(this),
+			new (WallEntity.for([14, 5, 8, 4]))(this),
 		);
 
 		if (this.prev)
