@@ -1,43 +1,39 @@
-import anothercrumpledpaperonfloor from '!p::../../../assets/img/sprites/pen. w. paper.png';
+import anotherCrumpledPaperOnFloor from '!p::../../../assets/img/sprites/pen. w. paper.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';
 import { CrumpledPapersOnFloorEntity } from './CrumpledPapersOnFloorEntity';
+import { StainedPenOnFloorEntity } from './StainedPenOnFloorEntity';
 
 export class AnotherCrumpledPaperOnFloorEntity extends InteractivePropEntity.for(
-	new Sprite(anothercrumpledpaperonfloor),
-	new Sprite(anothercrumpledpaperonfloor),
+	new Sprite(anotherCrumpledPaperOnFloor),
+	new Sprite(anotherCrumpledPaperOnFloor),
 	[1.5, 10, 2, 2],
 	{
-		heading: 'Happy Dr. Charles face :)',
+		heading: 'Very happy Dr. Charles face (:',
 		message:
-			'Dr. Charles appreciates the compliment, & decides to write even more',
+			'Dr. Charles appreciates the compliment again, & decides to write even more.',
 		options: ['Hm...'],
-		sprite: new Sprite(anothercrumpledpaperonfloor),
+		sprite: new Sprite(anotherCrumpledPaperOnFloor),
 	},
 	[2, 4, 4],
 ) {
 	protected override async onUnconsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
-			'WHO PUT THIS HERE?',
-			'You find another essay written by Dr. Charles on the floor and read it again, it is a really detailed paper about video game violence! Dr. Charles is obsessed with this. You compliment him again',
+			'Why does he keep litering?',
+			'You find another essay written by Dr. Charles, crumpled on the floor again. It’s a really detailed paper about video game violence! A topic he’s taught extensively. You compliment him again.',
 		);
 
-		if (this.round.next) {
-			const consumedAnotherCrumpledPaperOnFloorEntity =
-				new AnotherCrumpledPaperOnFloorEntity(this.round.next);
-			consumedAnotherCrumpledPaperOnFloorEntity.consumable.consume();
-
-			this.round.next.entityPool.push(
-				new CrumpledPapersOnFloorEntity(this.round.next),
-			);
-		}
+		this.round.next?.entityPool.push(
+			new CrumpledPapersOnFloorEntity(this.round.next),
+			new StainedPenOnFloorEntity(this.round.next),
+		);
 	}
 
 	protected override async onConsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
-			'What you looking for?',
-			'You already read these papers.',
+			'Ehh',
+			'It’s a pretty good essay, but you’re too lazy of a student to read it again.',
 		);
 	}
 }

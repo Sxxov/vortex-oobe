@@ -1,43 +1,36 @@
-import crumpledpaperonfloor from '!p::../../../assets/img/sprites/pen. w. paper.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
-import { Sprite } from '../sprite/Sprite';
+import { PlaceholderSprite } from '../sprite/PlaceholderSprite';
 import { AnotherCrumpledPaperOnFloorEntity } from './AnotherCrumpledPaperOnFloorEntity';
 
 export class CrumpledPaperOnFloorEntity extends InteractivePropEntity.for(
-	new Sprite(crumpledpaperonfloor),
-	new Sprite(crumpledpaperonfloor),
+	new PlaceholderSprite(),
+	new PlaceholderSprite(),
 	[1.5, 10, 2, 2],
 	{
-		heading: 'Re-Tick!',
+		heading: 'Happy Dr. Charles face (:',
 		message:
 			'Dr. Charles appreciates the compliment, & decides to write more',
-		options: ['Natural Writer'],
-		sprite: new Sprite(crumpledpaperonfloor),
+		options: ['go bestie!'],
+		sprite: new PlaceholderSprite(),
 	},
 	[1, 3, 3],
 ) {
 	protected override async onUnconsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
-			'WORLD’ BEST DETECTIVE',
-			'You find the essay written by Dr. Charles on the floor, after reading it you find it very detailed and compliment Dr. Charles about it.',
+			'Creative writing',
+			'You uncrumple the paper on the floor, it’s an essay written by Dr. Charles! You find that it’s actually very well-written & casually compliment him about it.',
 		);
 
-		if (this.round.next) {
-			const consumedCrumpledPaperOnFloorEntity =
-				new CrumpledPaperOnFloorEntity(this.round.next);
-			consumedCrumpledPaperOnFloorEntity.consumable.consume();
-
-			this.round.next.entityPool.push(
-				new AnotherCrumpledPaperOnFloorEntity(this.round.next),
-			);
-		}
+		this.round.next?.entityPool.push(
+			new AnotherCrumpledPaperOnFloorEntity(this.round.next),
+		);
 	}
 
 	protected override async onConsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
-			'What you looking for?',
-			'You already read this paper.',
+			'Ehh',
+			'It’s a pretty good essay, but you’re too lazy of a student to read it again.',
 		);
 	}
 }

@@ -1,41 +1,25 @@
-import hyperventilatingCharles from '!p::../../../assets/img/sprites/charle, idle.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
-import { Sprite } from '../sprite/Sprite';
-import { YourOwnPenEntity } from './YourOwnPenEntity';
+import { NullSprite } from '../sprite/NullSprite';
+import { PlaceholderSprite } from '../sprite/PlaceholderSprite';
 
 export class HyperventilatingCharlesEntity extends InteractivePropEntity.for(
-	new Sprite(hyperventilatingCharles),
-	new Sprite(hyperventilatingCharles),
+	new PlaceholderSprite(),
+	new NullSprite(),
 	[28, 10, 2, 4],
 	{
-		heading: 'IS HE OKAY?',
-		message:
-			'You see Dr. Charles hyperventilating in the corner of the classroom, & decide to console him,He says you don’t understand, it was his only way to quench the voices in his mind, & he’s not sure if he can continue like this',
-		options: ['Hm...'],
-		sprite: new Sprite(hyperventilatingCharles),
+		heading: '',
+		message: '',
+		options: [''],
+		sprite: new PlaceholderSprite(),
 	},
 	[0, 0, 2],
 	true,
 ) {
 	protected override async onUnconsumedInteraction() {
-		await this.component(AlertComponent)!.alert('', '');
-
-		if (this.round.next) {
-			const consumedHyperventilatingCharlesEntity =
-				new HyperventilatingCharlesEntity(this.round.next);
-			consumedHyperventilatingCharlesEntity.consumable.consume();
-
-			this.round.next.entityPool.push(
-				new YourOwnPenEntity(this.round.next),
-			);
-		}
-	}
-
-	protected override async onConsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
-			'What are you doing?',
-			'You already talked to Dr. Charles.',
+			'Uhh... Uh...',
+			'You see Dr. Charles hyperventilating in the corner of the classroom, & check up him. He says you don’t understand, it was his only way to quench the voices in his head. He’s not sure about what he wants to do next...',
 		);
 	}
 }

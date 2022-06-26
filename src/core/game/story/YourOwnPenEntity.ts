@@ -1,31 +1,27 @@
-import yourownpen from '!p::../../../assets/img/sprites/pen.png';
+import pen from '!p::../../../assets/img/sprites/pen.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
+import { NullSprite } from '../sprite/NullSprite';
 import { Sprite } from '../sprite/Sprite';
 
 export class YourOwnPenEntity extends InteractivePropEntity.for(
-	new Sprite(yourownpen),
-	new Sprite(yourownpen),
+	new Sprite(pen),
+	new NullSprite(),
 	[22, 8, 2, 2],
 	{
-		heading: 'WHATS WRONG WITH HIM?',
-		message:
-			'You try to give Dr. Charles one of your own pens,Dr. Charles accuses you of breaking his old one, & that being the reason you felt guilty & gave him this new pen',
-		options: ['ok'],
-		sprite: new Sprite(yourownpen),
+		heading: '',
+		message: '',
+		options: [''],
+		sprite: new NullSprite(),
 	},
 	[0, 0, 2],
 	true,
 ) {
 	protected override async onUnconsumedInteraction() {
-		await this.component(AlertComponent)!.alert('', '');
-
-		if (this.round.next) {
-			const consumedYourOwnPenEntity = new YourOwnPenEntity(
-				this.round.next,
-			);
-			consumedYourOwnPenEntity.consumable.consume();
-		}
+		await this.component(AlertComponent)!.alert(
+			'H-here’s mine...',
+			'You try to give Dr. Charles one of your own pens out of sympathy, but he doesn’t shake the fact you broke his old ones. He seems to be a bit more upset than usual.',
+		);
 	}
 
 	protected override async onConsumedInteraction() {
