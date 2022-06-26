@@ -21,10 +21,6 @@ export class Round extends DoublyLinkedNode {
 
 		this.setState = this.state.set.bind(this.state);
 		this.state.seal();
-	}
-
-	public start() {
-		if (this.state.value === RoundStates.IN_CLASS) return;
 
 		this.entityPool.unshift(
 			new BackgroundEntity(this),
@@ -54,6 +50,10 @@ export class Round extends DoublyLinkedNode {
 			new (WallEntity.for([20, 16, 8, 4]))(this),
 			new (WallEntity.for([14, 5, 8, 4]))(this),
 		);
+	}
+
+	public start() {
+		if (this.state.value === RoundStates.IN_CLASS) return;
 
 		if (this.prev)
 			for (const entity of this.prev.entityPool) {
