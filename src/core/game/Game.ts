@@ -10,6 +10,7 @@ import type { ScreenSpace } from './screen/ScreenSpace';
 import { DirtyTeddyBearEntity } from './story/DirtyTeddyBearEntity';
 import { ToteBagEntity } from './story/ToteBagEntity';
 import { XpStore } from './xp/XpStore';
+import { PensAndPaperEntity } from './story/PensAndPaperEntity';
 
 export class Game {
 	public uiQueue = new ArrayStore<TUi>();
@@ -45,6 +46,7 @@ export class Game {
 		currRound.entityPool.push(
 			new DirtyTeddyBearEntity(currRound),
 			new ToteBagEntity(currRound),
+			new PensAndPaperEntity(currRound),
 		);
 	}
 
