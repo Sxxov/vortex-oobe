@@ -4,7 +4,7 @@ import {
 	PerspectiveCamera,
 	Quaternion,
 	Vector3,
-	WebGLRenderer,
+	type WebGLRenderer,
 } from 'three';
 import { Css3dObject } from './Css3dObject';
 import { Css3dSprite } from './Css3dSprite';
