@@ -1,4 +1,4 @@
-import anotherCrumpledPaperOnFloor from '!p::../../../assets/img/sprites/pen. w. paper.png';
+import penWithPaper from '!p::../../../assets/img/sprites/pen, w. paper.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';
@@ -6,15 +6,15 @@ import { CrumpledPapersOnFloorEntity } from './CrumpledPapersOnFloorEntity';
 import { StainedPenOnFloorEntity } from './StainedPenOnFloorEntity';
 
 export class AnotherCrumpledPaperOnFloorEntity extends InteractivePropEntity.for(
-	new Sprite(anotherCrumpledPaperOnFloor),
-	new Sprite(anotherCrumpledPaperOnFloor),
+	new Sprite(penWithPaper),
+	new Sprite(penWithPaper),
 	[1.5, 10, 2, 2],
 	{
 		heading: 'Very happy Dr. Charles face (:',
 		message:
 			'Dr. Charles appreciates the compliment again, & decides to write even more.',
 		options: ['Hm...'],
-		sprite: new Sprite(anotherCrumpledPaperOnFloor),
+		sprite: new Sprite(penWithPaper),
 	},
 	[2, 4, 4],
 ) {
