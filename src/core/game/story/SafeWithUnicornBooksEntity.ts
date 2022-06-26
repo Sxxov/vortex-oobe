@@ -1,5 +1,5 @@
-import safeClosed from '!p::../../../assets/img/sprites/safe, closed.png';
-import safeOpenedUnicorn from '!p::../../../assets/img/sprites/safe, opened, unicorn.png';
+import safeClosed from '../../../assets/img/sprites/safe, closed.png';
+import safeOpenedUnicorn from '../../../assets/img/sprites/safe, opened, unicorn.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';

@@ -1,5 +1,5 @@
-import doorClosed from '!p::../../../assets/img/sprites/door, closed.png';
-import doorOpened from '!p::../../../assets/img/sprites/door, opened.png';
+import doorClosed from '../../../assets/img/sprites/door, closed.png';
+import doorOpened from '../../../assets/img/sprites/door, opened.png';
 import { HighlightComponent } from '../components/highlight/HighlightComponent';
 import { HighlightLevels } from '../components/highlight/HighlightLevels';
 import { PlayerNearComponent } from '../components/highlight/PlayerNearComponent';

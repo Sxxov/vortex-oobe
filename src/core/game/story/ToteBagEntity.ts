@@ -1,4 +1,4 @@
-import totebag from '!p::../../../assets/img/sprites/tote bag.png';
+import totebag from '../../../assets/img/sprites/tote bag.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { NullSprite } from '../sprite/NullSprite';

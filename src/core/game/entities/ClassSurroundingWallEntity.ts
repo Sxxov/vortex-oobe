@@ -2,7 +2,7 @@ import { StaticSpriteComponent } from '../components/sprites/StaticSpriteCompone
 import { GameConstants } from '../GameConstants';
 import { Sprite } from '../sprite/Sprite';
 import { AbstractEntity } from './AbstractEntity';
-import sprite from '!p::../../../assets/img/sprites/wall.png';
+import sprite from '../../../assets/img/sprites/wall.png';
 import { ZindexComponent } from '../components/zindex/ZindexComponent';
 
 export class ClassSurroundingWallEntity extends AbstractEntity {

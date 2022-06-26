@@ -1,4 +1,4 @@
-import penWithPaper from '!p::../../../assets/img/sprites/pen, w. paper.png';
+import penWithPaper from '../../../assets/img/sprites/pen, w. paper.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { NullSprite } from '../sprite/NullSprite';

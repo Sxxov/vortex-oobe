@@ -1,5 +1,5 @@
-import tissueBox from '!p::../../../assets/img/sprites/tissue box.png';
-import tissueDirty from '!p::../../../assets/img/sprites/tissue, dirty.png';
+import tissueBox from '../../../assets/img/sprites/tissue box.png';
+import tissueDirty from '../../../assets/img/sprites/tissue, dirty.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';

@@ -1,5 +1,5 @@
-import handkerchiefDirty from '!p::../../../assets/img/sprites/cloth, on floor.png';
-import handkerchief from '!p::../../../assets/img/sprites/cloth.png';
+import handkerchiefDirty from '../../../assets/img/sprites/cloth, on floor.png';
+import handkerchief from '../../../assets/img/sprites/cloth.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';

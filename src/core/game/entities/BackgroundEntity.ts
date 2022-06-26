@@ -2,7 +2,7 @@ import { StaticSpriteComponent } from '../components/sprites/StaticSpriteCompone
 import { GameConstants } from '../GameConstants';
 import { Sprite } from '../sprite/Sprite';
 import { AbstractEntity } from './AbstractEntity';
-import sprite from '!p::../../../assets/img/sprites/background.png';
+import sprite from '../../../assets/img/sprites/background.png';
 
 export class BackgroundEntity extends AbstractEntity {
 	public static override Components: typeof AbstractEntity['Components'] = [

@@ -1,4 +1,4 @@
-import pen from '!p::../../../assets/img/sprites/pen.png';
+import pen from '../../../assets/img/sprites/pen.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';

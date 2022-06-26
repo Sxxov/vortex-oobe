@@ -1,5 +1,5 @@
-import lolipopEaten from '!p::../../../assets/img/sprites/lolipop, eaten.png';
-import lolipop from '!p::../../../assets/img/sprites/lolipop.png';
+import lolipopEaten from '../../../assets/img/sprites/lolipop, eaten.png';
+import lolipop from '../../../assets/img/sprites/lolipop.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';

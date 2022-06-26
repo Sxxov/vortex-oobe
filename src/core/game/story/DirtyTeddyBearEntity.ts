@@ -1,4 +1,4 @@
-import teddy from '!p::../../../assets/img/sprites/teddy.png';
+import teddy from '../../../assets/img/sprites/teddy.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';

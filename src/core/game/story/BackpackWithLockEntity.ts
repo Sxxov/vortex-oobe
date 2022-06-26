@@ -1,4 +1,4 @@
-import backpackWithLock from '!p::../../../assets/img/sprites/backpack, w. lock.png';
+import backpackWithLock from '../../../assets/img/sprites/backpack, w. lock.png';
 import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { NullSprite } from '../sprite/NullSprite';

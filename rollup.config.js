@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import TailwindConfig from './tailwind.config.cjs';
 // @ts-expect-error
 import { copy } from 'vite-plugin-copy';
+import { URLSearchParams } from 'url';
 
 const PrevaledTailwindConfigExport = Object.entries(TailwindConfig)
 	.map(([k, v]) => `export const ${k} = ${JSON.stringify(v)};`)
@@ -25,19 +26,7 @@ export default {
 			},
 		},
 		alias({
-			entries: [
-				{ find: /!r::(.+)/, replacement: '$1' },
-				{
-					// !p::./a.png?webp&w=500
-					find: /!p::([^?]+)\?(.*)/,
-					replacement: '$1?$2',
-				},
-				{
-					// !p::./a.png
-					find: /!p::(.+)/,
-					replacement: production ? '$1?webp' : '$1',
-				},
-			],
+			entries: [],
 		}),
 		{
 			name: 'named material icons import',
@@ -76,7 +65,9 @@ export default {
 			// public path of the assets
 			publicPath: '',
 		}),
-		viteImagetools(),
+		viteImagetools({
+			defaultDirectives: new URLSearchParams({ webp: 'true' }),
+		}),
 		{
 			name: 'svg loader',
 			transform(/** @type {string} */ _, /** @type {string} */ path) {

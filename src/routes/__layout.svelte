@@ -14,8 +14,8 @@
 	import { Ctx } from '../core/ctx';
 	import 'kursor/dist/kursor.css';
 	import { Tailwinder } from '../core/tailwinder/Tailwinder';
-	import favicon32 from '!p::../assets/favi/favicon-32x32.png?png';
-	import favicon16 from '!p::../assets/favi/favicon-16x16.png?png';
+	import favicon32 from '../assets/favi/favicon-32x32.png?png';
+	import favicon16 from '../assets/favi/favicon-16x16.png?png';
 
 	const toastsW = Ctx.toasts;
 	$: toasts = $toastsW;
