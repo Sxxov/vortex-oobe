@@ -47,7 +47,7 @@ export abstract class InteractivePropEntity extends AbstractEntity {
 		consumedSprite: Sprite,
 		xywh: TCellRect,
 		dream: IDream,
-		points: TXps,
+		points: TXps = [0, 0, 0],
 		canEndGame = false,
 	) {
 		return class extends InteractivePropEntity {
