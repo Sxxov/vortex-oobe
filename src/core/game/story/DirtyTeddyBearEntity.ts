@@ -9,9 +9,9 @@ export class DirtyTeddyBearEntity extends InteractivePropEntity.for(
 	new Sprite(teddy),
 	[6, 6, 2, 2],
 	{
-		heading: 'Why was the teddy bear wet??',
+		heading: 'Why was the teddy bear wet?',
 		message:
-			'Dr. Charles put the teddy bear in the trash & decides to bring tissues tomorrow just incase he gets anything else dirty thrown on him',
+			'Dr. Charles put the teddy bear in the trash & decides to bring tissues tomorrow just incase he gets anything else dirty thrown on him.',
 		options: ['ok'],
 		sprite: new Sprite(teddy),
 	},
@@ -23,9 +23,12 @@ export class DirtyTeddyBearEntity extends InteractivePropEntity.for(
 
 		await this.component(AlertComponent)!.alert(
 			'Boing!',
-			'You throw the dirty teddy bear at Dr. Charles, hitting & stunning him. The teddy bear is wet & smells bad, you wonder who put that there',
+			'You throw the dirty teddy bear at Dr. Charles, hitting & stunning him. The teddy bear is wet & smells bad, you wonder who put that there.',
 		);
 
-		this.round.next?.entityPool.push(new TissueEntity(this.round.next));
+		this.round.next?.entityPool.push(
+			new TissueEntity(this.round.next),
+			new DirtyTeddyBearEntity(this.round.next),
+		);
 	}
 }

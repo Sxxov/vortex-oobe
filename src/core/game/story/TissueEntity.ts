@@ -5,6 +5,7 @@ import { AlertComponent } from '../components/ui/AlertComponent';
 import { InteractivePropEntity } from '../entities/InteractivePropEntity';
 import { Sprite } from '../sprite/Sprite';
 import { CandyEntity } from './CandyEntity';
+import { InconspicuousMachineEntity } from './InconspicuousMachineEntity';
 
 export class TissueEntity extends InteractivePropEntity.for(
 	new Sprite(tissueBox),
@@ -40,6 +41,7 @@ export class TissueEntity extends InteractivePropEntity.for(
 			this.round.next.entityPool.push(
 				new CandyEntity(this.round.next),
 				consumedTissue,
+				new InconspicuousMachineEntity(this.round.next),
 			);
 		}
 	}
