@@ -11,6 +11,8 @@ import { DirtyTeddyBearEntity } from './story/DirtyTeddyBearEntity';
 import { ToteBagEntity } from './story/ToteBagEntity';
 import { XpStore } from './xp/XpStore';
 import { PensAndPaperEntity } from './story/PensAndPaperEntity';
+import { DreamInjectionEntity } from './entities/DreamInjectionEntity';
+import { NullSprite } from './sprite/NullSprite';
 
 export class Game {
 	public uiQueue = new ArrayStore<TUi>();
@@ -19,7 +21,25 @@ export class Game {
 	public round = new RoundStore();
 	public state = new Store(GameStates.PREGAME);
 
-	constructor(public screenSpace: ScreenSpace) {}
+	constructor(public screenSpace: ScreenSpace) {
+		let hasSusPrompted = false;
+
+		this.xps.subscribeLazy((xps) => {
+			if (!hasSusPrompted && xps.some((xp) => xp >= 15)) {
+				this.round.value?.entityPool.push(
+					new (DreamInjectionEntity.for({
+						heading: 'Hmm...',
+						message:
+							'Dr. Charles has been acting a little weird lately.',
+						options: ['continue'],
+						sprite: new NullSprite(),
+					}))(this.round.value),
+				);
+
+				hasSusPrompted = true;
+			}
+		});
+	}
 
 	public start() {
 		this.state.set(GameStates.GAME);
