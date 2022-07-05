@@ -8,7 +8,3 @@ declare module '*.png?png' {
 	const src: string;
 	export default src;
 }
-
-declare module '!tw' {
-	export const theme: Record<string, any> = {};
-}
