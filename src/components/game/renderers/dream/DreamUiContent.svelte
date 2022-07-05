@@ -19,10 +19,11 @@
 	export let game: Game;
 
 	const uis = game.round
-		.value!.entityPool.value.map(
-			(entity) =>
-				entity.component(ConsumableComponent)?.isConsumed.value &&
-				entity.component(DreamComponent)?.ui,
+		.value!.entityPool.value.map((entity) =>
+			entity.component(ConsumableComponent)
+				? entity.component(ConsumableComponent)?.isConsumed.value &&
+				  entity.component(DreamComponent)?.ui
+				: entity.component(DreamComponent)?.ui,
 		)
 		.filter(Boolean) as IDream[];
 
