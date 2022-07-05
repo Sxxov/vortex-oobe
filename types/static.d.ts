@@ -8,3 +8,8 @@ declare module '*.png?png' {
 	const src: string;
 	export default src;
 }
+
+declare module '!tw' {
+	const src: string;
+	export default src;
+}
