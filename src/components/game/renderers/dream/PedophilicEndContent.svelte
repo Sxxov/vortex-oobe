@@ -9,12 +9,13 @@
 	import { UiKinds } from '../../../../core/game/components/ui/UiKinds';
 	import type { Game } from '../../../../core/game/Game';
 	import { NullSprite } from '../../../../core/game/sprite/NullSprite';
-	import { PlaceholderSprite } from '../../../../core/game/sprite/PlaceholderSprite';
 	import { fade } from '../../../../core/transitioner';
 	import SpriteRenderer from '../SpriteRenderer.svelte';
 	import UiRenderer from '../UiRenderer.svelte';
 	import type { IDreamContext } from './IDreamContext';
 	import { Css3dObject } from './renderer/Css3dObject';
+	import charle from '../../../../assets/img/sprites/charle, idle.png';
+	import { Sprite } from '../../../../core/game/sprite/Sprite';
 
 	const { degToRad } = MathUtils;
 
@@ -253,7 +254,7 @@
 <div class="ghost" class:startled={isGhostStartled} bind:this={ghostDiv}>
 	<SpriteRenderer
 		{game}
-		sprite={new PlaceholderSprite()}
+		sprite={new Sprite(charle)}
 		height="500px"
 		width="500px"
 	/>
