@@ -46,7 +46,7 @@ export class CandyEntity extends InteractivePropEntity.for(
 	protected override async onConsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
 			'Bleh!',
-			'You don’t like the lolipop',
+			'You don’t like the lolipop.',
 		);
 	}
 }

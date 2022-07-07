@@ -32,7 +32,7 @@ export class SlatheredPenOnFloorEntity extends InteractivePropEntity.for(
 	protected override async onConsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
 			'What you looking for?',
-			'You already destroyed this pen',
+			'You already destroyed this pen.',
 		);
 	}
 }

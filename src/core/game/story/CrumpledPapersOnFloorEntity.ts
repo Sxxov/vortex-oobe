@@ -8,7 +8,7 @@ export class CrumpledPapersOnFloorEntity extends InteractivePropEntity.for(
 	[26, 9, 2, 2],
 	{
 		heading: 'Angry Dr. Charles face ):<',
-		message: 'Dr. Charles keeps writing, frantically',
+		message: 'Dr. Charles keeps writing, frantically.',
 		options: ['Hm...'],
 		sprite: new PlaceholderSprite(),
 	},
@@ -24,7 +24,7 @@ export class CrumpledPapersOnFloorEntity extends InteractivePropEntity.for(
 	protected override async onConsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
 			'Nah',
-			'You don’t really want to dig through that pile again',
+			'You don’t really want to dig through that pile again.',
 		);
 	}
 }

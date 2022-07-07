@@ -33,7 +33,7 @@ export class StainedHandkerchiefEntity extends InteractivePropEntity.for(
 	protected override async onConsumedInteraction() {
 		await this.component(AlertComponent)!.alert(
 			'Sniff, sniff...',
-			'You smell the handkerchief again... Its smell stays weird',
+			'You smell the handkerchief again... Its smell stays weird.',
 		);
 	}
 }
