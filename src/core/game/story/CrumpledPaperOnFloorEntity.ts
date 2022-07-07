@@ -10,7 +10,7 @@ export class CrumpledPaperOnFloorEntity extends InteractivePropEntity.for(
 	{
 		heading: 'Happy Dr. Charles face (:',
 		message:
-			'Dr. Charles appreciates the compliment, & decides to write more',
+			'Dr. Charles appreciates the compliment, & decides to write more.',
 		options: ['go bestie!'],
 		sprite: new PlaceholderSprite(),
 	},

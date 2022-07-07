@@ -12,7 +12,7 @@ export class HandkerchiefEntity extends InteractivePropEntity.for(
 	{
 		heading: 'Not stonks.',
 		message:
-			'Being out of shoes, Dr. Charles decides to instead embrace nature & go barefoot. What’s the worst that could happen?',
+			'Being out of shoes, Dr. Charles decides to instead embrace nature & go barefoot. What’s the worst that could happen?.',
 		options: ['tetanus'],
 		sprite: new Sprite(handkerchief),
 	},

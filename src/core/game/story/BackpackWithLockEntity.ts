@@ -12,7 +12,7 @@ export class BackpackWithLockEntity extends InteractivePropEntity.for(
 	{
 		heading: 'Bags don’t cut it',
 		message:
-			'Dr. Charles brings locks for the books and stores them in a safe',
+			'Dr. Charles brings locks for the books and stores them in a safe.',
 		options: ['ok'],
 		sprite: new Sprite(backpackWithLock),
 	},

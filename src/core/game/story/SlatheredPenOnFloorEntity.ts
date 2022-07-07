@@ -11,7 +11,7 @@ export class SlatheredPenOnFloorEntity extends InteractivePropEntity.for(
 	{
 		heading: 'Where is it???',
 		message:
-			'Dr. Charles can’t find either of his pens, & can’t continue to write',
+			'Dr. Charles can’t find either of his pens, & can’t continue to write.',
 		options: ['oh no'],
 		sprite: new PlaceholderSprite(),
 	},
