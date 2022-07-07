@@ -11,7 +11,7 @@ export class DirtyTeddyBearEntity extends InteractivePropEntity.for(
 	{
 		heading: 'Why was the teddy bear wet?',
 		message:
-			'Dr. Charles put the teddy bear in the trash & decides to bring tissues tomorrow just incase he gets anything else dirty thrown on him.',
+			'Dr. Charles put the teddy bear in the trash & decides to bring tissues tomorrow just in case he gets anything else dirty thrown on him.',
 		options: ['ok'],
 		sprite: new Sprite(teddy),
 	},
