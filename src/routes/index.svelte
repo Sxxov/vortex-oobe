@@ -11,17 +11,29 @@
 	let isHintShown = false;
 	let isHintShownHandle: ReturnType<typeof setTimeout>;
 
+	const isStandalone =
+		typeof location !== 'undefined' &&
+		new URLSearchParams(location.search).get('standalone') !== null;
+
 	onMount(() => {
 		hasMounted = true;
 		isHintShown = true;
 		isHintShownHandle = setTimeout(() => {
 			isHintShown = false;
 		}, 3000);
+		document.addEventListener('visibilitychange', onVisibilityChange);
 	});
 
 	onDestroy(() => {
 		clearTimeout(isHintShownHandle);
+		document.removeEventListener('visibilitychange', onVisibilityChange);
 	});
+
+	function onVisibilityChange() {
+		if (isStandalone && document.visibilityState === 'visible') {
+			location.reload();
+		}
+	}
 </script>
 
 <div type="/index" class="component">

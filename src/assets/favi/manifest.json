@@ -1,6 +1,7 @@
 {
  "name": "Vortex Welcome Experience",
  "display": "standalone",
+ "start_url": "/?standalone",
  "icons": [
   {
    "src": "\/android-icon-36x36.png",
