@@ -47,6 +47,8 @@
 				ctx.root.rotation.y = ctx.camera.rotation.y + Math.PI / 2;
 			}
 		});
+
+		void video.play();
 	});
 
 	$: isPlaying =
