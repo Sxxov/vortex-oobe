@@ -81,7 +81,6 @@
 	}
 
 	function onDown(e: MouseEvent | TouchEvent) {
-		console.log('onDown');
 		const [x, y] = getClientPosition(e);
 
 		if (!Number.isFinite(x) || !Number.isFinite(y)) {
@@ -92,7 +91,6 @@
 	}
 
 	function onMove(e: MouseEvent | TouchEvent) {
-		console.log('onMove');
 		const [x, y] = getClientPosition(e);
 
 		if (!Number.isFinite(x) || !Number.isFinite(y)) {
