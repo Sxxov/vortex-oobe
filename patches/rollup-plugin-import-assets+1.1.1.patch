@@ -1,0 +1,13 @@
+diff --git a/node_modules/rollup-plugin-import-assets/index.js b/node_modules/rollup-plugin-import-assets/index.js
+index ee853a9..b598bca 100644
+--- a/node_modules/rollup-plugin-import-assets/index.js
++++ b/node_modules/rollup-plugin-import-assets/index.js
+@@ -57,6 +57,8 @@ module.exports = function svelte(options = {}) {
+ 			for (const chunk of Object.values(bundle)) {
+ 				if (chunk.type === 'asset') continue;
+ 				for (const f of Object.keys(chunk.modules).filter(filter)) {
++					if (!assets[f]) continue;
++						
+ 					this.emitFile({
+ 						type: 'asset',
+ 						fileName: assets[f].fileName,
