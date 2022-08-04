@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	const enum Particulars {
-		NAME = 'welcome to vortex',
+		NAME = 'Welcome to Vortex XR Lab',
 		DESCRIPTION = '',
 		KEYWORDS = '',
 		AUTHOR = '',
