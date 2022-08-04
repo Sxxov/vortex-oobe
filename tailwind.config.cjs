@@ -16,12 +16,12 @@ const Colours = {
 	green: TailwindColours.emerald,
 	accent: {
 		dark: {
-			primary: TailwindColours.rose[300],
-			secondary: `${TailwindColours.rose[300]}33`,
+			primary: '#ed1c24',
+			secondary: '#ed1c2433',
 		},
 		light: {
-			primary: TailwindColours.rose[300],
-			secondary: `${TailwindColours.rose[300]}33`,
+			primary: '#ed1c24',
+			secondary: '#ed1c2433',
 		},
 	},
 	background: {
