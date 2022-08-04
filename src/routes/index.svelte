@@ -1,9 +1,12 @@
 <script lang="ts">
-	import GameRenderer from '../components/game/renderers/GameRenderer.svelte';
+	import Content from '../components/Content.svelte';
+	import DreamRenderer from '../components/game/renderers/DreamRenderer.svelte';
 </script>
 
 <div type="/index" class="component">
-	<GameRenderer />
+	<DreamRenderer enforceLuminance={false} let:ctx>
+		<Content {ctx} />
+	</DreamRenderer>
 </div>
 
 <style lang="postcss">

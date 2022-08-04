@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	const enum Particulars {
-		NAME = 'anti game-studies game-studies game™',
+		NAME = 'welcome to vortex',
 		DESCRIPTION = '',
 		KEYWORDS = '',
 		AUTHOR = '',

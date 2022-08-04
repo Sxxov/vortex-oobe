@@ -18,6 +18,7 @@
 	let rendererDiv: HTMLDivElement;
 	let containerDivHeight = 0;
 	let containerDivWidth = 0;
+	let windowHeight: number;
 
 	let scene: THREE.Scene;
 	let camera: THREE.PerspectiveCamera;
@@ -197,11 +198,16 @@
 	}
 </script>
 
+<svelte:window bind:innerHeight={windowHeight} />
+
 <div
 	type="DreamRenderer"
 	class="component"
 	bind:clientHeight={containerDivHeight}
 	bind:clientWidth={containerDivWidth}
+	style="
+		--height-window: {windowHeight}px;
+	"
 >
 	<svg class="filters" xmlns="http://www.w3.org/2000/svg">
 		<defs>
