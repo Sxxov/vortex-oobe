@@ -21,16 +21,27 @@
 		isHintShownHandle = setTimeout(() => {
 			isHintShown = false;
 		}, 3000);
-		document.addEventListener('visibilitychange', onVisibilityChange);
+		if (typeof document !== 'undefined') {
+			document.addEventListener('visibilitychange', onVisibilityChange);
+		}
 	});
 
 	onDestroy(() => {
 		clearTimeout(isHintShownHandle);
-		document.removeEventListener('visibilitychange', onVisibilityChange);
+		if (typeof document !== 'undefined') {
+			document.removeEventListener(
+				'visibilitychange',
+				onVisibilityChange,
+			);
+		}
 	});
 
 	function onVisibilityChange() {
-		if (isStandalone && document.visibilityState === 'visible') {
+		if (
+			isStandalone &&
+			typeof document !== 'undefined' &&
+			document.visibilityState === 'visible'
+		) {
 			location.reload();
 		}
 	}
