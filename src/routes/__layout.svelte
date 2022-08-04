@@ -16,6 +16,9 @@
 	import { Tailwinder } from '../core/tailwinder/Tailwinder';
 	import favicon32 from '../assets/favi/favicon-32x32.png?png';
 	import favicon16 from '../assets/favi/favicon-16x16.png?png';
+	import apple180 from '../assets/favi/apple-icon-180x180.png?png';
+	import android192 from '../assets/favi/android-icon-192x192.png?png';
+	import manifest from '../assets/favi/manifest.json';
 
 	const toastsW = Ctx.toasts;
 	$: toasts = $toastsW;
@@ -60,6 +63,12 @@
 	<!-- Icon Tags -->
 	<link rel="icon" type="image/png" sizes="32x32" href={favicon32} />
 	<link rel="icon" type="image/png" sizes="16x16" href={favicon16} />
+	<link rel="apple-touch-icon" sizes="180x180" href={apple180} />
+	<link rel="icon" type="image/png" sizes="192x192" href={android192} />
+	<link
+		rel="manifest"
+		href="data:application/manifest+json,{JSON.stringify(manifest)}"
+	/>
 
 	<!-- Viewport Tag to prevent jank -->
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
