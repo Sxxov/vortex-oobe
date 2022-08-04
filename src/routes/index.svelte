@@ -38,7 +38,7 @@
 					padding={0}
 					isClickable={false}
 				/>
-				<h1>Pan by rotating your phone.</h1>
+				<h1>Pan by rotating your device.</h1>
 			</div>
 		</div>
 	{/if}
