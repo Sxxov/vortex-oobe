@@ -33,6 +33,6 @@
 	});
 </script>
 
-<div class="container" bind:this={containerDiv}>
+<div bind:this={containerDiv}>
 	<h1>totally a video</h1>
 </div>
