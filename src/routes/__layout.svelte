@@ -25,11 +25,13 @@
 
 	onMount(() => {
 		window.addEventListener('sveltekit:start', async () => {
-			const theme =
-				localStorage.getItem('theme') ??
-				(window.matchMedia('(prefers-color-scheme: dark)').matches
-					? 'dark'
-					: 'light');
+			// const theme =
+			// 	localStorage.getItem('theme') ??
+			// 	(window.matchMedia('(prefers-color-scheme: dark)').matches
+			// 		? 'dark'
+			// 		: 'light');
+
+			const theme = 'dark';
 
 			document.documentElement.classList.add(theme);
 
