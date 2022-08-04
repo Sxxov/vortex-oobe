@@ -48,7 +48,7 @@
 			}
 		});
 
-		void video.play().catch();
+		void video.play().catch(() => {});
 	});
 
 	$: isPlaying =
