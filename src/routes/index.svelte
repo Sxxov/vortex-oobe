@@ -49,26 +49,26 @@
 				<div />
 			</div>
 		</div>
-
-		<DreamRenderer let:ctx>
-			<Content {ctx} />
-		</DreamRenderer>
-
-		{#if hasMounted}
-			<div class="watermark">
-				<div class="content" in:dropIn>
-					<SvgButton
-						svgHeight="56px"
-						svgWidth="168px"
-						svgColour="#fff"
-						svg={logo}
-						padding={0}
-						isClickable={false}
-					/>
-				</div>
-			</div>
-		{/if}
 	</div>
+
+	<DreamRenderer let:ctx>
+		<Content {ctx} />
+	</DreamRenderer>
+
+	{#if hasMounted}
+		<div class="watermark">
+			<div class="content" in:dropIn>
+				<SvgButton
+					svgHeight="56px"
+					svgWidth="168px"
+					svgColour="#fff"
+					svg={logo}
+					padding={0}
+					isClickable={false}
+				/>
+			</div>
+		</div>
+	{/if}
 </div>
 
 <style lang="postcss">
