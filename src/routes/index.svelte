@@ -7,6 +7,7 @@
 	import { onDestroy, onMount } from 'svelte';
 
 	let hasMounted = false;
+	let dreamRendererKey = {};
 	let shouldMountDreamRenderer = true;
 
 	const isStandalone =
@@ -37,9 +38,8 @@
 		) {
 			shouldMountDreamRenderer = false;
 			requestAnimationFrame(() => {
-				requestAnimationFrame(() => {
-					shouldMountDreamRenderer = true;
-				});
+				dreamRendererKey = {};
+				shouldMountDreamRenderer = true;
 			});
 		}
 	}
@@ -57,11 +57,13 @@
 		</div>
 	</div>
 
-	{#if shouldMountDreamRenderer}
-		<DreamRenderer let:ctx>
-			<Content {ctx} />
-		</DreamRenderer>
-	{/if}
+	{#key dreamRendererKey}
+		{#if shouldMountDreamRenderer}
+			<DreamRenderer let:ctx>
+				<Content {ctx} />
+			</DreamRenderer>
+		{/if}
+	{/key}
 
 	<div class="overlay">
 		{#if hasMounted}
