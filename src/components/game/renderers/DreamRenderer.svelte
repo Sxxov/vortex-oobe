@@ -34,6 +34,7 @@
 	let root: THREE.Object3D;
 
 	let video: HTMLVideoElement;
+	let mediaStream: MediaStream | undefined;
 
 	let isEyeOpen = true;
 
@@ -147,20 +148,21 @@
 		)?.deviceId;
 
 		// set camera video feed
-		video.srcObject = await navigator.mediaDevices.getUserMedia({
+		mediaStream = await navigator.mediaDevices.getUserMedia({
 			audio: false,
 			video: {
 				facingMode: 'environment',
 				...(mainCameraId ? { deviceId: { exact: mainCameraId } } : {}),
 			},
 		});
+		video.srcObject = mediaStream;
 
 		// attempt to detect fov
 		// works on chrome & ff (fuck you safari)
 		let fov = 40;
 		if ('ImageCapture' in window) {
 			const blob = (await new (window as any).ImageCapture(
-				video.srcObject.getVideoTracks()[0],
+				mediaStream.getVideoTracks()[0],
 			).takePhoto()) as Blob;
 			const file = new File([blob], '_.jpg', { type: 'image/jpeg' });
 			const {
@@ -271,10 +273,8 @@
 	onDestroy(() => {
 		clearTimeout(isHintShownHandle);
 
-		if (video?.srcObject) {
-			for (const track of (
-				video.srcObject as MediaStream
-			).getVideoTracks()) {
+		if (mediaStream) {
+			for (const track of mediaStream.getVideoTracks()) {
 				track.stop();
 			}
 		}
