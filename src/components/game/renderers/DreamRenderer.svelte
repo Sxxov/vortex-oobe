@@ -51,6 +51,7 @@
 	let wobblyInFilter: SVGFilterElement;
 	let wobblyOutFilter: SVGFilterElement;
 
+	let hasDestroyed = false;
 	let hasMounted = false;
 	let hasInitialised = false;
 
@@ -249,6 +250,10 @@
 		}
 
 		requestAnimationFrame(function raf() {
+			if (hasDestroyed) {
+				return;
+			}
+
 			controls.update();
 			renderer.render(scene, camera);
 
@@ -271,6 +276,8 @@
 	});
 
 	onDestroy(() => {
+		hasDestroyed = true;
+
 		clearTimeout(isHintShownHandle);
 
 		if (mediaStream) {
@@ -278,6 +285,8 @@
 				track.stop();
 			}
 		}
+
+		dreamContext.controls.dispose();
 	});
 
 	// responsive THREE canvas
