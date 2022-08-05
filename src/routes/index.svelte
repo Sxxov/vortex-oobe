@@ -7,6 +7,7 @@
 	import { onDestroy, onMount } from 'svelte';
 
 	let hasMounted = false;
+	let visibilityKey = {};
 
 	const isStandalone =
 		typeof location !== 'undefined' &&
@@ -34,44 +35,46 @@
 			typeof document !== 'undefined' &&
 			document.visibilityState === 'visible'
 		) {
-			location.reload();
+			visibilityKey = {};
 		}
 	}
 </script>
 
-<div type="/index" class="component">
-	<div class="overlay">
-		<div class="spinner" out:fadeOut>
-			<div class="lds-ring">
-				<div />
-				<div />
-				<div />
-				<div />
-			</div>
-		</div>
-	</div>
-
-	<DreamRenderer let:ctx>
-		<Content {ctx} />
-	</DreamRenderer>
-
-	<div class="overlay">
-		{#if hasMounted}
-			<div class="watermark">
-				<div class="content" in:dropIn>
-					<SvgButton
-						svgHeight="56px"
-						svgWidth="168px"
-						svgColour="#fff"
-						svg={logo}
-						padding={0}
-						isClickable={false}
-					/>
+{#key visibilityKey}
+	<div type="/index" class="component">
+		<div class="overlay">
+			<div class="spinner" out:fadeOut>
+				<div class="lds-ring">
+					<div />
+					<div />
+					<div />
+					<div />
 				</div>
 			</div>
-		{/if}
+		</div>
+
+		<DreamRenderer let:ctx>
+			<Content {ctx} />
+		</DreamRenderer>
+
+		<div class="overlay">
+			{#if hasMounted}
+				<div class="watermark">
+					<div class="content" in:dropIn>
+						<SvgButton
+							svgHeight="56px"
+							svgWidth="168px"
+							svgColour="#fff"
+							svg={logo}
+							padding={0}
+							isClickable={false}
+						/>
+					</div>
+				</div>
+			{/if}
+		</div>
 	</div>
-</div>
+{/key}
 
 <style lang="postcss">
 	.overlay {
