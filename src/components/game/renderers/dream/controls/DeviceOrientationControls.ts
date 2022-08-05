@@ -1,4 +1,5 @@
 import { Euler, EventDispatcher, MathUtils, Quaternion, Vector3 } from 'three';
+import { DeviceOrientationControlsConnectResults } from './DeviceOrientationControlsConnectResults';
 
 export class DeviceOrientationControls extends EventDispatcher {
 	public static readonly zee = new Vector3(0, 0, 1);
@@ -66,50 +67,66 @@ export class DeviceOrientationControls extends EventDispatcher {
 		this.screenOrientation = window.orientation || 0;
 	};
 
-	public connect() {
-		this.onScreenOrientationChangeEvent(); // run once on load
+	public async connect() {
+		if (!('DeviceOrientationEvent' in window))
+			return DeviceOrientationControlsConnectResults.UNSUPPORTED;
 
-		// iOS 13+
-		if (
-			window.DeviceOrientationEvent !== undefined &&
-			'requestPermission' in window.DeviceOrientationEvent
-		) {
-			(
-				window.DeviceOrientationEvent as unknown as DeviceOrientationEvent & {
-					requestPermission(): Promise<'granted' | 'denied'>;
-				}
-			)
-				.requestPermission()
-				.then((response: 'granted' | 'denied') => {
-					if (response === 'granted') {
-						window.addEventListener(
-							'orientationchange',
-							this.onScreenOrientationChangeEvent,
+		if ('requestPermission' in window.DeviceOrientationEvent)
+			try {
+				if (
+					(await (
+						window.DeviceOrientationEvent as typeof DeviceOrientationEvent & {
+							requestPermission(): Promise<'granted' | 'denied'>;
+						}
+					).requestPermission()) !== 'granted'
+				)
+					throw new Error();
+			} catch {
+				return DeviceOrientationControlsConnectResults.UNPERMITTED;
+			}
+
+		try {
+			await new Promise<void>((resolve, reject) => {
+				const timeoutHandle = setTimeout(reject, 1000);
+
+				window.addEventListener(
+					'devicemotion',
+					function onDeviceMotion({ rotationRate }) {
+						if (
+							rotationRate === null ||
+							rotationRate.alpha === null ||
+							rotationRate.beta === null ||
+							rotationRate.gamma === null
+						)
+							reject();
+
+						window.removeEventListener(
+							'devicemotion',
+							onDeviceMotion,
 						);
-						window.addEventListener(
-							'deviceorientation',
-							this.onDeviceOrientationChangeEvent,
-						);
-					}
-				})
-				.catch((error: Error) => {
-					console.error(
-						'THREE.DeviceOrientationControls: Unable to use DeviceOrientation API:',
-						error,
-					);
-				});
-		} else {
-			window.addEventListener(
-				'orientationchange',
-				this.onScreenOrientationChangeEvent,
-			);
-			window.addEventListener(
-				'deviceorientation',
-				this.onDeviceOrientationChangeEvent,
-			);
+						clearTimeout(timeoutHandle);
+						resolve();
+					},
+				);
+			});
+		} catch {
+			return DeviceOrientationControlsConnectResults.UNSUPPORTED;
 		}
 
+		this.onScreenOrientationChangeEvent(); // run once on load
+
+		window.addEventListener(
+			'orientationchange',
+			this.onScreenOrientationChangeEvent,
+		);
+		window.addEventListener(
+			'deviceorientation',
+			this.onDeviceOrientationChangeEvent,
+		);
+
 		this.enabled = true;
+
+		return DeviceOrientationControlsConnectResults.OK;
 	}
 
 	public disconnect() {

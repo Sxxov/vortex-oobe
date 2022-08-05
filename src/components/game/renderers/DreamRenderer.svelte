@@ -1,19 +1,27 @@
 <script lang="ts">
-	import { onMount, createEventDispatcher, onDestroy } from 'svelte';
-	import { Object3D, PerspectiveCamera, Scene } from 'three';
-	import { fade } from '../../../core/transitioner/Transitioner';
+	import { onMount, onDestroy } from 'svelte';
+	import { Object3D, PerspectiveCamera, Scene, MathUtils } from 'three';
+	import { dropIn, fade } from '../../../core/transitioner/Transitioner';
 	import { DeviceOrientationControls } from './dream/controls/DeviceOrientationControls';
 	import type { IDreamContext } from './dream/IDreamContext';
 	import { Css3dRenderer } from './dream/renderer/Css3dRenderer';
+	import {
+		done,
+		info,
+		error,
+		arrow_forward,
+		camera_alt,
+		settings_backup_restore,
+		swipe,
+		refresh,
+	} from '!i/twotone::done,info,error,arrow_forward,camera_alt,settings_backup_restore,swipe,refresh';
+	import { writable } from 'svelte/store';
+	import SvgButton from '../../composable/buttons/SvgButton.svelte';
+	import Spacer from '../../composable/Spacer.svelte';
+	import { DeviceOrientationControlsConnectResults } from './dream/controls/DeviceOrientationControlsConnectResults';
+	import exifr from 'exifr';
 
-	const dispatch = createEventDispatcher();
-
-	const VIDEO_LUMINANCE_CHECK_BLOCK_SIZE = 16;
-
-	export let enforceLuminance =
-		new URLSearchParams(window.location.search).get(
-			'dream-enforce-luminance',
-		) !== 'false';
+	const { radToDeg } = MathUtils;
 
 	let rendererDiv: HTMLDivElement;
 	let containerDivHeight = 0;
@@ -26,104 +34,217 @@
 	let root: THREE.Object3D;
 
 	let video: HTMLVideoElement;
-	let videoLuminanceCanvas: HTMLCanvasElement;
-	let videoLuminanceUpdateIntervalHandle: ReturnType<typeof setInterval>;
-	let videoLuminanceHistory = new Array<number>(10).fill(0);
-	let videoLuminance = 0;
-	let isTooBright = false;
 
 	let isEyeOpen = true;
-	let isWaking = false;
-	let isWobbly = false;
+
+	const isAlertShown = writable(false);
+	let alertHeading = '';
+	let alertText = '';
+	let alertSvg = '';
+	let alertButtonText = '';
+	let alertButtonSvg = '';
+
+	let isHintShown = false;
+	let isHintShownHandle: ReturnType<typeof setTimeout>;
 
 	let wobblyInFilter: SVGFilterElement;
 	let wobblyOutFilter: SVGFilterElement;
 
 	let hasMounted = false;
+	let hasInitialised = false;
 
 	let dreamContext: IDreamContext;
 
-	onMount(() => {
-		// set camera video feed
-		void (async () => {
-			video.srcObject = await navigator.mediaDevices.getUserMedia({
+	onMount(async () => {
+		hasMounted = true;
+
+		const hasCameraPermission =
+			((await navigator.mediaDevices.enumerateDevices()).find(
+				({ kind }) => kind === 'videoinput',
+			)?.label ?? '') !== '';
+
+		if (!hasCameraPermission) {
+			await alert(
+				'Camera',
+				'Allow access to your camera to start the experience.',
+				camera_alt,
+				'Continue',
+				arrow_forward,
+			);
+		}
+
+		try {
+			const mediaStream = await navigator.mediaDevices.getUserMedia({
+				video: true,
 				audio: false,
-				video: {
-					facingMode: 'environment',
-				},
 			});
-		})();
 
-		// update video luminance
-		videoLuminanceCanvas = document.createElement('canvas');
-		const ctx = videoLuminanceCanvas.getContext('2d')!;
-		videoLuminanceUpdateIntervalHandle = setInterval(() => {
-			ctx.drawImage(
-				video,
-				0,
-				0,
-				videoLuminanceCanvas.width,
-				videoLuminanceCanvas.height,
-			);
-
-			const data = ctx.getImageData(
-				0,
-				0,
-				videoLuminanceCanvas.width,
-				videoLuminanceCanvas.height,
-			);
-			const pixelCount =
-				(videoLuminanceCanvas.width * videoLuminanceCanvas.height) /
-				VIDEO_LUMINANCE_CHECK_BLOCK_SIZE;
-			let r = 0;
-			let g = 0;
-			let b = 0;
-
-			for (
-				let i = 0, l = data.data.length;
-				i < l;
-				i += 4 * VIDEO_LUMINANCE_CHECK_BLOCK_SIZE
-			) {
-				const a = data.data[i + 3];
-				const aFloat = a / 255;
-				r += data.data[i + 0] * aFloat;
-				g += data.data[i + 1] * aFloat;
-				b += data.data[i + 2] * aFloat;
+			for (const track of mediaStream.getVideoTracks()) {
+				track.stop();
+			}
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				switch (err.name) {
+					case 'NotAllowedError':
+						await alert(
+							'Camera',
+							'Access to your camera is required for this experience. Please allow it from the prompt, or in the settings on your browser.',
+							error,
+							'Try again',
+							refresh,
+						);
+						break;
+					case 'NotFoundError':
+						await alert(
+							'Camera',
+							"No cameras found. Please ensure you're using a camera-enabled device.",
+							error,
+							'',
+						);
+						break;
+					case 'NotReadableError':
+						await alert(
+							'Camera',
+							'Failed to start using camera. Please ensure no other apps might using it.',
+							error,
+							'Try again',
+							refresh,
+						);
+						break;
+					default:
+						await alert(
+							'Camera',
+							`Unknown error (${err.name}). You may need to update your browser.`,
+							error,
+							'Try again',
+							refresh,
+						);
+						break;
+				}
 			}
 
-			// https://gist.github.com/jfsiii/5641126
-			const rFloat = r / 255 / pixelCount;
-			const gFloat = g / 255 / pixelCount;
-			const bFloat = b / 255 / pixelCount;
+			location.reload();
+			return;
+		}
 
-			videoLuminanceHistory.shift();
-			videoLuminanceHistory.push(
-				0.2126 *
-					(rFloat <= 0.03928
-						? rFloat / 12.92
-						: ((rFloat + 0.055) / 1.055) ** 2.4) +
-					0.7152 *
-						(gFloat <= 0.03928
-							? gFloat / 12.92
-							: ((gFloat + 0.055) / 1.055) ** 2.4) +
-					0.0722 *
-						(bFloat <= 0.03928
-							? bFloat / 12.92
-							: ((bFloat + 0.055) / 1.055) ** 2.4),
-			);
-			videoLuminanceHistory = videoLuminanceHistory;
-		}, 100);
+		// may have a length of 0 if no back facing cameras are installed
+		// perhaps webcams or "left"/"right" cameras
+		const backCameraInfos = (
+			await navigator.mediaDevices.enumerateDevices()
+		).filter(
+			(info) =>
+				info.kind === 'videoinput' &&
+				(!('getCapabilities' in info) ||
+					(info as any)
+						.getCapabilities()
+						.facingMode.includes('environment')),
+		);
+
+		// find main back camera id
+		// as if fov can't be detected, it'll be closest to the default fov
+		const mainCameraId = backCameraInfos.find((v) =>
+			v.label.includes('0,'),
+		)?.deviceId;
+
+		// set camera video feed
+		video.srcObject = await navigator.mediaDevices.getUserMedia({
+			audio: false,
+			video: {
+				facingMode: 'environment',
+				...(mainCameraId ? { deviceId: { exact: mainCameraId } } : {}),
+			},
+		});
+
+		// attempt to detect fov
+		// works on chrome & ff (fuck you safari)
+		let fov = 40;
+		if ('ImageCapture' in window) {
+			const blob = (await new (window as any).ImageCapture(
+				video.srcObject.getVideoTracks()[0],
+			).takePhoto()) as Blob;
+			const file = new File([blob], '_.jpg', { type: 'image/jpeg' });
+			const {
+				FocalLength: focalLength = 0,
+				FocalLengthIn35mmFormat: focalLengthIn35mmFormat = 0,
+			} =
+				(await exifr.parse(file, [
+					'FocalLength',
+					'FocalLengthIn35mmFormat',
+				])) ?? {};
+
+			if (focalLengthIn35mmFormat > 0) {
+				fov = radToDeg(
+					2 * Math.atan(35 / (2 * focalLengthIn35mmFormat)),
+				);
+			} else if (focalLength > 0) {
+				fov = radToDeg(2 * Math.atan(1.8 / (2 * focalLength)));
+			}
+		}
 
 		// setup scene
 		scene = new Scene();
-		camera = new PerspectiveCamera(90, 1, 0.1, 2000);
+		camera = new PerspectiveCamera(fov, 1, 0.1, 2000);
 		renderer = new Css3dRenderer({ element: rendererDiv });
 		root = new Object3D();
 		scene.add(root);
 
 		// setup camera to use gyro
 		const controls = new DeviceOrientationControls(camera);
-		controls.connect();
+		const controlsConnectResult = await controls.connect();
+
+		switch (controlsConnectResult) {
+			case DeviceOrientationControlsConnectResults.OK:
+				break;
+			case DeviceOrientationControlsConnectResults.UNPERMITTED:
+				await alert(
+					'Gyroscope',
+					'Allow access to your gyroscope to start the experience.',
+					settings_backup_restore,
+					'Continue',
+					arrow_forward,
+				);
+
+				if (
+					!(await (async () => {
+						try {
+							return (
+								(await (
+									window.DeviceOrientationEvent as typeof DeviceOrientationEvent & {
+										requestPermission(): Promise<
+											'granted' | 'denied'
+										>;
+									}
+								).requestPermission()) === 'granted'
+							);
+						} catch {
+							return false;
+						}
+					})())
+				) {
+					await alert(
+						'Gyroscope',
+						'Access to your gyroscope is required for this experience. Please allow it from the prompt, or in the settings on your browser.',
+						error,
+						'Try again',
+						refresh,
+					);
+
+					location.reload();
+					return;
+				}
+
+				break;
+			case DeviceOrientationControlsConnectResults.UNSUPPORTED:
+				await alert(
+					'Gyroscope',
+					"No gyroscope was found. Please make sure you're using a device that supports orientation changes (eg. a phone or a tablet).",
+					error,
+					'',
+				);
+				location.reload();
+				return;
+			default:
+		}
 
 		requestAnimationFrame(function raf() {
 			controls.update();
@@ -133,8 +254,6 @@
 		});
 
 		dreamContext = {
-			awaken,
-			setWobbly,
 			controls,
 			scene,
 			camera,
@@ -142,21 +261,27 @@
 			root,
 		};
 
-		hasMounted = true;
+		hasInitialised = true;
+		isHintShown = true;
+		isHintShownHandle = setTimeout(() => {
+			isHintShown = false;
+		}, 5000);
 	});
 
 	onDestroy(() => {
-		clearInterval(videoLuminanceUpdateIntervalHandle);
+		clearTimeout(isHintShownHandle);
+
+		if (video?.srcObject) {
+			for (const track of (
+				video.srcObject as MediaStream
+			).getVideoTracks()) {
+				track.stop();
+			}
+		}
 	});
 
-	$: if (isWaking) {
-		setTimeout(() => {
-			dispatch('wake');
-		}, 2000);
-	}
-
 	// responsive THREE canvas
-	$: if (hasMounted) {
+	$: if (hasInitialised) {
 		renderer.setSize(containerDivWidth, containerDivHeight);
 
 		camera.aspect = containerDivWidth / containerDivHeight;
@@ -165,36 +290,30 @@
 		renderer.render(scene, camera);
 	}
 
-	// responsive video luminance canvas
-	$: if (videoLuminanceCanvas && video) {
-		videoLuminanceCanvas.height = containerDivHeight;
-		videoLuminanceCanvas.width = containerDivWidth;
-	}
+	async function alert(
+		heading: string,
+		text: string,
+		svg = info,
+		buttonText = 'OK',
+		buttonSvg = done,
+	) {
+		return new Promise<void>((resolve) => {
+			alertHeading = heading;
+			alertText = text;
+			alertSvg = svg;
+			alertButtonText = buttonText;
+			alertButtonSvg = buttonSvg;
+			isEyeOpen = false;
+			isAlertShown.set(true);
 
-	$: videoLuminance =
-		videoLuminanceHistory.reduce((a, b) => a + b) /
-		videoLuminanceHistory.length;
-
-	$: isTooBright = enforceLuminance && videoLuminance > 0.08;
-
-	$: isEyeOpen = !isTooBright;
-
-	$: if (isWaking) {
-		wobblyOutFilter?.querySelectorAll('animate').forEach((elem) => {
-			elem.beginElement();
+			const unsubscribe = isAlertShown.subscribe((v) => {
+				if (!v) {
+					unsubscribe();
+					isEyeOpen = true;
+					resolve();
+				}
+			});
 		});
-	} else {
-		wobblyInFilter?.querySelectorAll('animate').forEach((elem) => {
-			elem.beginElement();
-		});
-	}
-
-	function awaken() {
-		isWaking = true;
-	}
-
-	function setWobbly(v: boolean) {
-		isWobbly = v;
 	}
 </script>
 
@@ -209,163 +328,167 @@
 		--height-window: {windowHeight}px;
 	"
 >
-	<svg class="filters" xmlns="http://www.w3.org/2000/svg">
-		<defs>
-			<filter id="wobbly-out-filter" bind:this={wobblyOutFilter}>
-				<feTurbulence
-					type="turbulence"
-					baseFrequency="0"
-					numOctaves="1"
-					result="turbulence"
-					seed="10"
-					stitchTiles="noStitch"
-				>
-					<animate
-						attributeName="baseFrequency"
-						attributeType="XML"
-						from="0"
-						to=".03"
-						begin="0s"
-						dur="2s"
-						repeatCount="1"
-						fill="freeze"
-						calcMode="spline"
-						keySplines=".64 0 .78 0"
+	{#if hasInitialised}
+		<svg class="filters" xmlns="http://www.w3.org/2000/svg">
+			<defs>
+				<filter id="wobbly-out-filter" bind:this={wobblyOutFilter}>
+					<feTurbulence
+						type="turbulence"
+						baseFrequency="0"
+						numOctaves="1"
+						result="turbulence"
+						seed="10"
+						stitchTiles="noStitch"
+					>
+						<animate
+							attributeName="baseFrequency"
+							attributeType="XML"
+							from="0"
+							to=".03"
+							begin="0s"
+							dur="2s"
+							repeatCount="1"
+							fill="freeze"
+							calcMode="spline"
+							keySplines=".64 0 .78 0"
+						/>
+					</feTurbulence>
+					<feColorMatrix
+						in="turbulence"
+						type="hueRotate"
+						values="0"
+						result="displacementMap"
+					>
+						<animate
+							attributeName="values"
+							from="0"
+							to="360"
+							dur=".3s"
+							repeatCount="7"
+							fill="freeze"
+						/>
+					</feColorMatrix>
+					<feDisplacementMap
+						in2="displacementMap"
+						in="SourceGraphic"
+						scale="-100"
+						xChannelSelector="R"
+						yChannelSelector="G"
+					>
+						<animate
+							attributeName="scale"
+							from="0"
+							to="-100"
+							dur="2s"
+							repeatCount="1"
+							fill="freeze"
+							calcMode="spline"
+							keySplines=".64 0 .78 0"
+						/>
+					</feDisplacementMap>
+				</filter>
+				<filter id="wobbly-in-filter" bind:this={wobblyInFilter}>
+					<feTurbulence
+						type="turbulence"
+						baseFrequency="0"
+						numOctaves="1"
+						result="turbulence"
+						seed="10"
+						stitchTiles="noStitch"
+					>
+						<animate
+							attributeName="baseFrequency"
+							attributeType="XML"
+							from=".03"
+							to="0"
+							begin="0s"
+							dur="5s"
+							repeatCount="1"
+							fill="freeze"
+							calcMode="spline"
+							keySplines=".83 0 .17 1"
+						/>
+					</feTurbulence>
+					<feColorMatrix
+						in="turbulence"
+						type="hueRotate"
+						values="0"
+						result="displacementMap"
+					>
+						<animate
+							attributeName="values"
+							from="0"
+							to="360"
+							dur=".3s"
+							repeatCount="17"
+							fill="freeze"
+						/>
+					</feColorMatrix>
+					<feDisplacementMap
+						in2="displacementMap"
+						in="SourceGraphic"
+						scale="0"
+						xChannelSelector="R"
+						yChannelSelector="G"
+					>
+						<animate
+							attributeName="scale"
+							from="-100"
+							to="0"
+							dur="5s"
+							repeatCount="1"
+							fill="freeze"
+							calcMode="spline"
+							keySplines=".83 0 .17 1"
+						/>
+					</feDisplacementMap>
+				</filter>
+				<filter id="wobbly-filter" bind:this={wobblyInFilter}>
+					<feTurbulence
+						type="turbulence"
+						baseFrequency=".03"
+						numOctaves="1"
+						result="turbulence"
+						seed="10"
+						stitchTiles="noStitch"
 					/>
-				</feTurbulence>
-				<feColorMatrix
-					in="turbulence"
-					type="hueRotate"
-					values="0"
-					result="displacementMap"
-				>
-					<animate
-						attributeName="values"
-						from="0"
-						to="360"
-						dur=".3s"
-						repeatCount="7"
-						fill="freeze"
+					<feColorMatrix
+						in="turbulence"
+						type="hueRotate"
+						values="0"
+						result="displacementMap"
+					>
+						<animate
+							attributeName="values"
+							from="0"
+							to="360"
+							dur=".3s"
+							repeatCount="indefinite"
+							fill="freeze"
+						/>
+					</feColorMatrix>
+					<feDisplacementMap
+						in2="displacementMap"
+						in="SourceGraphic"
+						scale="10"
+						xChannelSelector="R"
+						yChannelSelector="G"
 					/>
-				</feColorMatrix>
-				<feDisplacementMap
-					in2="displacementMap"
-					in="SourceGraphic"
-					scale="-100"
-					xChannelSelector="R"
-					yChannelSelector="G"
-				>
-					<animate
-						attributeName="scale"
-						from="0"
-						to="-100"
-						dur="2s"
-						repeatCount="1"
-						fill="freeze"
-						calcMode="spline"
-						keySplines=".64 0 .78 0"
-					/>
-				</feDisplacementMap>
-			</filter>
-			<filter id="wobbly-in-filter" bind:this={wobblyInFilter}>
-				<feTurbulence
-					type="turbulence"
-					baseFrequency="0"
-					numOctaves="1"
-					result="turbulence"
-					seed="10"
-					stitchTiles="noStitch"
-				>
-					<animate
-						attributeName="baseFrequency"
-						attributeType="XML"
-						from=".03"
-						to="0"
-						begin="0s"
-						dur="5s"
-						repeatCount="1"
-						fill="freeze"
-						calcMode="spline"
-						keySplines=".83 0 .17 1"
-					/>
-				</feTurbulence>
-				<feColorMatrix
-					in="turbulence"
-					type="hueRotate"
-					values="0"
-					result="displacementMap"
-				>
-					<animate
-						attributeName="values"
-						from="0"
-						to="360"
-						dur=".3s"
-						repeatCount="17"
-						fill="freeze"
-					/>
-				</feColorMatrix>
-				<feDisplacementMap
-					in2="displacementMap"
-					in="SourceGraphic"
-					scale="0"
-					xChannelSelector="R"
-					yChannelSelector="G"
-				>
-					<animate
-						attributeName="scale"
-						from="-100"
-						to="0"
-						dur="5s"
-						repeatCount="1"
-						fill="freeze"
-						calcMode="spline"
-						keySplines=".83 0 .17 1"
-					/>
-				</feDisplacementMap>
-			</filter>
-			<filter id="wobbly-filter" bind:this={wobblyInFilter}>
-				<feTurbulence
-					type="turbulence"
-					baseFrequency=".03"
-					numOctaves="1"
-					result="turbulence"
-					seed="10"
-					stitchTiles="noStitch"
-				/>
-				<feColorMatrix
-					in="turbulence"
-					type="hueRotate"
-					values="0"
-					result="displacementMap"
-				>
-					<animate
-						attributeName="values"
-						from="0"
-						to="360"
-						dur=".3s"
-						repeatCount="indefinite"
-						fill="freeze"
-					/>
-				</feColorMatrix>
-				<feDisplacementMap
-					in2="displacementMap"
-					in="SourceGraphic"
-					scale="10"
-					xChannelSelector="R"
-					yChannelSelector="G"
-				/>
-			</filter>
-		</defs>
-	</svg>
-	<div
-		class="content"
-		class:wobbly={isWobbly}
-		class:wobbly-in={!isWaking && !isWobbly}
-		class:wobbly-out={isWaking}
-	>
-		<video playsinline autoplay muted src="" bind:this={video} />
+				</filter>
+			</defs>
+		</svg>
+	{/if}
+	<div class="content" class:wobbly-in={hasInitialised}>
+		<video
+			class:visible={hasInitialised}
+			playsinline
+			autoplay
+			muted
+			src=""
+			bind:this={video}
+		/>
 		<div class="renderer" bind:this={rendererDiv}>
-			{#if hasMounted}
+			{#if hasInitialised}
 				<slot ctx={dreamContext} />
 			{/if}
 		</div>
@@ -373,14 +496,44 @@
 			<div class="top" />
 			<div class="bottom" />
 		</div>
-		{#if isTooBright}
-			<div class="too-bright" in:fade out:fade>
+		{#if $isAlertShown}
+			<div class="alert" in:fade out:fade>
+				<SvgButton
+					svgHeight="28px"
+					svgWidth="28px"
+					svg={alertSvg}
+					isClickable={false}
+				/>
+				<h1>{alertHeading}</h1>
 				<p>
-					It's currently too bright to dream, dim your surroundings.
+					{alertText}
 				</p>
+				{#if alertButtonText.length > 0}
+					<Spacer height={56} />
+					<SvgButton
+						svg={alertButtonSvg}
+						on:click={() => {
+							isAlertShown.set(false);
+						}}>{alertButtonText}</SvgButton
+					>
+				{/if}
 			</div>
 		{/if}
 	</div>
+	{#if isHintShown}
+		<div class="hint" in:dropIn out:fade={{ duration: 1000 }}>
+			<div class="content">
+				<SvgButton
+					svgHeight="28px"
+					svgWidth="28px"
+					svg={swipe}
+					padding={0}
+					isClickable={false}
+				/>
+				<h1>Pan by rotating your device.</h1>
+			</div>
+		</div>
+	{/if}
 </div>
 
 <style lang="postcss">
@@ -390,10 +543,33 @@
 
 		height: var(--height-window);
 
-		background: #000;
+		/* background: #000; */
+
+		touch-action: none;
 
 		& > .filters {
 			display: none;
+		}
+
+		& > .hint {
+			@apply grid
+					absolute
+					h-full
+					w-full
+					top-0
+					left-0
+					pointer-events-none
+					place-items-center;
+
+			& > .content {
+				@apply flex
+						flex-col
+						items-center
+						text-center
+						box-border;
+
+				padding: theme('padding');
+			}
 		}
 
 		& > .content {
@@ -407,7 +583,7 @@
 				animation-fill-mode: both;
 			}
 
-			&.wobbly-out {
+			/* &.wobbly-out {
 				animation-name: wobbly-out;
 				animation-duration: 2s;
 				animation-timing-function: theme('ease.slowFast');
@@ -416,7 +592,7 @@
 
 			&.wobbly {
 				filter: url(#wobbly-filter);
-			}
+			} */
 
 			& > .renderer {
 				@apply h-full
@@ -429,6 +605,13 @@
 					w-full
 					object-cover
 					top-0;
+
+				opacity: 0;
+				transition: opacity 0.5s theme('ease.slowFast');
+
+				&.visible {
+					opacity: 1;
+				}
 			}
 
 			& > .eyelids {
@@ -479,13 +662,14 @@
 				}
 			}
 
-			& > .too-bright {
+			& > .alert {
 				@apply absolute
 					box-border
 					top-0
-					grid
+					flex
+					flex-col
 					items-center
-					justify-items-center
+					justify-center
 					h-full
 					w-full;
 
@@ -493,7 +677,8 @@
 
 				padding: theme('padding');
 
-				& > p {
+				& p,
+				& h1 {
 					@apply text-center;
 				}
 			}

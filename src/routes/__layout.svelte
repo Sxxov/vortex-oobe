@@ -10,50 +10,25 @@
 <script lang="ts">
 	import '../global.pcss';
 	import { onMount } from 'svelte';
+	import android192 from '../assets/favi/android-icon-192x192.png?png';
+	import apple180 from '../assets/favi/apple-icon-180x180.png?png';
+	import favicon16 from '../assets/favi/favicon-16x16.png?png';
+	import favicon32 from '../assets/favi/favicon-32x32.png?png';
+	import manifest from '../assets/favi/manifest.json';
 	import Toast from '../components/composable/Toast.svelte';
 	import { Ctx } from '../core/ctx';
-	import 'kursor/dist/kursor.css';
 	import { Tailwinder } from '../core/tailwinder/Tailwinder';
-	import favicon32 from '../assets/favi/favicon-32x32.png?png';
-	import favicon16 from '../assets/favi/favicon-16x16.png?png';
-	import apple180 from '../assets/favi/apple-icon-180x180.png?png';
-	import android192 from '../assets/favi/android-icon-192x192.png?png';
-	import manifest from '../assets/favi/manifest.json';
 
 	const toastsW = Ctx.toasts;
 	$: toasts = $toastsW;
 
 	onMount(() => {
-		window.addEventListener('sveltekit:start', async () => {
-			// const theme =
-			// 	localStorage.getItem('theme') ??
-			// 	(window.matchMedia('(prefers-color-scheme: dark)').matches
-			// 		? 'dark'
-			// 		: 'light');
-
+		window.addEventListener('sveltekit:start', () => {
 			const theme = 'dark';
 
 			document.documentElement.classList.add(theme);
 
 			Tailwinder.injectThemeAsCssVariables();
-
-			const { default: SmoothScroll } = await import(
-				'smoothscroll-for-websites'
-			);
-			const { default: Kursor } = await import('kursor');
-
-			// eslint-disable-next-line new-cap
-			SmoothScroll({
-				animationTime: 500,
-				touchpadSupport: false,
-				pulseScale: 6,
-			});
-
-			// eslint-disable-next-line no-new
-			new Kursor({
-				removeDefaultCursor: false,
-				color: '#fff',
-			});
 		});
 	});
 </script>
@@ -75,7 +50,7 @@
 	<!-- Viewport Tag to prevent jank -->
 	<meta
 		name="viewport"
-		content="width=device-width; initial-scale=1; viewport-fit=cover"
+		content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
 	/>
 
 	<meta name="mobile-web-app-capable" content="yes" />
@@ -120,6 +95,6 @@
 	}
 
 	main {
-		background: #451973;
+		background: black;
 	}
 </style>

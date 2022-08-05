@@ -3,7 +3,8 @@
 	import { MathUtils, Object3D } from 'three';
 	import type { IDreamContext } from '../components/game/renderers/dream/IDreamContext';
 	import { Css3dObject } from '../components/game/renderers/dream/renderer/Css3dObject';
-	import oobeVideo from '../assets/video/oobe.webm';
+	import vp9 from '../assets/video/vp9.webm';
+	import vp8 from '../assets/video/vp8.webm';
 	import SvgButton from './composable/buttons/SvgButton.svelte';
 	import {
 		play_arrow,
@@ -32,7 +33,7 @@
 		pivotObject = new Object3D();
 		spriteObject = new Css3dObject(containerDiv);
 
-		spriteObject.position.set(500, 0, 0);
+		spriteObject.position.set(500, -100, 0);
 		spriteObject.rotateY(degToRad(-90));
 
 		pivotObject.add(spriteObject);
@@ -115,6 +116,10 @@
 			void video.play();
 		}
 	}
+
+	function update() {
+		updateKey = {};
+	}
 </script>
 
 <svelte:window
@@ -125,25 +130,18 @@
 />
 
 <div bind:this={containerDiv}>
+	<!-- svelte-ignore a11y-media-has-caption -->
 	<video
 		bind:this={video}
 		width="1080"
 		preload="auto"
-		on:ended={() => {
-			updateKey = {};
-		}}
-		on:play={() => {
-			updateKey = {};
-		}}
-		on:pause={() => {
-			updateKey = {};
-		}}
-		on:seeked={() => {
-			updateKey = {};
-		}}
-		on:timeupdate={() => {
-			updateKey = {};
-		}}
+		playsinline
+		autoplay
+		on:ended={update}
+		on:play={update}
+		on:pause={update}
+		on:seeked={update}
+		on:timeupdate={update}
 		on:playing={() => {
 			isBuffering = false;
 		}}
@@ -151,7 +149,8 @@
 			isBuffering = true;
 		}}
 	>
-		<source src={oobeVideo} type={'video/webm; codecs="vp9"'} />
+		<source src={vp9} type={'video/webm; codecs="vp9"'} />
+		<source src={vp8} type={'video/webm; codecs="vp8"'} />
 	</video>
 	<div class="controls" on:click={togglePlay}>
 		{#if isControlsVisible}
@@ -173,7 +172,6 @@
 <style lang="postcss">
 	video {
 		max-width: unset;
-		transform: translateY(100px);
 	}
 
 	.controls {
