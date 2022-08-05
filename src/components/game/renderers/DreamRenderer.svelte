@@ -286,7 +286,7 @@
 			}
 		}
 
-		dreamContext.controls.dispose();
+		dreamContext?.controls.dispose();
 	});
 
 	// responsive THREE canvas
