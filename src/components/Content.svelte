@@ -5,7 +5,9 @@
 	import { Css3dObject } from '../components/game/renderers/dream/renderer/Css3dObject';
 	import vp9 from '../assets/video/vp9.webm';
 	import vp8 from '../assets/video/vp8.webm';
-	import hevc from '../assets/video/hevc.mov';
+	// non-standard file-extension, should be .mov
+	// using mp4 to avoid issues with vite
+	import hevc from '../assets/video/hevc.mp4';
 	import SvgButton from './composable/buttons/SvgButton.svelte';
 	import {
 		play_arrow,
