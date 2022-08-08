@@ -3,6 +3,12 @@ declare module '*.svg' {
 	export default src;
 }
 
+// quicktime video
+declare module '*.mov' {
+	const src: string;
+	export default src;
+}
+
 // png that should stay a png
 declare module '*.png?png' {
 	const src: string;
