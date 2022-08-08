@@ -208,7 +208,7 @@
 				);
 
 				if (
-					!(await (async () => {
+					await (async () => {
 						try {
 							return (
 								(await (
@@ -222,8 +222,10 @@
 						} catch {
 							return false;
 						}
-					})())
+					})()
 				) {
+					await controls.connect();
+				} else {
 					await alert(
 						'Gyroscope',
 						'Access to your gyroscope is required for this experience. Please allow it from the prompt, or in the settings on your browser.',
